@@ -1,0 +1,210 @@
+How to create an Editor Plugin:
+ 
+Background
+An editor plugin for the TopCoder Competition applet (TCApplet) is simply a java class that implements methods recognized by the TCApplet (see below).  This java class (entry point) is responsible for creating and interacting with your editor and can consist of as many classes, packages and/or jar files that are needed to implement your editor functionality.
+ 
+The editor plugin will be responsible for providing a JPanel that represents the visual representation of the editor.  The JPanel will be put in the coding frame between the split bar (below the problem description) and the standard buttons (save, test, clear, compile, submit).
+ 
+To avoid namespace collisions, please assign a package to your editor plugin.  As a suggestion, use the name of your editor plugin as the package name.
+ 
+If you feel that your plugin contains functionality that the general community group would like, you can submit the plugin to Topcoder (applet@topcoder.com) for review to become a standard editor.   
+Metfhods the Entry Point class can Implement
+Signature
+Required
+JPanel getEditorPanel()
+Yes
+String getSource()
+Yes
+void setSource(String source)
+Yes
+void configure()
+No
+void clear()
+No
+void setTextEnabled(Boolean enable)
+No
+Void setProblemComponent(ProblemComponentModel component, Langauge language, Renderer renderer)
+No
+void setLanguage(Integer languageType)
+No
+void setProblem(String problemText)
+No
+void setSignature(String className, String methodName, List parmTypes, String rcType)
+No
+void setName(String name)
+No
+void install()
+No
+void uninstall()
+No
+void startUsing()
+No
+void stopUsing()
+No
+void dispose()
+No
+Boolean isCacheable()
+No
+Boolean setCompileResults(Boolean success, String message)
+No
+ 
+Pink 每 Depreciated methods
+Blue 每 not yet supported
+ 
+Your editor plugin MUST implement the required functions or it will be ignored by the TCApplet.  Your editor plugin MAY implement the optional functions to provide greater range of functionality.  Any optional methods that you do NOT implement will simply be ignored by the TCApplet.
+ 
+JPanel getEditorPanel()
+This method will be called to retrieve the JPanel containing your editor.  This method will be called initially (if your plugin is the default plugin) when the coder enters the coding room or called when the coder switches editors.  Please note that the contest applet will size the panel accordingly.
+ 
+String getSource()
+This method will be called to retrieve the current source code in your editor.  This method will be called when the coder presses the Save/Test/Compile/Submit buttons OR if the coder switches editors or language.
+ 
+void setSource(String source)
+This method will be called to set the current source code.  This method will be called when a problem is opened OR if the coder switches editors or language.  Please note that the source could be blank.
+ 
+void configure()
+This method will be called from the Editor Preferences window to allow any editor configuration that needs to be preformed.  You can store any local preferences by calling the class jmaContestApplet.common.LocalPreferences 每 please see the source code for the contest applet for details on the API.
+ 
+void clear()
+This method is called to clear the current source code from the editor.  This method will be called between opening problems to clear the prior problems source code.
+ 
+void setTextEnabled(Boolean enable)
+This method is called to enable/disable editing of text within the editor.  This method will be called with TRUE when you enter (or reenter) the coding phase and will be called with FALSE when the coding phase ends.
+ 
+void setProblemComponent(ProblemComponentModel component, Language language, Renderer renderer)
+This method gives you all the information about the problem, the current language and the specific component of the problem being edited (there may be more than one in a team environment).  Please refer to the javadoc on the Problem and Language objects for details.  You must import com.topcoder.client.contestant.ProblemComponentModel, com.topcoder.shared.problem.Renderer and import com.topcoder.shared.language.* from the ContestApplet.jar file.
+ 
+void setLanguage(Integer languageType) - DEPRECATED
+This method is called to set the current language preference.  Please refer to Common.contest.ContestConstants in the source code of the Contest Applet for a list of language and their corresponding value.    This method will be called when a problem is opened OR if the coder switches editors or language. 
+ 
+void setProblem(String problemText) - DEPRECATED
+This method will be called to set the current problem text.  This method will be called when a problem is opened OR if the coder switches editors or language. 
+ 
+void setSignature(String className, String methodName, List parmTypes, String rcType) - DEPRECATED
+This method will be called to set the current problem signature.  Please note that the parmType list contains (in order) a string representation of the parameter types (※int§, ※string[]§, etc) for the signature.  The names of the specific parameter are NOT included.  The string representation of the parameter type IS dependent on the language (※String§ for java, ※string§ for C++).  This method will be called when a problem is opened OR if the coder switches editors or language. 
+ 
+void setName(String name)
+Tells the plugin the UNIQUE name that was given to it.  This is useful to the plugin to denote each unique instance of the plugin that the user has setup (so that plugin configuration information can be kept unique per instance).  See plugin life-cycle below for information as to when this method is being called.
+ 
+void install()
+This method is called ONCE (per instance) when the plugin is being installed.  This gives the plugin a chance to setup (or request) the plugin when it is installed.  The plugin can throw an runtime exception to prevent the installation of the plugin if a critical error occurs.  See plugin life-cycle below for information as to when this method is being called.
+ 
+void uninstall()
+This method is called ONCE (per instance) when the plugin is being uninstalled.  This gives the plugin a chance to cleanup any resources that were used.  See plugin life-cycle below for information as to when this method is being called.
+ 
+void startUsing()
+Tells the plugin that the plugin is about to be used.  See plugin life-cycle below for information as to when this method is being called.
+ 
+void stopUsing()
+Tells the plugin that the plugin will not be used until the next startUsing() method call.  See plugin life-cycle below for information as to when this method is being called.
+ 
+ 
+void dispose()
+Tells the plugin that the plugin object will no longer be called or referenced (ie can be garbage collected).  See plugin life-cycle below for information as to when this method is being called.
+ 
+Boolean isCacheable()
+Tells the applet that the plugin object can be cache＊d and reused or not.  The applet should return TRUE (the default) if the plugin object can be reused.  Return FALSE if the a new plugin object should be instantiated each time it is needed.  See plugin life-cycle below for information as to when this method is being called.
+ 
+Boolean setCompileResults (Boolean success, String message) 每 Not Yet Implemented
+This method will be called when the results of a compile have completed.  The method should return Boolean.TRUE if the contest applet should suppress the compile results message or return Boolean.FALSE if the results should be displayed by the Contest Applet (as they are done currently).  The success indicates whether the compile was successful or not.  The message will contain either a string representing a successful compile OR the standard results from Sun＊s javac compile.
+Life Cycle of a Plugin
+When the plugin is constructed depends on whether the user has specified to construct at startup or ＆lazy＊ (ie when needed).  If the user has specified at startup 每 please see the ※at startup§ discussion below.  Otherwise 每 the plugin will be constructed when first needed.  When the user opens a problem 每 the applet will check it＊s internal cache to see if the plugin has already been constructed (either at startup time or from a prior problem and the plugin is cacheable).  If the plugin does exist in the internal cache, it will be removed from the cache and step #3 is executed below.  If it does NOT exist in the internal cache 每 the following will occur.
+1)      The constructor is called.
+2)      The setName() method is called.
+ 
+The following methods are called in the order below. 
+1)      The startUsing() method is called to notify the plugin is about to be used.
+2)      The getEditorPanel() method is called to construct the coding frame
+3)      The setLanguage() method (DEPRECATED) is called to set the currently chosen language.
+4)      The setProblem() method (DEPRECATED) is called to set the problem description.
+5)      The setSignature() method (DEPRECATED) is called to set the problem＊s signature.
+6)      The setProblemComponent() is called to set the problem component model.
+7)      The setSource() is called to set the initial source (if no initial source, the setSource will be called with an empty string).
+ 
+At this point 每 the user will work with the editor plugin and the following methods may be called in response to user actions (ie pressing the buttons):
+1)      The getSource() to retrieve the current source
+2)      The clear() to clear the current source
+ 
+If the user has either changed a setting (such as the selected language or chosen editor) OR has opened the coding frame again (note: these methods will NOT be called if the coding frame has been closed):
+1)      The stopUsing() method to tell the plugin it will no longer be used.
+2)      The isCacheable() method to determine if the plugin should be cached or re-created for the next usage.  If true, the plugin object is put into the internal cache for future use.  If false is returned, the dispose() method is called and the object is dereferenced.
+ 
+At this point 每 if the user has opened the coding frame again 每 the process repeats with the startUsing() method mentioned above (or the constructor point if the plugin wants to be recreated each time 每 ie returns false for the isCacheable method).
+ 
+Life Cycle at Startup
+If the user has specified that the plugin should be constructed at startup 每 then the following steps are executed immediately (in it＊s own thread) following the showing of the main frame:
+1)      The plugin is constructed
+2)      The setName() method is called
+3)      The startUsing() method is called
+4)      The stopUsing() method is called
+5)      The isCacheable() method is called
+ 
+If the isCacheable() method return true 每 then the plugin object is stored in an internal cache for use when a problem is opened.  If false is returned, the dispose() method is called and the object is dereferenced.
+ 
+Life Cycle 每 Various Times
+There are several other scenarios where the plugin will be called (installing, configuring, verifying, and uninstalling) that generally follow these steps:
+1)      The plugin is constructed
+2)      The setName() method is called
+3)      The install()/configure()/uninstall() method may be called (or this step can be skipped if the applet is simply verifying the plugin can be instantiated)
+4)      The dispose() method is called and the object is dereferenced.
+ 
+Debugging
+There is one useful ＆switch＊ that can help you debug your editor plugin.  The switch may be manually added or changed in the configuration file (※contestapplet.conf§) in your home directory (the directory returned by the java system property of ※user.home§).
+ 
+editor.debug = true/false
+This switch will cause the dynamic editor within the TCApplet to display diagnostic messages.  This is useful in seeing what entry point class that it is loading, the path it is loading from and what methods are found (and not found).  The default value for this switch is false.
+ 
+Try it out - Creating the minimal editor
+ 
+1.      Create a java file called ※Minimal.java§ containing the following:
+ 
+import javax.swing.*;
+import java.awt.*;
+ 
+public class MinimalEditor {
+       private JPanel minimalPanel;
+       private JTextArea minimalEditor;
+      
+       public MinimalEditor() {
+             
+              // Create the editor area as a JTextArea
+              // and set some crazy colors
+              minimalEditor = new JTextArea();
+              minimalEditor.setForeground(Color.white);
+              minimalEditor.setBackground(Color.magenta);
+             
+              // Create the panel and add the editor (wrapped
+              // in a scollable pane) to it
+              minimalPanel = new JPanel(new BorderLayout());
+              minimalPanel.add(new JScrollPane(minimalEditor), BorderLayout.CENTER);
+             
+       }
+      
+       public JPanel getEditorPanel() {
+              // Return our panel
+              return minimalPanel;
+       }
+      
+       public String getSource() {
+              // Return our source
+              return minimalEditor.getText();
+       }
+      
+       public void setSource(String source) {
+              // Set the source
+              minimalEditor.setText(source);
+       }
+}
+2.      Compile the java file and put the resulting MinimalEditor.class in some directory (or leave it where it＊s at)
+3.      Start up the ContestApplet and from the menu choose Options->Editors
+4.      The editor preferences window will appear.  Press the ADD button to create a new line.
+5.      Under name, type ※My Editor§
+6.      Under entrypoint, type ※MinimalEditor§
+7.      Under classpath, type the location of the class file (example: ※c:\myclasses\§ or ※\home\me\§).  Since this is a class file in a directory 每 you must ensure you class path ends with a slash.  If you packaged the class file in a jar, you would specify the jar name here.  If your plugin contains multiple jar/directories, you can separate them with the file separator (※:§ on unix, ※;§ on windows).
+8.      Click on the radio button next to your editor to make it the default editor
+9.      Press SAVE and close the preferences screen
+10.  Open a practice problem and viola 每 there is your editor
+ 
+ 
+ 
+ 
