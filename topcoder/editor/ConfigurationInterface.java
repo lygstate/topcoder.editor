@@ -1,22 +1,17 @@
-/** 
- * ConfigurationInterface.java
- *
- * Description:		Interface used by all the configuration panels
- * @author			Tim "Pops" Roberts
- * @version			1.0
- */
-
 package topcoder.editor;
 
+import javax.swing.Icon;
 
-interface ConfigurationInterface {
-	public String getTabTitle();
-	public String getTabToolTip();
-	public javax.swing.Icon getTabIcon();
-	public boolean isSavePending();
-	public boolean savePreferences();
-	public void resetSavePending();
+public abstract interface ConfigurationInterface {
+	public abstract String getTabTitle();
+
+	public abstract String getTabToolTip();
+
+	public abstract Icon getTabIcon();
+
+	public abstract boolean isSavePending();
+
+	public abstract boolean savePreferences();
+
+	public abstract void resetSavePending();
 }
-
-
-/* @(#)ConfigurationInterface.java */
