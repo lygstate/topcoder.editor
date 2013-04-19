@@ -8,8 +8,7 @@ import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
 
 public abstract class CodeProcessor {
-	public Map<String, String> getUserDefinedTags()
-	{
+	public Map<String, String> getUserDefinedTags() {
 		return new HashMap<String, String>();
 	}
 
@@ -17,15 +16,16 @@ public abstract class CodeProcessor {
 			String source,
 			ProblemComponentModel problem,
 			Language language,
-			Renderer render)
-	{
+			Renderer render) {
 		return source;
 	}
 
 	public String postProcess(
 			String source,
-			Language language)
-	{
+			Language language) {
 		return source;
+	}
+
+	public void configure()	{
 	}
 }
