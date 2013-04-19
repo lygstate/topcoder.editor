@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jardesc>
+    <jar path="C:/tc/plugin/ExampleBuilder.jar"/>
+    <options overwrite="true" compress="true" exportErrors="false"
+        exportWarnings="true" saveDescription="true"
+        descriptionLocation="/plugin/tc_plugin/OutputJAR.jardesc"
+        useSourceFolders="false" buildIfNeeded="true"/>
+    <manifest manifestVersion="1.0" usesManifest="true"
+        reuseManifest="false" saveManifest="false"
+        generateManifest="true" manifestLocation="">
+        <sealing sealJar="false">
+            <packagesToSeal/>
+            <packagesToUnSeal/>
+        </sealing>
+    </manifest>
+    <selectedElements exportClassFiles="true" exportJavaFiles="false">
+        <javaElement handleIdentifier="=plugin/&lt;tc_plugin"/>
+        <folder path="/plugin/lib/tc_plugin"/>
+    </selectedElements>
+</jardesc>

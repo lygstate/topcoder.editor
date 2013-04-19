@@ -1,0 +1,97 @@
+How to use FileEdit plugin
+Background
+The FileEdit plugin is useful if you wish to use either an external editor or external IDE to develop your problems whether you develop in Java or C++.  The plugin will redirect all ＆calls＊ made by the TopCoder Contest Applet (TCApplet) to and from an external file.
+ 
+Please note 每 when using an external resource to modify the file 每 do NOT forget to save before switching back to the TCApplet.  The FileEdit plugin cannot detect unsaved changes made to the file by an external resource.
+ 
+Policy File Settings
+To use this plugin 每 you need to allow the contestapplet to create and set a security manager.  Find the policy file that is being used by the java plugin and add to the top of the file:
+ 
+grant codeBase "http://www.topcoder.com/-" {
+  permission java.lang.RuntimePermission "setSecurityManager";
+  permission java.lang.RuntimePermission "createSecurityManager";
+};
+ 
+After making this change, you should either reboot your PC or atleast close all browser windows and restart your browser for the settings to take affect.
+Use
+First you must define the FileEdit plugin within the TCApplet:
+1)      Start the TCApplet and sign in
+2)      From the options menu, select Editors
+3)      Press the ADD button
+4)      For the name, type ※FileEdit§
+5)      For the entry point, type ※fileedit.EntryPoint§  (case is important here)
+6)      For the classpath, press the browse button and navigate to where you put the FileEdit.jar 每 double click on it.
+7)      Press OK.  The new FileEdit plugin should appear.  If you have made a mistake anywhere, simply double-click and correct.
+8)      If you want to make FileEdit your default editor 每 check the default box next to the plugin.
+9)      Configure the FileEdit plugin (see below for configuration options) by pressing the Configure button
+10)  Press the Save button and exit.
+ 
+The next section assumes you are using the default configuration, your default language is Java and that you made the FileEdit plugin the default editor.
+ 
+Now the fun part!
+ 
+Go to practice room 62 and open up the 500-point problem.  When the problem opens, you will notice that the ＆editor＊ area is no longer an editor area.  Since this plugin assumes you will be editing an external file 每 this area has been replaced with an activity log of what the FileEdit plugin is doing.  In this case, you should see messages about it writing the problem to the file DandyLand.java.  If the DandyLand.java file already existed, you will also see messages about the existing file being backed up to a file called DandyLand.java.bak.
+ 
+Now, open up the file with your favorite editor/IDE.  You will see that the description of the problem has been written as comments in front of the file and the signature of the method is next.  Go ahead and develop the solution.
+ 
+Now that you have developed the solution, swap back to the TCApplet and press ※Compile§.  You will see activity messages about DandyLand.java being read and then the popup of the results of the compile.
+ 
+Big Note: you must do this even if the solution has been successfully compiled and tested outside of the TCApplet.  Whenever you press test or submit in the TCApplet 每 it uses the last source that was compiled by the TCApplet (not by your external IDE).
+ 
+At this point 每 it depends on how things went.  If you got compiler errors, swap back to your editor and make the corrections
+ 
+Gotcha＊s＃
+There are two things you need to keep in mind when using this plugin:
+1)      As the note said above 每 you must successfully compile the solution in the TCApplet prior to hitting Test or Submit.  If you fail to do this, you may test (or even worse 每 submit) an older solution.
+2)      You must remember to SAVE in your external editor/IDE.  The plugin has no way of knowing if you have unsaved changes and will always read the file asis.  If you have pending changes, it will not bee ＆seen＊ by the plugin.  If you fail to save, you may test (or even worse submit) an older solution.
+3)      It is up to you to properly balance the $BEGINCUT$ and $ENDCUT$ tags in your code template.  The fileedit plugin will begin cutting when it encounters the begincut text regardless if there is matching endcut text.
+ 
+Functionality of the standard TCApplet Keys
+SAVE
+The save key will read from the external file and save the source code remotely at TopCoder
+ 
+CLEAR
+Does nothing
+ 
+COMPILE
+The compile key will read from the external file, save and compile the source code remotely at TopCoder and display within the TCApplet the results of the compile.
+ 
+TEST
+The test key will remotely test the last compiled (with the compile key above) source code.  See Gotcha＊s above.
+SUBMIT
+The submit key will submit the last compiled (with the compile key above) source code. See Gotcha＊s above.
+ 
+ 
+Configuration Options 每 General Tab
+Directory to Read/Write Problems
+This is the directory that the FileEdit plugin will read and write the problems to.  The directory can either be an absolute reference (※C:\my problems§ or ※\home\me§) or a relative reference (※.§ or ※..\..\my problems§).  Please make sure you do NOT put a trailing slash on the directory name 每 it will be added for you.
+Make Filename Equal to Classname
+This tells the FileEdit plugin how to name the file.  If checked (the default), the filename for the problem will be the classname followed by a period followed by the chosen extension for the language (see ※Code Template§ below).  If unchecked, you must enter a filename into the provided space 每 the FileEdit plugin will use this filename regardless of the problem and chosen language.  Do NOT enter the extension for the filename 每 a language specific extension as specified on the code templates tab will be appended to the filename you enter.
+ 
+Write Problem Description to separate file
+This option tells the fileedit plugin to write the problem description text to a different file.  If checked, you can specify the extension of the problem text.  The filename that will be the same as the problem file with the extension you specify here.  If the problem was written to a file called ※prob.java§ 每 the problem description would be written to the file ※prob.txt§ if ※txt§ was the extension you chose.
+Use Line Comments for Problem Description
+If the problem description is NOT being written to a separate file, checking this option will pre-pend each description line with the line comment ※//§.
+Force Breaks At
+This tells the FileEdit plugin to try to force line breaking at a specific column.  Unchecked is the default.
+$BEGINCUT$/$ENDCUT$
+You can specify the exact text that will replace the relevant tags in the code template.
+Enter signature file
+Enter the location of a signature file you wish added to the top of your source when it is submitted.  Please note: this file is taken as is 每 so make sure that it contains information that can be compiled correctly in your chosen language
+ 
+Configuration Options 每 Code Template
+ 
+The Code Template panel allows you to specify two things:  1) the file extension for the given language and 2) the generic template to initially use.  You can specify each of these for each language supported.
+ 
+Whatever code you specify in the template panel will be written to the file initially.  The FileEdit plugin allows you to specify variables that will be replaced at the time of the initial write:
+ 
+$BEGINCUT$ will be replaced with the text from the general page and designates where the fileedit plugin will begin cutting code out of the source.  This tag should be the ONLY text on the line to work properly.
+$ENDCUT$ will be replaced with the text from the general page and designates where to end cutting code.  This tag should be the ONLY text on the line to work properly.
+$PROBLEMDESC$ will be replaced with the problem description text and should be the ONLY text on the line.  You should put a $BEGINCUT$ line prior to the line containing this tag and a $ENDCUT$ line after the line to have the comments stripped prior to submitting.
+$LINENUMBER$ will be replaced with the line number where this variable appears on.
+$NEXTLINENUMBER$ will be replaced with the line number AFTER the line this variable appears on (useful for the C++ crowd using the #line directive)
+$FILENAME$ will be replaced with the filename
+$CLASSNAME$ will be replaced with the classname for the problem
+$RC$ will be replace with the return type for the problem (example: ※String§ for a java string or ※string§ for a C++ string)
+$METHODNAME$ will be replaced with the methodname for the problem
+$METHODPARMS$ will be replaced with the parameter list (type followed by space followed by name) for method.  Please note that the FileEdit plugin will scan the problem description in an attempt to provide the real names for each parameter.  If it is unable to find or parse the parameter names, they will be named by ascending letter (※a§ for the first parameter, ※b§ for the next, etc).

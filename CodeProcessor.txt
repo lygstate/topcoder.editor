@@ -1,0 +1,96 @@
+How to use CodeProcessor plugin
+Background
+The CodeProcessor plugin allows you to quickly write scripts to process source code WITHOUT having to write a full-blown editor.  Some example of what you can do:
+1)      Create a specialized code template suited to your needs.
+2)      Attempt to automatically extract test examples from the problem description.
+3)      Strip ＆sensitive＊ information (such as test cases) from your source code prior to submission.
+4)      Create tags that will be replaced in the PopsEdit/FileEdit code template
+ 
+To use the CodeProcessor plugin you need two things:
+1)      A class (that you write) that will pre-process and/or post-process code (see below for details on writing this class).
+2)      An existing editor plugin like PopsEdit or FileEdit or any of the standard editors.
+ 
+The CodeProcessor plugin works by inserting itself in between the applet and the plugin you wish to use.  CodeProcessor will intercept any calls to the plugin and give your processing class a chance to modify the source code prior to giving it to the plugin.  Additionally, CodeProcessor will intercept the source code going to the applet and allow you to modify it prior to the applet ＆seeing＊ it.
+Creating a processing class.
+A processing class is any java class (JDK1.3+) that implements the preprocess and/or postprocess methods as defined below. You must implement one of them but not necessarily both. To build a processing script 每 you will need to have the ContestApplet.jar file in your path and have imported both ※com.topcoder.shared.problem.*§ and ※com.topcoder.shared.language.*§. 
+ 
+For reference, look in the CodeProcessor.jar file, you will see three example processors:
+examples.ExampleProcessor.java 每 implements both a preprocess and a postprocess method
+examples.ExamplePreProcessor.java 每 implements only a preprocess method
+examples.ExamplePostProcessor.java 每 implements only a postprocess method
+examples.ExampleUserTags.java 每 implements the user defined tag replacement.
+ 
+Pre-Process Method
+The preprocess method will give your class first crack at writing the default source code.  This method will be called once when you open a problem.  The CodeProcessor plugin will take the string returned from this method and give that to the selected plugin as it＊s default code (please note 每 this will OVERRIDE PopsEdit/FileEdit internal code templates).  The method signature is as follows:
+ 
+public String preProcess(String source, ProblemComponentModel component, Language language, Renderer renderer)
+ 
+This method will receive:
+source 每 This is the existing source which will be blank (if first opened), writer supplied source code or source code from the last save/test/compile.
+component 每 This is the component being edited.  See TC＊s javadoc for details.
+language 每 The currently selected langauge.  See TC＊s javadoc for details.
+renderer 每 A renderer that can be used to render the component to html or to plain text
+ 
+This method should return:
+A string representing the source after your modification.
+Post-Process Method
+The postprocess method will give your class a chance of modifying the source code BEFORE it is returned to the applet.  This method will be called whenever the applet request the source code (on a save, compile or submit generally).  Please note:  it is against TopCoder contest rules to purposely obfuscate your code.  The method signature is as follows:
+ 
+public String postProcess(String source, Language language)
+ 
+This method will receive:
+source 每 This is the source code from the selected plugin. 
+language 每 This is the language that was selected.  See TC＊s javadoc for details
+ 
+This method should return:
+A string representing the source after your modification
+ 
+GetUserDefinedTags Method
+The getUserDefinedTags method will give your class a chance to define it＊s own tags that will be replaced in the code templates of PopsEdit/FileEdit.  Please note: this method has no effect on any other editor plugins.  Example:  let＊s say you wrote a class that will extract test cases but you don＊t want to replace all the code template features within PopsEdit.  You can use this method to define a new tag called ※$TESTCASES$§ and have PopsEdit automatically replace that tag (in the code template) with the test cases you generate.  The method signature is:
+ 
+public java.util.Map getUserDefinedTags()
+ 
+This method should return a Map that has the tag to replace as the key and the source code to replace that tag as the value.
+ 
+Example:  If you were to return a map that has a key of ※$HELLO$§ and a value of ※Hello§ and define your code template in PopsEdit to include the tag ※$HELLO$§ 每 then PopsEdit will replace all occurrences of ※$HELLO$§ with ※Hello§.
+ 
+See Gotchas for some issues you need to be aware of.
+Configure Method
+The configure method will be called to enable the processor to configure itself.  A typical action would be to display a dialog that will allow the user to configure the processor.  Please note that this is an optional method and does not need to be defined if the processor has no configuration options.  The method signature is:
+ 
+public void configure()
+ 
+To Define the CodeProcessor plugin in the applet:
+First you must define the CodeProcessor plugin within the TCApplet:
+1)      Start the TCApplet and sign in
+2)      From the options menu, select Editors
+3)      Press the ADD button
+4)      For the name, type ※CodeProcessor§
+5)      For the entry point, type ※codeprocessor.EntryPoint§  (case is important here)
+6)      For the classpath, press the browse button and navigate to where you put the CodeProcessor.jar 每 double click on it.  Repeat this process to add the classpath of the plugin you will be using (see below for configuration options).
+7)      Press OK.  The new CodeProcessor plugin should appear.  If you have made a mistake anywhere, simply double-click and correct.
+8)      If you want to make CodeProcessor your default editor 每 check the default box next to the plugin.
+9)      Very Important - Configure the CodeProcessor plugin (see below for configuration options) by pressing the Configure button
+10)  Press the Save button and exit.
+ 
+Gotcha＊s＃
+There are a few things you need to keep in mind when using this plugin:
+1)      The classpath for this plugin needs to include the classpath for the editor plugin as well.
+2)      Java plugin will cache your class.  So if you test out your class 每 then make a change.  You need to shutdown all browsers (until the java plugin goes away) and restart to have the change show up.  Note: using Java Web Start is a much easier way to do this 每 simply shut the contest applet down and then double click to restart
+3)      If you are defining tags 每 do NOT duplicate any used by the plugin.  The plugin tags CANNOT be overridden and your＊s will be ignored
+4)      If you are defining tags 每 make sure your tag is unique.  I STRONGLY recommend that you surround your tags with dollar signs (※$§).  PopsEdit/FileEdit does a simple string find/replace on tags.  You need to make sure your tag is unique enough not to accidentally replace something un-intended.  Example:  If you created a tag of ※the§ 每 then every occurrence (whether it＊s a standalone word or part of another word) will be replaced.
+ 
+Configuration Options 每 General Tab
+Editor Entry Point
+Type in the entry point for the editor plugin you wish to use.  Example:  if you use PopsEdit, type ※popsedit.EntryPoint§.  See the documentation for the editor plugin that you use.
+ 
+IMPORTANT NOTE:  the class path for the CodeProcessor plugin needs to include the classpath for your preferred editor
+ 
+Configuration Button
+Press this button to configure the editor you specified above.  Note: pressing this button is also a good way to verify the editor works (you will get an error popup if something went wrong).
+ 
+Processor Classes
+Type in the entry class for your code processor you will be using.  Example: if you were to use the ExampleProcessor 每 you＊d type ※examples.ExampleProcessor§.  New to version 2.0 is the ability to specify multiple processors.  You may enter these into the window and arrange their ordering (the topmost will be called first and so on).  Additionally, you can highlight a processor and press configuration to configure the processor (if it has configuration).
+ 
+Verify Button
+Press this button to verify your code processor.  It will attempt to instantiate your class and then evaluate which methods you＊ve included.  A popup will display the methods that were found.
