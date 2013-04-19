@@ -11,42 +11,24 @@ If you feel that your plugin contains functionality that the general community g
 Metfhods the Entry Point class can Implement
 Signature
 Required
-JPanel getEditorPanel()
-Yes
-String getSource()
-Yes
-void setSource(String source)
-Yes
-void configure()
-No
-void clear()
-No
-void setTextEnabled(Boolean enable)
-No
-Void setProblemComponent(ProblemComponentModel component, Langauge language, Renderer renderer)
-No
-void setLanguage(Integer languageType)
-No
-void setProblem(String problemText)
-No
-void setSignature(String className, String methodName, List parmTypes, String rcType)
-No
-void setName(String name)
-No
-void install()
-No
-void uninstall()
-No
-void startUsing()
-No
-void stopUsing()
-No
-void dispose()
-No
-Boolean isCacheable()
-No
-Boolean setCompileResults(Boolean success, String message)
-No
+JPanel getEditorPanel() Yes
+String getSource() Yes
+void setSource(String source) Yes
+void configure() No
+void clear() No
+void setTextEnabled(Boolean enable) No
+Void setProblemComponent(ProblemComponentModel component, Langauge language, Renderer renderer) No
+void setLanguage(Integer languageType) No
+void setProblem(String problemText) No
+void setSignature(String className, String methodName, List parmTypes, String rcType) No
+void setName(String name) No
+void install() No
+void uninstall() No
+void startUsing() No
+void stopUsing() No
+void dispose() No
+Boolean isCacheable() No
+Boolean setCompileResults(Boolean success, String message) No
  
 Pink ¨C Depreciated methods
 Blue ¨C not yet supported

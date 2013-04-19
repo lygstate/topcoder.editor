@@ -20,9 +20,10 @@ public class EntryPoint {
 	
 	// The dynamic editor proxy
 	private DynamicEditor editor=null;
-	
-	// The dynamic code processor proxy
-	private DynamicCodeProcessor[] codeProcessor=null;
+
+	// The Code Processor, process code with the 
+	// need replacement.
+	private CodeProcessor processor;
 
 	// Current language chosen
 	private Language language;
@@ -49,7 +50,7 @@ public class EntryPoint {
 	/** SetName plugin API */
 	public void setName(String name) {
 		// Attach codeprocessor to the name and save it
-		this.name = "codeprocessor." + name;
+		this.name = "topcoder.editor." + name;
 		
 		// Load the preferences (based on the above name)
 		loadPreferences();
@@ -119,8 +120,7 @@ public class EntryPoint {
 		if(editor!=null) return new Boolean(editor.setCompileResults(success.booleanValue(), message));
 		return Boolean.FALSE; 
 	}
-	
-	
+
 	// Pass through to editor
 	public JPanel getEditorPanel() { 
 		loadPreferences();
@@ -129,20 +129,17 @@ public class EntryPoint {
 	}	
 
 	// Get the source, the post process it with the processor and return that
-	public String getSource() { 
+	public String getSource() {
 		loadPreferences();
 		if(editor==null) return "";
 
 		String source = editor.getSource();
-		if(codeProcessor==null) return source;
-		
+		if(processor==null) return source;
 		// Get the source
 		String cpSource = (source==null ? "" : source);
-		for(int x=0;x<codeProcessor.length;x++) {
-			String tempSource = codeProcessor[x].postProcess(cpSource, language);
-			if(tempSource!=null) cpSource = tempSource;
-		}
-		
+		String tempSource = processor.postProcess(cpSource, language);
+		if(tempSource!=null) cpSource = tempSource;
+
 		StringBuffer temp = new StringBuffer(cpSource);
 
 		// Write the powered by line (only if doesn't exceed max length for source)
@@ -151,70 +148,48 @@ public class EntryPoint {
 			temp.append("\n");
 			temp.append(POWEREDBY);
 		}
-		
+
 		return temp.toString();
 	}
 			
 	private final void loadPreferences() {
 		// If already loaded - ignore
 		if(pref!=null) return;
+		processor = new ExampleProcessor();
 		
 		// Create the preferences
 		pref = new Preferences(name);
 		
 		String editorEntryPoint   = pref.getPluginEntryPoint();
-		String[] codeProcessorClass = pref.getCodeProcessors();
-		
 		if(editorEntryPoint==null || editorEntryPoint.equals("")) return;
-		if(codeProcessorClass==null || codeProcessorClass.length==0) return;
 		
 		try {
 			if(editor==null || !editor.getEditorName().equals(editorEntryPoint)) editor = new DynamicEditor(editorEntryPoint);
-			if(codeProcessor==null || noMatch(codeProcessorClass, codeProcessor)) {
-				codeProcessor = new DynamicCodeProcessor[codeProcessorClass.length];
-				for(int x=0;x<codeProcessorClass.length;x++) {
-					codeProcessor[x] = new DynamicCodeProcessor(codeProcessorClass[x]);
-				}
-			} 
 		} catch (Throwable t) {
 			editor = null;
-			codeProcessor = null;
 			Common.showMessage("Error", "Error initializing the CodeProcessor: " + t, null);
 		}
-
-	}	
-	
-	private boolean noMatch(String[] cd, DynamicCodeProcessor[] dcp) {
-		if(cd.length!=dcp.length) return true;
-		for(int x=0;x<cd.length;x++) {
-			if(!dcp[x].getCodeProcessorName().equals(cd[x])) return true;
-		}
-		return false;
 	}
-	
-	// Preprocess the source and the pass it to the editro	
+
+	// Preprocess the source and the pass it to the editor	
 	public void setSource(String source) {
 		loadPreferences();
 		// This probably needs to be broken up and cleaned up...
 		String newSource = source;
-		Map userDefinedTags = new HashMap();
-		if(codeProcessor!=null) {
-			for(int x=0;x<codeProcessor.length;x++) {
-				String tempSource = codeProcessor[x].preProcess(newSource, problem, language, renderer);
-				if(tempSource!=null) newSource = tempSource;
 
-				Map temp = codeProcessor[x].getUserDefinedTags();
-				if(temp!=null) userDefinedTags.putAll(temp);
-			}
-			
+		Map<String, String> userDefinedTags = new HashMap<String, String>();
+		if (processor != null) {
+			String tempSource = processor.preProcess(newSource, problem, language, renderer);
+			if(tempSource!=null) newSource = tempSource;
+			Map<String, String> temp = processor.getUserDefinedTags();
+			userDefinedTags.putAll(temp);
 		}
-		
+
 		// Pass it to the editor
 		if(editor==null) return;
-		
+
 		editor.setUserDefinedTags(userDefinedTags);
 		editor.setSource(newSource);
-
 	}
 
 	public void setProblemComponent(ProblemComponentModel problem, Language lang, Renderer renderer) {
@@ -226,7 +201,4 @@ public class EntryPoint {
 		// Pass it to the editor
 		if(editor!=null) editor.setProblemComponent(problem, lang, renderer);
 	}
-	
 }
-
-

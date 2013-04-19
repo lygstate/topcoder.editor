@@ -125,39 +125,12 @@ class ConfigurationPanel extends JPanel implements ActionListener, DocumentListe
 		if(processorTable.getCellEditor()!=null) processorTable.getCellEditor().stopCellEditing();
 		
 		if(e.getSource()==verify) {
-			DynamicCodeProcessor codeP = getCodeProcessor();
-			if(codeP!=null) {
-				StringBuffer temp = new StringBuffer();
-				temp.append("Class: ");
-				temp.append(myModel.getValueAt(processorTable.getSelectedRow(),0));
-				temp.append("\n");
-				temp.append("Method configuration: ");
-				temp.append(codeP.isConfigureDefined() ? "found" : "not found");
-				temp.append("\n");
-				temp.append("Method preProcess: ");
-				temp.append(codeP.isPreProcessDefined() ? "found" : "not found");
-				temp.append("\n");
-				temp.append("Method postProcess: ");
-				temp.append(codeP.isPostProcessDefined() ? "found" : "not found");
-				temp.append("\n");
-				temp.append("Method getUserDefinedTags: ");
-				temp.append(codeP.isUserDefinedTagsDefined() ? "found" : "not found");
-				Common.showMessage("Info", temp.toString(), null);
-			}
 		} else if(e.getSource()==editorConfigure){
 			DynamicEditor editor = getEditor();
 			if(editor!=null && !editor.configure()) {
 				Common.showMessage("Info","Editor has no configuration defined", null);
 			}				
 		} else if(e.getSource()==codeProcessorConfigure) {
-			DynamicCodeProcessor codeP = getCodeProcessor();
-			if(codeP!=null) {
-				if(codeP.isConfigureDefined()) {
-					codeP.configure();
-				} else {
-					Common.showMessage("Info", "Processor script has no configuration available", null);
-				}
-			}		 
 		}
 			
 	}
@@ -193,28 +166,7 @@ class ConfigurationPanel extends JPanel implements ActionListener, DocumentListe
 			return null;
 		}
 	}
-				
-	private DynamicCodeProcessor getCodeProcessor() {
-		String processorClass = (String)myModel.getValueAt(processorTable.getSelectedRow(), 0);
-		if(processorClass == null || processorClass.equals("")) {
-			Common.showMessage("Info","Please specify class for the code processor", null);
-			return null;
-		}
-		
-		if(processorClass.equals(EntryPoint.class.getName())) {
-			Common.showMessage("Info", "You cannot embed the code processor within itself", null);
-			return null;
-		}
-		
-		try {
-			return new DynamicCodeProcessor(processorClass);				
-		} catch(InstantiationError t) {
-			Common.showMessage("Error", "Could not instantiate the class: " + t, null);
-			return null;
-		}
-		
-	}
-		
+
 	public boolean savePreferences() { 
 		
 		// Stop any editing
@@ -233,7 +185,6 @@ class ConfigurationPanel extends JPanel implements ActionListener, DocumentListe
 		int row = processorTable.getSelectedRow();
 		for(int x = 0;x < myModel.getModel().length; x++) {
 			processorTable.getSelectionModel().setSelectionInterval(x, x);
-			if (getCodeProcessor() == null) return false;
 		}
 		if (row >= 0) {
 			processorTable.getSelectionModel().setSelectionInterval(row, row);

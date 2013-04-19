@@ -17,9 +17,11 @@ import com.topcoder.shared.problem.TestCase;
  * It is based on PopsProcessor which is a Java-only test generator developed by Tim Roberts.
  * 
  * This code works only with code templates specifically written for compatibility with the plugin.
- * The templates for each supported language are in the templates directory of this source distribution. 
+ * The templates for each supported language are in the templates directory of this source distribution.
+ * The Example Processor, generating test case for Examples in TopCoder
+ * Description
  */
-public class ExampleProcessor {
+public class ExampleProcessor extends CodeProcessor {
     /**
      * Obtains a list of user-defined tags.
      * @return a list of user-defined tags.
