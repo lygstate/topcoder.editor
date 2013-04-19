@@ -15,6 +15,10 @@ import javax.swing.*;
 
 class ConfigurationDialog extends JDialog implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -827816084045078323L;
 	private Preferences pref;
 	private JTabbedPane tab			= new JTabbedPane();
 	private JButton saveButton		= new JButton("Save");

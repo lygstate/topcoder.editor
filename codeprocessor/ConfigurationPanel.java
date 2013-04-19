@@ -23,6 +23,11 @@ import javax.swing.table.TableModel;
 class ConfigurationPanel extends JPanel implements ActionListener, DocumentListener, ConfigurationInterface {
 
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 8321962248388177104L;
+
 	private Preferences pref;
 
 	private JLabel editorEntryPointLabel		= Common.createJLabel("Editor EntryPoint:");
@@ -245,7 +250,12 @@ class ConfigurationPanel extends JPanel implements ActionListener, DocumentListe
 	// Table model
 	class MyModel extends AbstractTableModel implements TableModel {
 
-		private ArrayList model = new ArrayList();
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -7330713721262498425L;
+
+		private ArrayList<Object> model = new ArrayList<Object>();
 		
 		public MyModel(String[] current) {
 			if(current!=null) model.addAll(Arrays.asList(current));
