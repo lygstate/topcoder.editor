@@ -1,4 +1,4 @@
-/*    */ package fileedit;
+/*    */ package topcoder.editor;
 /*    */ 
 /*    */ import java.awt.Font;
 /*    */ import java.awt.Insets;
@@ -25,11 +25,11 @@
 /*    */ 
 /* 49 */     setFont(new Font("Courier", 0, 12));
 /* 50 */     setMargin(new Insets(5, 5, 5, 5));
-/* 51 */     setSelectedTextColor(Common.HF_COLOR);
-/* 52 */     setSelectionColor(Common.HB_COLOR);
-/* 53 */     setCaretColor(Common.FG_COLOR);
-/* 54 */     setForeground(Common.FG_COLOR);
-/* 55 */     setBackground(Common.BG_COLOR);
+/* 51 */     setSelectedTextColor(EditorCommon.HF_COLOR);
+/* 52 */     setSelectionColor(EditorCommon.HB_COLOR);
+/* 53 */     setCaretColor(EditorCommon.FG_COLOR);
+/* 54 */     setForeground(EditorCommon.FG_COLOR);
+/* 55 */     setBackground(EditorCommon.BG_COLOR);
 /* 56 */     setEditable(false);
 /*    */   }
 /*    */ 

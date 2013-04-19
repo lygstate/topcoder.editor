@@ -1,4 +1,4 @@
-/*    */ package fileedit;
+/*    */ package topcoder.editor;
 /*    */ 
 /*    */ import java.awt.Component;
 /*    */ import javax.swing.JComponent;
@@ -21,16 +21,16 @@
 /* 27 */     if ((this.internalList != list) && (list != null)) {
 /* 28 */       this.internalList = list;
 /*    */ 
-/* 30 */       list.setSelectionForeground(Common.TF_COLOR);
-/* 31 */       list.setSelectionBackground(Common.TB_COLOR);
+/* 30 */       list.setSelectionForeground(EditorCommon.TF_COLOR);
+/* 31 */       list.setSelectionBackground(EditorCommon.TB_COLOR);
 /*    */     }
 /*    */ 
 /* 34 */     if (isSelected) {
-/* 35 */       setForeground(Common.HF_COLOR);
-/* 36 */       setBackground(Common.HB_COLOR);
+/* 35 */       setForeground(EditorCommon.HF_COLOR);
+/* 36 */       setBackground(EditorCommon.HB_COLOR);
 /*    */     } else {
-/* 38 */       setForeground(Common.TF_COLOR);
-/* 39 */       setBackground(Common.TB_COLOR);
+/* 38 */       setForeground(EditorCommon.TF_COLOR);
+/* 39 */       setBackground(EditorCommon.TB_COLOR);
 /*    */     }
 /*    */ 
 /* 42 */     if (value != null) {

@@ -41,7 +41,7 @@ public class EntryPoint {
 	private Preferences pref=null;
 	
 	// Tag line
-	private final static String POWEREDBY = "// Powered by CodeProcessor";
+	private final static String POWEREDBY = "// Powered by TopCoder Editor https://github.com/lygstate/topcoder.editor";
 	
 	/** Constructor that does nothing */
 	public EntryPoint() {

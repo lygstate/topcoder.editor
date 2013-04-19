@@ -1,4 +1,4 @@
-/*    */ package fileedit;
+/*    */ package topcoder.editor;
 /*    */ 
 /*    */ import javax.swing.text.AbstractDocument;
 /*    */ import javax.swing.text.AttributeSet;

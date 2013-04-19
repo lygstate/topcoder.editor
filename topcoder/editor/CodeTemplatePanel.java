@@ -1,4 +1,4 @@
-package fileedit;
+package topcoder.editor;
 
 import java.awt.Component;
 import java.awt.Dimension;
@@ -24,14 +24,14 @@ public class CodeTemplatePanel extends JPanel
 	public static final String CPP = "C++";
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
-	private final Preferences pref;
-	private JComboBox language = Common.createJComboBox(new String[] { "C++",
+	private final EditorPreferences pref;
+	private JComboBox language = EditorCommon.createJComboBox(new String[] { "C++",
 			"Java", "C#" });
-	private JLabel languageLabel = Common.createJLabel("Language: ");
-	private JLabel extensionLabel = Common.createJLabel("Extension: ");
-	private JTextField extension = Common.createJTextField(5, new Dimension(
+	private JLabel languageLabel = EditorCommon.createJLabel("Language: ");
+	private JLabel extensionLabel = EditorCommon.createJLabel("Extension: ");
+	private JTextField extension = EditorCommon.createJTextField(5, new Dimension(
 			150, 20));
-	private JTextArea template = Common.createJTextArea("");
+	private JTextArea template = EditorCommon.createJTextArea("");
 	private boolean savePending = false;
 	private String CPPTemplate;
 	private String CPPExtension;
@@ -41,7 +41,7 @@ public class CodeTemplatePanel extends JPanel
 	private String JAVAExtension;
 	private boolean initializing = true;
 
-	public CodeTemplatePanel(Preferences pref) {
+	public CodeTemplatePanel(EditorPreferences pref) {
 		this.pref = pref;
 
 		this.JAVATemplate = pref.getJAVATemplate();
@@ -51,13 +51,13 @@ public class CodeTemplatePanel extends JPanel
 		this.CPPExtension = pref.getCPPExtension();
 		this.CSHARPExtension = pref.getCSHARPExtension();
 
-		Common.setDefaultAttributes(this);
+		EditorCommon.setDefaultAttributes(this);
 
-		Box lang = Common.createHorizontalBox(new Component[] {
+		Box lang = EditorCommon.createHorizontalBox(new Component[] {
 				this.languageLabel, this.language, Box.createHorizontalGlue(),
 				this.extensionLabel, this.extension });
 
-		JScrollPane scroll = Common.createJScrollPane(this.template);
+		JScrollPane scroll = EditorCommon.createJScrollPane(this.template);
 		this.template.getDocument().addDocumentListener(this);
 		this.extension.getDocument().addDocumentListener(this);
 

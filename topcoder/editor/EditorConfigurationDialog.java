@@ -1,4 +1,4 @@
-package fileedit;
+package topcoder.editor;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -16,12 +16,12 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-public class ConfigurationDialog extends JDialog implements ActionListener {
+public class EditorConfigurationDialog extends JDialog implements ActionListener {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1712681747171330702L;
-	private Preferences pref = new Preferences();
+	private EditorPreferences pref = new EditorPreferences();
 	private JTabbedPane tab = new JTabbedPane();
 	private JButton saveButton = new JButton("Save");
 	private JButton closeButton = new JButton("Close");
@@ -31,18 +31,18 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 			new CodeTemplatePanel(this.pref) };
 	private WindowHandler windowHandler = new WindowHandler();
 
-	public ConfigurationDialog() {
+	public EditorConfigurationDialog() {
 		super((Dialog)(null), "FileEdit Configuration", true);
 
 		setSize(new Dimension(600, 400));
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BoxLayout(contentPane, 0));
-		contentPane.setForeground(Common.FG_COLOR);
-		contentPane.setBackground(Common.WPB_COLOR);
+		contentPane.setForeground(EditorCommon.FG_COLOR);
+		contentPane.setBackground(EditorCommon.WPB_COLOR);
 
-		this.tab.setForeground(Common.FG_COLOR);
-		this.tab.setBackground(Common.WPB_COLOR);
+		this.tab.setForeground(EditorCommon.FG_COLOR);
+		this.tab.setBackground(EditorCommon.WPB_COLOR);
 
 		for (int x = 0; x < this.config.length; x++) {
 			this.tab.addTab(this.config[x].getTabTitle(),
@@ -96,7 +96,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 			this.pref.save();
 			for (int x = 0; x < this.config.length; x++)
 				this.config[x].resetSavePending();
-			Common.showMessage("Save", "Preferences were saved successfully",
+			EditorCommon.showMessage("Save", "Preferences were saved successfully",
 					null);
 			return true;
 		} catch (IOException e) {
@@ -107,7 +107,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		ConfigurationDialog ff = new ConfigurationDialog();
+		EditorConfigurationDialog ff = new EditorConfigurationDialog();
 		ff.setVisible(true);
 	}
 
@@ -117,24 +117,24 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 		public void windowClosing(WindowEvent e) {
 			boolean savePending = false;
-			for (int x = 0; x < ConfigurationDialog.this.config.length; x++)
-				if (ConfigurationDialog.this.config[x].isSavePending()) {
+			for (int x = 0; x < EditorConfigurationDialog.this.config.length; x++)
+				if (EditorConfigurationDialog.this.config[x].isSavePending()) {
 					savePending = true;
 					break;
 				}
 
 			if (savePending) {
-				if (Common
+				if (EditorCommon
 						.confirm(
 								"Save Pending",
 								"Changes are pending.  Do you want to save before closing?",
 								null)) {
-					if (!ConfigurationDialog.this.save())
+					if (!EditorConfigurationDialog.this.save())
 						return;
 				}
 			}
 
-			ConfigurationDialog.this.dispose();
+			EditorConfigurationDialog.this.dispose();
 		}
 	}
 }

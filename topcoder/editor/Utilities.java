@@ -1,4 +1,4 @@
-/*     */ package fileedit;
+/*     */ package topcoder.editor;
 /*     */ 
 /*     */ import com.topcoder.client.contestant.ProblemComponentModel;
 /*     */ import com.topcoder.shared.language.Language;
@@ -17,7 +17,7 @@
 /*     */ public class Utilities
 /*     */ {
 /*  20 */   public static final String lineEnding = System.getProperty("line.separator");
-/*  21 */   private static final Preferences pref = new Preferences();
+/*  21 */   private static final EditorPreferences pref = new EditorPreferences();
 /*     */ 
 /*     */   public static final String getSource(Language language, ProblemComponentModel component, String fileName, String problemText)
 /*     */   {

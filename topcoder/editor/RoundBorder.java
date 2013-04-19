@@ -1,4 +1,4 @@
-/*    */ package fileedit;
+/*    */ package topcoder.editor;
 /*    */ 
 /*    */ import java.awt.Color;
 /*    */ import java.awt.Component;

@@ -1,4 +1,4 @@
-/*     */ package fileedit;
+/*     */ package topcoder.editor;
 /*     */ 
 /*     */ import java.awt.BorderLayout;
 /*     */ import java.awt.Component;
@@ -23,36 +23,36 @@
 /*     */ public class FileEditorConfiguration extends JPanel
 /*     */   implements ActionListener, DocumentListener, ConfigurationInterface
 /*     */ {
-/*     */   Preferences pref;
-/*  21 */   JLabel dirNameLabel = Common.createJLabel("Enter directory to read/write problems to:");
-/*  22 */   JTextField dirNameField = Common.createJTextField(40, new Dimension(400, 21));
-/*  23 */   JCheckBox backup = Common.createJCheckBox("Backup existing file then overwrite (uncheck if you want to keep existing file)");
-/*  24 */   JLabel fileNameLabel = Common.createJLabel("Enter filename to use (no extension):");
-/*  25 */   JTextField fileNameField = Common.createJTextField(40, new Dimension(400, 21));
-/*  26 */   JCheckBox htmlDesc = Common.createJCheckBox("Write the problem description using HTML");
-/*  27 */   JCheckBox useLineComments = Common.createJCheckBox("Use Line Comments for Problem Description");
-/*  28 */   JCheckBox overrideFileNameField = Common.createJCheckBox("Make filename equal to classname");
-/*  29 */   JCheckBox provideBreakField = Common.createJCheckBox("Force Breaks at");
-/*  30 */   JTextField breakAtField = Common.createJTextField(4, new Dimension(75, 21));
-/*  31 */   JLabel beginCutLabel = Common.createJLabel("$BEGINCUT$ ");
-/*  32 */   JTextField beginCutField = Common.createJTextField(40, new Dimension(400, 21));
-/*  33 */   JLabel endCutLabel = Common.createJLabel("$ENDCUT$ ");
-/*  34 */   JTextField endCutField = Common.createJTextField(40, new Dimension(400, 21));
+/*     */   EditorPreferences pref;
+/*  21 */   JLabel dirNameLabel = EditorCommon.createJLabel("Enter directory to read/write problems to:");
+/*  22 */   JTextField dirNameField = EditorCommon.createJTextField(40, new Dimension(400, 21));
+/*  23 */   JCheckBox backup = EditorCommon.createJCheckBox("Backup existing file then overwrite (uncheck if you want to keep existing file)");
+/*  24 */   JLabel fileNameLabel = EditorCommon.createJLabel("Enter filename to use (no extension):");
+/*  25 */   JTextField fileNameField = EditorCommon.createJTextField(40, new Dimension(400, 21));
+/*  26 */   JCheckBox htmlDesc = EditorCommon.createJCheckBox("Write the problem description using HTML");
+/*  27 */   JCheckBox useLineComments = EditorCommon.createJCheckBox("Use Line Comments for Problem Description");
+/*  28 */   JCheckBox overrideFileNameField = EditorCommon.createJCheckBox("Make filename equal to classname");
+/*  29 */   JCheckBox provideBreakField = EditorCommon.createJCheckBox("Force Breaks at");
+/*  30 */   JTextField breakAtField = EditorCommon.createJTextField(4, new Dimension(75, 21));
+/*  31 */   JLabel beginCutLabel = EditorCommon.createJLabel("$BEGINCUT$ ");
+/*  32 */   JTextField beginCutField = EditorCommon.createJTextField(40, new Dimension(400, 21));
+/*  33 */   JLabel endCutLabel = EditorCommon.createJLabel("$ENDCUT$ ");
+/*  34 */   JTextField endCutField = EditorCommon.createJTextField(40, new Dimension(400, 21));
 /*     */ 
-/*  36 */   JCheckBox problemDescFileWrite = Common.createJCheckBox("Write Problem Description to separate file");
-/*  37 */   JLabel problemDescFileLabel = Common.createJLabel("File Extension: ");
-/*  38 */   JTextField problemDescFileField = Common.createJTextField(4, new Dimension(75, 21));
-/*  39 */   JLabel sigFileLabel = Common.createJLabel("Enter signature filename: ");
-/*  40 */   JTextField sigFileField = Common.createJTextField(40, new Dimension(400, 21));
+/*  36 */   JCheckBox problemDescFileWrite = EditorCommon.createJCheckBox("Write Problem Description to separate file");
+/*  37 */   JLabel problemDescFileLabel = EditorCommon.createJLabel("File Extension: ");
+/*  38 */   JTextField problemDescFileField = EditorCommon.createJTextField(4, new Dimension(75, 21));
+/*  39 */   JLabel sigFileLabel = EditorCommon.createJLabel("Enter signature filename: ");
+/*  40 */   JTextField sigFileField = EditorCommon.createJTextField(40, new Dimension(400, 21));
 /*     */ 
 /*  43 */   boolean savePending = false;
 /*     */ 
-/*     */   public FileEditorConfiguration(Preferences pref)
+/*     */   public FileEditorConfiguration(EditorPreferences pref)
 /*     */   {
 /*  47 */     this.pref = pref;
-/*  48 */     Common.setDefaultAttributes(this, new BorderLayout());
+/*  48 */     EditorCommon.setDefaultAttributes(this, new BorderLayout());
 /*     */ 
-/*  51 */     setBackground(Common.WPB_COLOR);
+/*  51 */     setBackground(EditorCommon.WPB_COLOR);
 /*     */ 
 /*  56 */     String dirName = pref.getDirectoryName();
 /*  57 */     this.dirNameField.setText(dirName);
@@ -108,29 +108,29 @@
 /* 119 */       this.problemDescFileField.setEnabled(true);
 /*     */     }
 /*     */ 
-/* 123 */     Box dirNamePane = Common.createHorizontalBox(new Component[] { this.dirNameLabel, this.dirNameField }, true);
+/* 123 */     Box dirNamePane = EditorCommon.createHorizontalBox(new Component[] { this.dirNameLabel, this.dirNameField }, true);
 /*     */ 
-/* 126 */     Box backupPane = Common.createHorizontalBox(new Component[] { this.backup }, true);
+/* 126 */     Box backupPane = EditorCommon.createHorizontalBox(new Component[] { this.backup }, true);
 /*     */ 
-/* 129 */     Box fileNamePane = Common.createHorizontalBox(new Component[] { Box.createHorizontalStrut(20), this.fileNameLabel, this.fileNameField }, true);
+/* 129 */     Box fileNamePane = EditorCommon.createHorizontalBox(new Component[] { Box.createHorizontalStrut(20), this.fileNameLabel, this.fileNameField }, true);
 /*     */ 
-/* 132 */     Box sigFilePane = Common.createHorizontalBox(new Component[] { this.sigFileLabel, this.sigFileField }, true);
+/* 132 */     Box sigFilePane = EditorCommon.createHorizontalBox(new Component[] { this.sigFileLabel, this.sigFileField }, true);
 /*     */ 
-/* 135 */     Box overridePane = Common.createHorizontalBox(new Component[] { this.overrideFileNameField }, true);
+/* 135 */     Box overridePane = EditorCommon.createHorizontalBox(new Component[] { this.overrideFileNameField }, true);
 /*     */ 
-/* 138 */     Box lineCommentsPane = Common.createHorizontalBox(new Component[] { this.useLineComments }, true);
+/* 138 */     Box lineCommentsPane = EditorCommon.createHorizontalBox(new Component[] { this.useLineComments }, true);
 /*     */ 
-/* 141 */     Box htmlDescPane = Common.createHorizontalBox(new Component[] { this.htmlDesc }, true);
+/* 141 */     Box htmlDescPane = EditorCommon.createHorizontalBox(new Component[] { this.htmlDesc }, true);
 /*     */ 
-/* 144 */     Box breakAtPane = Common.createHorizontalBox(new Component[] { this.provideBreakField, this.breakAtField }, true);
+/* 144 */     Box breakAtPane = EditorCommon.createHorizontalBox(new Component[] { this.provideBreakField, this.breakAtField }, true);
 /*     */ 
-/* 147 */     Box beginCutPane = Common.createHorizontalBox(new Component[] { this.beginCutLabel, this.beginCutField }, true);
+/* 147 */     Box beginCutPane = EditorCommon.createHorizontalBox(new Component[] { this.beginCutLabel, this.beginCutField }, true);
 /*     */ 
-/* 150 */     Box endCutPane = Common.createHorizontalBox(new Component[] { this.endCutLabel, this.endCutField }, true);
+/* 150 */     Box endCutPane = EditorCommon.createHorizontalBox(new Component[] { this.endCutLabel, this.endCutField }, true);
 /*     */ 
-/* 153 */     Box probDescFileWriteBox = Common.createHorizontalBox(new Component[] { this.problemDescFileWrite }, true);
+/* 153 */     Box probDescFileWriteBox = EditorCommon.createHorizontalBox(new Component[] { this.problemDescFileWrite }, true);
 /*     */ 
-/* 156 */     Box probDescFileExtBox = Common.createHorizontalBox(new Component[] { Box.createHorizontalStrut(20), this.problemDescFileLabel, this.problemDescFileField }, true);
+/* 156 */     Box probDescFileExtBox = EditorCommon.createHorizontalBox(new Component[] { Box.createHorizontalStrut(20), this.problemDescFileLabel, this.problemDescFileField }, true);
 /*     */ 
 /* 159 */     Box all = Box.createVerticalBox();
 /* 160 */     all.add(Box.createVerticalStrut(10));
@@ -232,7 +232,7 @@
 /*     */   public boolean savePreferences()
 /*     */   {
 /* 262 */     if ((this.overrideFileNameField.isSelected()) && (this.fileNameField.getText().trim().equals(""))) {
-/* 263 */       Common.showMessage("Error", "You must specify a filename", null);
+/* 263 */       EditorCommon.showMessage("Error", "You must specify a filename", null);
 /* 264 */       return false;
 /*     */     }
 /*     */ 
@@ -243,7 +243,7 @@
 /*     */     catch (NumberFormatException e)
 /*     */     {
 /*     */       int breakAt;
-/* 272 */       Common.showMessage("Error", "The break at is not a number", null);
+/* 272 */       EditorCommon.showMessage("Error", "The break at is not a number", null);
 /* 273 */       return false;
 /*     */     }
 /*     */     int breakAt;
