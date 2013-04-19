@@ -1,4 +1,4 @@
-package tc_plugin;
+package topcoder.editor;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -19,12 +19,12 @@ import com.topcoder.shared.problem.TestCase;
  * This code works only with code templates specifically written for compatibility with the plugin.
  * The templates for each supported language are in the templates directory of this source distribution. 
  */
-public class ExampleBuilder {
+public class ExampleProcessor {
     /**
      * Obtains a list of user-defined tags.
      * @return a list of user-defined tags.
      */
-    public Map getUserDefinedTags() {
+    public Map<String, String> getUserDefinedTags() {
         return tags;
     }
     /**
@@ -219,7 +219,7 @@ public class ExampleBuilder {
     /** List of the supported languages */
     private static final String[] supported = new String[] { "Java", "C#", "C++" };
     /** This map stores user-defined tags */
-    private final Map tags= new HashMap();
+    private final Map<String, String> tags= new HashMap<String, String>();
     /** Name of the Writer Code tag in the code template.*/
     private static final String WRITERCODE= "$WRITERCODE$";
     /** Name of the Main Body tag in the code template. */
