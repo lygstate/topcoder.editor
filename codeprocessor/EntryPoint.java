@@ -61,9 +61,8 @@ public class EntryPoint {
 	/** Show the configuration dialog */
 	public void configure() { 
 		loadPreferences();
-		new ConfigurationDialog(pref).show(); 
+		new ConfigurationDialog(pref).setVisible(true); 
 	}
-
 	
 	/** Configure the editor */
 	public boolean configureEditor() { 
