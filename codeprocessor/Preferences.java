@@ -42,7 +42,7 @@ class Preferences {
 
 	public String[] getCodeProcessors() {
 		int num = getIntegerProperty(Preferences.NUMCODEPROCESSORS, 0);
-		ArrayList rc = new ArrayList();
+		ArrayList<String> rc = new ArrayList<String>();
 		for(int x=0;x<num;x++) {
 			String codeProcessor = getStringProperty(Preferences.CODEPROCESSOR + x, "");
 			if(codeProcessor==null || codeProcessor.trim().length()==0) continue;

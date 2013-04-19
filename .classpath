@@ -3,5 +3,16 @@
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="var" path="JRE_LIB" sourcepath="JRE_SRC"/>
 	<classpathentry kind="var" path="TC_APPLET"/>
+	<classpathentry kind="lib" path="libs/arena-shared-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/arena-client-7.0.3.jar"/>
+	<classpathentry kind="lib" path="libs/basic_type_serialization-1.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/client-common-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/client-socket-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/compeng-common-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/concurrent-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/custom-serialization-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/encoder-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/http-tunnel-client-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/log4j-1.2.13.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
