@@ -6,7 +6,7 @@
  * @version			2.0
  */
 
-package codeprocessor;
+package topcoder.editor;
 import java.util.HashMap;
 import java.util.Map;
 

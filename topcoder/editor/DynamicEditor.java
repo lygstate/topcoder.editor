@@ -1,4 +1,4 @@
-package codeprocessor;
+package topcoder.editor;
 
 /** 
  * DynamicEditor.java

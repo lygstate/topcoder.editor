@@ -6,7 +6,7 @@
  * @version			1.0
  */
 
-package codeprocessor;
+package topcoder.editor;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;

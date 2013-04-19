@@ -1,4 +1,4 @@
-package codeprocessor;
+package topcoder.editor;
 
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;

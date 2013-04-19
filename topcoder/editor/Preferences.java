@@ -6,7 +6,7 @@
  * @version			3.0
  */
 
-package codeprocessor;
+package topcoder.editor;
 import java.util.ArrayList;
 import java.util.Observer;
 

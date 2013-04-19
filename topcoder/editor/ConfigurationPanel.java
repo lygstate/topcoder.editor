@@ -6,7 +6,7 @@
  * @version			3.0
  */
 
-package codeprocessor;
+package topcoder.editor;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
