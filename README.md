@@ -9,3 +9,5 @@ Those code first comes from FileEdit, CodeProcessor and ExampleBuilder; if the a
 ExampleProcessor should have the setting page for
 userDefinedTags
 The output indent is tab|space. (2 space, 4 space).
+
+Try to automatically genearte package data for Java.
