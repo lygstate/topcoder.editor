@@ -17,7 +17,6 @@
 /*     */ import javax.swing.JScrollPane;
 /*     */ import javax.swing.JTable;
 /*     */ import javax.swing.JTextField;
-/*     */ import javax.swing.JViewport;
 /*     */ import javax.swing.border.Border;
 /*     */ import javax.swing.text.JTextComponent;
 /*     */ 
@@ -187,8 +186,3 @@
 /*     */     }
 /*     */   }
 /*     */ }
-
-/* Location:           C:\Users\Game\Downloads\CodeProcessor.jar
- * Qualified Name:     codeprocessor.Common
- * JD-Core Version:    0.6.2
- */

@@ -7,7 +7,6 @@
  */
 
 package codeprocessor;
-//import com.topcoder.jmaContestApplet.common.LocalPreferences;
 import java.util.ArrayList;
 import java.util.Observer;
 
