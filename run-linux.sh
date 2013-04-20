@@ -1,0 +1,1 @@
+java -Djava.library.path='natives/Linux' -cp 'libs/*' com.topcoder.client.contestApplet.runner.generic 

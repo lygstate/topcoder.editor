@@ -1,0 +1,1 @@
+java -Djava.library.path="natives\Windows" -cp "libs\*" com.topcoder.client.contestApplet.runner.generic 

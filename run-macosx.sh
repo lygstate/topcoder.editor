@@ -1,0 +1,1 @@
+java -Djava.library.path='natives/Mac' -cp 'libs/*' com.topcoder.client.contestApplet.runner.generic 
