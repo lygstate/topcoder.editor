@@ -19,7 +19,7 @@ public class EditorPanel extends JPanel {
 	public EditorPanel(JTextArea textArea) {
 		Common.setDefaultAttributes(this);
 
-		JLabel statusLabel = Common.createJLabel("TopCoder Editor v0.10",
+		JLabel statusLabel = Common.createJLabel(Common.PRODUCT_NAME,
 				new Font(getFont().getFontName(), 3, getFont().getSize()));
 		JLabel reminderLabel = Common.createJLabel(
 				"*** Make sure you remotely compile before test/submit ***",
@@ -29,9 +29,9 @@ public class EditorPanel extends JPanel {
 		scrollPane.setBorder(Common.getTitledBorder("Activity Log"));
 
 		Box status = Common
-				.createHorizontalBox(
+				.createVerticalBox(
 						new Component[] { statusLabel,
-								Box.createHorizontalGlue(), reminderLabel },
+								Box.createVerticalGlue(), reminderLabel },
 						false);
 
 		add(scrollPane, "Center");

@@ -55,10 +55,6 @@ public class Editor implements Observer {
 		this.panel = new EditorPanel(this.log);
 	}
 
-	public void configure() {
-		new ConfigurationDialog().show();
-	}
-
 	public void setUserDefinedTags(Map userDefinedTags) {
 		this.userDefinedTags = userDefinedTags;
 	}
@@ -90,10 +86,9 @@ public class Editor implements Observer {
 		StringBuffer sourceComments = new StringBuffer(len);
 		StringBuffer source = new StringBuffer(len);
 
-		BufferedReader in = null;
 		boolean ignoreLine = false;
 		try {
-			in = new BufferedReader(new FileReader(this.fullPath));
+			BufferedReader in = new BufferedReader(new FileReader(this.fullPath));
 			while (true) {
 				String line = in.readLine();
 				if (line == null) {
@@ -111,21 +106,14 @@ public class Editor implements Observer {
 					source.append(Utilities.lineEnding);
 				}
 			}
+			in.close();
 		} catch (IOException e) {
 			writeLog("Error reading source code from file " + this.fullPath
 					+ ": " + e.toString() + Utilities.lineEnding
 					+ "Returning nothing.");
 			return "";
-		} finally {
-			break label305;
-			localObject1 = returnAddress;
-			if (in != null)
-				try {
-					in.close();
-				} catch (IOException e) {
-				}
 		}
-		label305: writeLog("Source read from file " + this.fullPath);
+		writeLog("Source read from file " + this.fullPath);
 
 		if ((this.initialSrc != null)
 				&& (this.initialSrc.equals(sourceComments.toString()))) {
@@ -151,15 +139,13 @@ public class Editor implements Observer {
 
 	protected String getSignature() {
 		String sigFileName = this.pref.getSignatureFileName().trim();
-
 		if (!sigFileName.equals("")) {
 			File sigFile = new File(sigFileName);
 
 			if (sigFile.exists()) {
 				StringBuffer sig = new StringBuffer((int) sigFile.length());
-				BufferedReader in = null;
 				try {
-					in = new BufferedReader(new FileReader(sigFile));
+					BufferedReader in = new BufferedReader(new FileReader(sigFile));
 					while (true) {
 						String line = in.readLine();
 						if (line == null)
@@ -167,24 +153,16 @@ public class Editor implements Observer {
 						sig.append(line);
 						sig.append(Utilities.lineEnding);
 					}
-
+					in.close();
 					return sig.toString();
 				} catch (IOException e) {
 					writeLog("Error reading the signature file " + sigFileName
 							+ ":" + e.toString() + Utilities.lineEnding
 							+ "SigFile ignored");
-				} finally {
-					break label196;
-					localObject1 = returnAddress;
-					if (in != null)
-						try {
-							in.close();
-						} catch (IOException e) {
-						}
 				}
 			}
 		}
-		label196: return "";
+		return "";
 	}
 
 	public void setSource(String source) {
@@ -196,18 +174,19 @@ public class Editor implements Observer {
 						: this.language.getId() == 3 ? this.pref
 								.getCPPExtension() : this.pref
 								.getCSHARPExtension());
+		String problemDescription;
+
 		try {
 			problemDescription = this.pref.isHTMLDesc() ? this.renderer
 					.toHTML(this.language) : this.renderer
 					.toPlainText(this.language);
 		} catch (Exception e) {
-			String problemDescription;
 			System.err.println("Exception happened during rendering: " + e);
 			problemDescription = this.pref.isHTMLDesc() ? "<html><body>Error happened - see applet for problem text</body></html>"
 					: "Error happened - see applet for problem text";
 		}
 
-		String problemDescription = this.pref.isHTMLDesc() ? problemDescription
+		problemDescription = this.pref.isHTMLDesc() ? problemDescription
 				: Utilities.parseProblem(problemDescription);
 
 		if ((source == null) || (source.equals(""))

@@ -35,6 +35,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 
 public class Common {
+	public final static String PRODUCT_NAME = "TopCoder Editor https://github.com/lygstate/topcoder.editor";
+	public final static String PRODUCT_VERSION = "0.10";
 	public static final Color FG_COLOR = Color.white;
 	public static final Color BG_COLOR = Color.black;
 	public static final Color WPB_COLOR = Color.decode("0x333333");
@@ -68,6 +70,23 @@ public class Common {
 		temp.add(a[(a.length - 1)]);
 		if (endGlue)
 			temp.add(Box.createHorizontalGlue());
+
+		return temp;
+	}
+
+	public static final Box createVerticalBox(Component[] a, boolean endGlue) {
+		Box temp = Box.createVerticalBox();
+		if (a.length == 0)
+			return temp;
+
+		for (int x = 0; x < a.length - 1; x++) {
+			temp.add(a[x]);
+			temp.add(Box.createHorizontalStrut(5));
+		}
+
+		temp.add(a[(a.length - 1)]);
+		if (endGlue)
+			temp.add(Box.createVerticalGlue());
 
 		return temp;
 	}

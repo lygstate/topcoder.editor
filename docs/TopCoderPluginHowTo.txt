@@ -9,29 +9,29 @@ To avoid namespace collisions, please assign a package to your editor plugin.  A
  
 If you feel that your plugin contains functionality that the general community group would like, you can submit the plugin to Topcoder (applet@topcoder.com) for review to become a standard editor.   
 Metfhods the Entry Point class can Implement
-Signature
-Required
+Signature   Required
 JPanel getEditorPanel() Yes
 String getSource() Yes
 void setSource(String source) Yes
 void configure() No
-void clear() No
-void setTextEnabled(Boolean enable) No
-Void setProblemComponent(ProblemComponentModel component, Langauge language, Renderer renderer) No
-void setLanguage(Integer languageType) No
-void setProblem(String problemText) No
-void setSignature(String className, String methodName, List parmTypes, String rcType) No
-void setName(String name) No
-void install() No
-void uninstall() No
-void startUsing() No
-void stopUsing() No
-void dispose() No
-Boolean isCacheable() No
-Boolean setCompileResults(Boolean success, String message) No
+|void clear() No
+|void setTextEnabled(Boolean enable) No
+void setProblemComponent(ProblemComponentModel component, Langauge language, Renderer renderer) No
+//void setLanguage(Integer languageType) No
+//void setProblem(String problemText) No
+//void setSignature(String className, String methodName, List parmTypes, String rcType) No
+|void setName(String name) No
+|void install() No
+|void uninstall() No
+|void startUsing() No
+|void stopUsing() No
+|void dispose() No
+|Boolean isCacheable() No
+/// Boolean setCompileResults(Boolean success, String message) No
  
-Pink 每 Depreciated methods
-Blue 每 not yet supported
+// 每 Depreciated methods
+/// 每 not yet supported
+| won't implement.
  
 Your editor plugin MUST implement the required functions or it will be ignored by the TCApplet.  Your editor plugin MAY implement the optional functions to provide greater range of functionality.  Any optional methods that you do NOT implement will simply be ignored by the TCApplet.
  

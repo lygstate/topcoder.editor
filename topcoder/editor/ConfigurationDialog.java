@@ -28,21 +28,25 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	 * 
 	 */
 	private static final long serialVersionUID = 1712681747171330702L;
-	private Preferences pref = new Preferences();
+
+	private Preferences pref;
+	ConfigurationInterface[] config;
+
 	private JTabbedPane tab = new JTabbedPane();
 	private JButton saveButton = new JButton("Save");
 	private JButton closeButton = new JButton("Close");
 
-	private ConfigurationInterface[] config = {
-			new CodeProcessorConfig(pref),
-			new EditorConfig(this.pref),
-			new CodeTemplateConfig(this.pref),
-			};
 	private WindowHandler windowHandler = new WindowHandler();
 
-	public ConfigurationDialog() {
+	public ConfigurationDialog(Preferences pref) {
 		super((JFrame) null, "TopCoder Editor Configuration", true);
 		setSize(new Dimension(600, 400));
+		this.pref = pref;
+		this.config = new ConfigurationInterface[] {
+				new CodeProcessorConfig(pref),
+				new EditorConfig(this.pref),
+				new CodeTemplateConfig(this.pref),
+				};
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BoxLayout(contentPane, 0));
@@ -52,10 +56,12 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		this.tab.setForeground(Common.FG_COLOR);
 		this.tab.setBackground(Common.WPB_COLOR);
 
-		for (int x = 0; x < this.config.length; x++) {
-			this.tab.addTab(this.config[x].getTabTitle(),
-					this.config[x].getTabIcon(), (Component) this.config[x],
-					this.config[x].getTabToolTip());
+		for (int x = 0; x < config.length; x++) {
+			this.tab.addTab(
+					config[x].getTabTitle(),
+					config[x].getTabIcon(),
+					(Component)config[x],
+					config[x].getTabToolTip());
 		}
 
 		Box buttonPanel = Box.createHorizontalBox();
@@ -142,7 +148,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		ConfigurationDialog ff = new ConfigurationDialog();
+		ConfigurationDialog ff = new ConfigurationDialog(new Preferences());
 		ff.setVisible(true);
 	}
 }

@@ -276,7 +276,7 @@ public class Preferences {
 
 	private final String getStringProperty(String key, String defaultValue) {
 		String value = pref.getProperty(key);
-		if (value == null || value.equals("")) {
+		if (value == null || (value.equals("") && !defaultValue.equals(""))) {
 			setStringProperty(key, defaultValue);
 			return defaultValue;
 		}
