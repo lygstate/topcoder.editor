@@ -12,6 +12,8 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import topcoder.editor.panels.Common;
+
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;

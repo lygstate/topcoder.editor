@@ -1,22 +1,27 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import topcoder.editor.ConfigurationInterface;
+import topcoder.editor.EditorCommon;
+import topcoder.editor.Preferences;
 
-public class FileEditorConfiguration extends JPanel
-	implements ActionListener, DocumentListener, ConfigurationInterface {
+public class EditConfig extends JPanel implements ActionListener,
+		DocumentListener, ConfigurationInterface {
 	/**
 	 * 
 	 */
@@ -61,7 +66,7 @@ public class FileEditorConfiguration extends JPanel
 
 	boolean savePending = false;
 
-	public FileEditorConfiguration(Preferences pref) {
+	public EditConfig(Preferences pref) {
 		this.pref = pref;
 		EditorCommon.setDefaultAttributes(this, new BorderLayout());
 
@@ -318,5 +323,15 @@ public class FileEditorConfiguration extends JPanel
 		this.pref.setBackup(this.backup.isSelected());
 
 		return true;
+	}
+
+	public static void main(String[] s) {
+		JFrame frame = new JFrame();
+		frame.setDefaultCloseOperation(3);
+		Preferences pref = new Preferences();
+		pref.removeAllProperties();
+		frame.getContentPane().add(new EditConfig(pref));
+		frame.pack();
+		frame.setVisible(true);
 	}
 }

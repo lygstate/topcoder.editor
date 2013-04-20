@@ -1,9 +1,10 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JComboBox;
@@ -15,7 +16,11 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-public class CodeTemplatePanel extends JPanel
+import topcoder.editor.ConfigurationInterface;
+import topcoder.editor.EditorCommon;
+import topcoder.editor.Preferences;
+
+public class CodeTemplateConfig extends JPanel
 	implements ItemListener, DocumentListener, ConfigurationInterface {
 	/**
 	 * 
@@ -25,12 +30,12 @@ public class CodeTemplatePanel extends JPanel
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
 	private final Preferences pref;
-	private JComboBox language = EditorCommon.createJComboBox(new String[] { "C++",
-			"Java", "C#" });
+	private JComboBox language = EditorCommon.createJComboBox(new String[] {
+			"C++", "Java", "C#" });
 	private JLabel languageLabel = EditorCommon.createJLabel("Language: ");
 	private JLabel extensionLabel = EditorCommon.createJLabel("Extension: ");
-	private JTextField extension = EditorCommon.createJTextField(5, new Dimension(
-			150, 20));
+	private JTextField extension = EditorCommon.createJTextField(5,
+			new Dimension(150, 20));
 	private JTextArea template = EditorCommon.createJTextArea("");
 	private boolean savePending = false;
 	private String CPPTemplate;
@@ -41,7 +46,7 @@ public class CodeTemplatePanel extends JPanel
 	private String JAVAExtension;
 	private boolean initializing = true;
 
-	public CodeTemplatePanel(Preferences pref) {
+	public CodeTemplateConfig(Preferences pref) {
 		this.pref = pref;
 
 		this.JAVATemplate = pref.getJAVATemplate();

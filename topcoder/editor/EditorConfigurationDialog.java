@@ -2,19 +2,24 @@ package topcoder.editor;
 
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
+
+import topcoder.editor.panels.CodeTemplateConfig;
+import topcoder.editor.panels.CodeProcessorConfig;
+import topcoder.editor.panels.EditConfig;
 
 public class EditorConfigurationDialog extends JDialog implements ActionListener {
 	/**
@@ -27,13 +32,14 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 	private JButton closeButton = new JButton("Close");
 
 	private ConfigurationInterface[] config = {
-			new FileEditorConfiguration(this.pref),
-			new CodeTemplatePanel(this.pref) };
+			new CodeProcessorConfig(pref),
+			new EditConfig(this.pref),
+			new CodeTemplateConfig(this.pref),
+			};
 	private WindowHandler windowHandler = new WindowHandler();
 
 	public EditorConfigurationDialog() {
-		super((Dialog)(null), "FileEdit Configuration", true);
-
+		super((JFrame) null, "TopCoder Editor Configuration", true);
 		setSize(new Dimension(600, 400));
 
 		Container contentPane = getContentPane();
@@ -106,11 +112,6 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 		return false;
 	}
 
-	public static void main(String[] args) {
-		EditorConfigurationDialog ff = new EditorConfigurationDialog();
-		ff.setVisible(true);
-	}
-
 	private class WindowHandler extends WindowAdapter {
 		WindowHandler() {
 		}
@@ -136,5 +137,10 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 
 			EditorConfigurationDialog.this.dispose();
 		}
+	}
+
+	public static void main(String[] args) {
+		EditorConfigurationDialog ff = new EditorConfigurationDialog();
+		ff.setVisible(true);
 	}
 }
