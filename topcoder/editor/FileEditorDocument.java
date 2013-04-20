@@ -4,7 +4,7 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class PlainDocumentLimited extends PlainDocument {
+public class FileEditorDocument extends PlainDocument {
 	/**
 	 * 
 	 */
@@ -12,11 +12,11 @@ public class PlainDocumentLimited extends PlainDocument {
 	private int limit;
 	private boolean toUppercase = false;
 
-	public PlainDocumentLimited(int limit) {
+	public FileEditorDocument(int limit) {
 		this.limit = limit;
 	}
 
-	public PlainDocumentLimited(int limit, boolean upper) {
+	public FileEditorDocument(int limit, boolean upper) {
 		this.limit = limit;
 		this.toUppercase = upper;
 	}

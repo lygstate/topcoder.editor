@@ -3,6 +3,7 @@ package topcoder.editor;
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
+
 import java.awt.Dialog;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -18,11 +19,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
+
+import topcoder.editor.panels.FileEditorCommon;
 
 public class Editor implements Observer {
 	JPanel panel;
@@ -42,8 +46,8 @@ public class Editor implements Observer {
 	private static final String POWEREDBY = "// Powered by FileEdit";
 
 	public Editor() {
-		this.log.setForeground(EditorCommon.FG_COLOR);
-		this.log.setBackground(EditorCommon.BG_COLOR);
+		this.log.setForeground(FileEditorCommon.FG_COLOR);
+		this.log.setBackground(FileEditorCommon.BG_COLOR);
 
 		loadPreferences();
 
@@ -51,7 +55,7 @@ public class Editor implements Observer {
 	}
 
 	public void configure() {
-		new EditorConfigurationDialog().show();
+		new ConfigurationDialog().show();
 	}
 
 	public void setUserDefinedTags(Map userDefinedTags) {

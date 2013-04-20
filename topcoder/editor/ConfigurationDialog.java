@@ -21,8 +21,9 @@ import topcoder.editor.panels.CodeTemplateConfig;
 import topcoder.editor.panels.CodeProcessorConfig;
 import topcoder.editor.panels.ConfigurationInterface;
 import topcoder.editor.panels.EditConfig;
+import topcoder.editor.panels.FileEditorCommon;
 
-public class EditorConfigurationDialog extends JDialog implements ActionListener {
+public class ConfigurationDialog extends JDialog implements ActionListener {
 	/**
 	 * 
 	 */
@@ -39,17 +40,17 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 			};
 	private WindowHandler windowHandler = new WindowHandler();
 
-	public EditorConfigurationDialog() {
+	public ConfigurationDialog() {
 		super((JFrame) null, "TopCoder Editor Configuration", true);
 		setSize(new Dimension(600, 400));
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BoxLayout(contentPane, 0));
-		contentPane.setForeground(EditorCommon.FG_COLOR);
-		contentPane.setBackground(EditorCommon.WPB_COLOR);
+		contentPane.setForeground(FileEditorCommon.FG_COLOR);
+		contentPane.setBackground(FileEditorCommon.WPB_COLOR);
 
-		this.tab.setForeground(EditorCommon.FG_COLOR);
-		this.tab.setBackground(EditorCommon.WPB_COLOR);
+		this.tab.setForeground(FileEditorCommon.FG_COLOR);
+		this.tab.setBackground(FileEditorCommon.WPB_COLOR);
 
 		for (int x = 0; x < this.config.length; x++) {
 			this.tab.addTab(this.config[x].getTabTitle(),
@@ -103,7 +104,7 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 			this.pref.save();
 			for (int x = 0; x < this.config.length; x++)
 				this.config[x].resetSavePending();
-			EditorCommon.showMessage("Save", "Preferences were saved successfully",
+			FileEditorCommon.showMessage("Save", "Preferences were saved successfully",
 					null);
 			return true;
 		} catch (IOException e) {
@@ -119,29 +120,29 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 
 		public void windowClosing(WindowEvent e) {
 			boolean savePending = false;
-			for (int x = 0; x < EditorConfigurationDialog.this.config.length; x++)
-				if (EditorConfigurationDialog.this.config[x].isSavePending()) {
+			for (int x = 0; x < ConfigurationDialog.this.config.length; x++)
+				if (ConfigurationDialog.this.config[x].isSavePending()) {
 					savePending = true;
 					break;
 				}
 
 			if (savePending) {
-				if (EditorCommon
+				if (FileEditorCommon
 						.confirm(
 								"Save Pending",
 								"Changes are pending.  Do you want to save before closing?",
 								null)) {
-					if (!EditorConfigurationDialog.this.save())
+					if (!ConfigurationDialog.this.save())
 						return;
 				}
 			}
 
-			EditorConfigurationDialog.this.dispose();
+			ConfigurationDialog.this.dispose();
 		}
 	}
 
 	public static void main(String[] args) {
-		EditorConfigurationDialog ff = new EditorConfigurationDialog();
+		ConfigurationDialog ff = new ConfigurationDialog();
 		ff.setVisible(true);
 	}
 }

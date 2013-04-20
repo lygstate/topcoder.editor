@@ -11,7 +11,7 @@ import java.awt.Rectangle;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class MyTitledBorder extends TitledBorder {
+public class FileEditorTitledBorder extends TitledBorder {
 	/**
 	 * 
 	 */
@@ -22,7 +22,7 @@ public class MyTitledBorder extends TitledBorder {
 	protected static final int TEXT_INSET_H = 5;
 	private Point textLoc = new Point();
 
-	public MyTitledBorder(Border b, String t, int j, int p) {
+	public FileEditorTitledBorder(Border b, String t, int j, int p) {
 		super(b, t, j, p);
 	}
 

@@ -5,23 +5,23 @@ import java.awt.Component;
 import java.awt.Graphics;
 import javax.swing.border.LineBorder;
 
-public class RoundBorder extends LineBorder {
+public class FileEditorRoundBorder extends LineBorder {
 	/**
 	 * RoundBorder serialVersionUID
 	 */
 	private static final long serialVersionUID = -3016467626337207467L;
 
-	public RoundBorder(Color color) {
+	public FileEditorRoundBorder(Color color) {
 		super(color, 1);
 		this.roundedCorners = false;
 	}
 
-	public RoundBorder(Color color, int thickness) {
+	public FileEditorRoundBorder(Color color, int thickness) {
 		super(color, thickness);
 		this.roundedCorners = false;
 	}
 
-	public RoundBorder(Color color, int thickness, boolean roundedCorners) {
+	public FileEditorRoundBorder(Color color, int thickness, boolean roundedCorners) {
 		super(color, thickness);
 		this.roundedCorners = roundedCorners;
 	}

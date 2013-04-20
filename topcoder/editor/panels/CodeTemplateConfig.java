@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import topcoder.editor.EditorCommon;
 import topcoder.editor.Preferences;
 
 public class CodeTemplateConfig extends JPanel
@@ -29,13 +28,13 @@ public class CodeTemplateConfig extends JPanel
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
 	private final Preferences pref;
-	private JComboBox language = EditorCommon.createJComboBox(new String[] {
+	private JComboBox language = FileEditorCommon.createJComboBox(new String[] {
 			"C++", "Java", "C#" });
-	private JLabel languageLabel = EditorCommon.createJLabel("Language: ");
-	private JLabel extensionLabel = EditorCommon.createJLabel("Extension: ");
-	private JTextField extension = EditorCommon.createJTextField(5,
+	private JLabel languageLabel = FileEditorCommon.createJLabel("Language: ");
+	private JLabel extensionLabel = FileEditorCommon.createJLabel("Extension: ");
+	private JTextField extension = FileEditorCommon.createJTextField(5,
 			new Dimension(150, 20));
-	private JTextArea template = EditorCommon.createJTextArea("");
+	private JTextArea template = FileEditorCommon.createJTextArea("");
 	private boolean savePending = false;
 	private String CPPTemplate;
 	private String CPPExtension;
@@ -55,13 +54,13 @@ public class CodeTemplateConfig extends JPanel
 		this.CPPExtension = pref.getCPPExtension();
 		this.CSHARPExtension = pref.getCSHARPExtension();
 
-		EditorCommon.setDefaultAttributes(this);
+		FileEditorCommon.setDefaultAttributes(this);
 
-		Box lang = EditorCommon.createHorizontalBox(new Component[] {
+		Box lang = FileEditorCommon.createHorizontalBox(new Component[] {
 				this.languageLabel, this.language, Box.createHorizontalGlue(),
 				this.extensionLabel, this.extension });
 
-		JScrollPane scroll = EditorCommon.createJScrollPane(this.template);
+		JScrollPane scroll = FileEditorCommon.createJScrollPane(this.template);
 		this.template.getDocument().addDocumentListener(this);
 		this.extension.getDocument().addDocumentListener(this);
 

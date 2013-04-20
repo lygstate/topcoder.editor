@@ -1,4 +1,4 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -11,14 +11,13 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
-import javax.swing.AbstractButton;
+
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JMenuItem;
@@ -34,7 +33,12 @@ import javax.swing.text.JTextComponent;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 
-public class EditorCommon {
+import topcoder.editor.ContestListCellRenderer;
+import topcoder.editor.FileEditorDocument;
+import topcoder.editor.FileEditorRoundBorder;
+import topcoder.editor.FileEditorTitledBorder;
+
+public class FileEditorCommon {
 	public static final Color FG_COLOR = Color.white;
 	public static final Color BG_COLOR = Color.black;
 	public static final Color WPB_COLOR = Color.decode("0x333333");
@@ -209,7 +213,7 @@ public class EditorCommon {
 		temp.setFont(font);
 		temp.setBorder(BorderFactory.createLineBorder(FG_COLOR, 1));
 		temp.setMaximumSize(max);
-		PlainDocumentLimited doc = new PlainDocumentLimited(size);
+		FileEditorDocument doc = new FileEditorDocument(size);
 		temp.setDocument(doc);
 		temp.addFocusListener(new SelectAll(temp));
 		return temp;
@@ -356,8 +360,8 @@ public class EditorCommon {
 	}
 
 	public static TitledBorder getTitledBorder(String title) {
-		Border border = new RoundBorder(PB_COLOR, 5, true);
-		MyTitledBorder tb = new MyTitledBorder(border, title, 1, 1);
+		Border border = new FileEditorRoundBorder(PB_COLOR, 5, true);
+		FileEditorTitledBorder tb = new FileEditorTitledBorder(border, title, 1, 1);
 		tb.setTitleColor(PT_COLOR);
 		return tb;
 	}
@@ -393,6 +397,11 @@ public class EditorCommon {
 	}
 
 	private static class PopsTreeCellRenderer extends DefaultTreeCellRenderer {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -976799479973364140L;
+
 		public Dimension getPreferredSize() {
 			Dimension ret = super.getPreferredSize();
 			if (ret != null)

@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import topcoder.editor.EditorCommon;
 import topcoder.editor.Preferences;
 
 public class EditConfig extends JPanel implements ActionListener,
@@ -26,50 +25,50 @@ public class EditConfig extends JPanel implements ActionListener,
 	 */
 	private static final long serialVersionUID = 2663430179796252986L;
 	Preferences pref;
-	JLabel dirNameLabel = EditorCommon
+	JLabel dirNameLabel = FileEditorCommon
 			.createJLabel("Enter directory to read/write problems to:");
-	JTextField dirNameField = EditorCommon.createJTextField(40, new Dimension(
+	JTextField dirNameField = FileEditorCommon.createJTextField(40, new Dimension(
 			400, 21));
-	JCheckBox backup = EditorCommon
+	JCheckBox backup = FileEditorCommon
 			.createJCheckBox("Backup existing file then overwrite (uncheck if you want to keep existing file)");
-	JLabel fileNameLabel = EditorCommon
+	JLabel fileNameLabel = FileEditorCommon
 			.createJLabel("Enter filename to use (no extension):");
-	JTextField fileNameField = EditorCommon.createJTextField(40, new Dimension(
+	JTextField fileNameField = FileEditorCommon.createJTextField(40, new Dimension(
 			400, 21));
-	JCheckBox htmlDesc = EditorCommon
+	JCheckBox htmlDesc = FileEditorCommon
 			.createJCheckBox("Write the problem description using HTML");
-	JCheckBox useLineComments = EditorCommon
+	JCheckBox useLineComments = FileEditorCommon
 			.createJCheckBox("Use Line Comments for Problem Description");
-	JCheckBox overrideFileNameField = EditorCommon
+	JCheckBox overrideFileNameField = FileEditorCommon
 			.createJCheckBox("Make filename equal to classname");
-	JCheckBox provideBreakField = EditorCommon
+	JCheckBox provideBreakField = FileEditorCommon
 			.createJCheckBox("Force Breaks at");
-	JTextField breakAtField = EditorCommon.createJTextField(4, new Dimension(
+	JTextField breakAtField = FileEditorCommon.createJTextField(4, new Dimension(
 			75, 21));
-	JLabel beginCutLabel = EditorCommon.createJLabel("$BEGINCUT$ ");
-	JTextField beginCutField = EditorCommon.createJTextField(40, new Dimension(
+	JLabel beginCutLabel = FileEditorCommon.createJLabel("$BEGINCUT$ ");
+	JTextField beginCutField = FileEditorCommon.createJTextField(40, new Dimension(
 			400, 21));
-	JLabel endCutLabel = EditorCommon.createJLabel("$ENDCUT$ ");
-	JTextField endCutField = EditorCommon.createJTextField(40, new Dimension(
+	JLabel endCutLabel = FileEditorCommon.createJLabel("$ENDCUT$ ");
+	JTextField endCutField = FileEditorCommon.createJTextField(40, new Dimension(
 			400, 21));
 
-	JCheckBox problemDescFileWrite = EditorCommon
+	JCheckBox problemDescFileWrite = FileEditorCommon
 			.createJCheckBox("Write Problem Description to separate file");
-	JLabel problemDescFileLabel = EditorCommon.createJLabel("File Extension: ");
-	JTextField problemDescFileField = EditorCommon.createJTextField(4,
+	JLabel problemDescFileLabel = FileEditorCommon.createJLabel("File Extension: ");
+	JTextField problemDescFileField = FileEditorCommon.createJTextField(4,
 			new Dimension(75, 21));
-	JLabel sigFileLabel = EditorCommon
+	JLabel sigFileLabel = FileEditorCommon
 			.createJLabel("Enter signature filename: ");
-	JTextField sigFileField = EditorCommon.createJTextField(40, new Dimension(
+	JTextField sigFileField = FileEditorCommon.createJTextField(40, new Dimension(
 			400, 21));
 
 	boolean savePending = false;
 
 	public EditConfig(Preferences pref) {
 		this.pref = pref;
-		EditorCommon.setDefaultAttributes(this, new BorderLayout());
+		FileEditorCommon.setDefaultAttributes(this, new BorderLayout());
 
-		setBackground(EditorCommon.WPB_COLOR);
+		setBackground(FileEditorCommon.WPB_COLOR);
 
 		String dirName = pref.getDirectoryName();
 		this.dirNameField.setText(dirName);
@@ -127,41 +126,41 @@ public class EditConfig extends JPanel implements ActionListener,
 			this.problemDescFileField.setEnabled(true);
 		}
 
-		Box dirNamePane = EditorCommon.createHorizontalBox(new Component[] {
+		Box dirNamePane = FileEditorCommon.createHorizontalBox(new Component[] {
 				this.dirNameLabel, this.dirNameField }, true);
 
-		Box backupPane = EditorCommon.createHorizontalBox(
+		Box backupPane = FileEditorCommon.createHorizontalBox(
 				new Component[] { this.backup }, true);
 
-		Box fileNamePane = EditorCommon.createHorizontalBox(new Component[] {
+		Box fileNamePane = FileEditorCommon.createHorizontalBox(new Component[] {
 				Box.createHorizontalStrut(20), this.fileNameLabel,
 				this.fileNameField }, true);
 
-		Box sigFilePane = EditorCommon.createHorizontalBox(new Component[] {
+		Box sigFilePane = FileEditorCommon.createHorizontalBox(new Component[] {
 				this.sigFileLabel, this.sigFileField }, true);
 
-		Box overridePane = EditorCommon.createHorizontalBox(
+		Box overridePane = FileEditorCommon.createHorizontalBox(
 				new Component[] { this.overrideFileNameField }, true);
 
-		Box lineCommentsPane = EditorCommon.createHorizontalBox(
+		Box lineCommentsPane = FileEditorCommon.createHorizontalBox(
 				new Component[] { this.useLineComments }, true);
 
-		Box htmlDescPane = EditorCommon.createHorizontalBox(
+		Box htmlDescPane = FileEditorCommon.createHorizontalBox(
 				new Component[] { this.htmlDesc }, true);
 
-		Box breakAtPane = EditorCommon.createHorizontalBox(new Component[] {
+		Box breakAtPane = FileEditorCommon.createHorizontalBox(new Component[] {
 				this.provideBreakField, this.breakAtField }, true);
 
-		Box beginCutPane = EditorCommon.createHorizontalBox(new Component[] {
+		Box beginCutPane = FileEditorCommon.createHorizontalBox(new Component[] {
 				this.beginCutLabel, this.beginCutField }, true);
 
-		Box endCutPane = EditorCommon.createHorizontalBox(new Component[] {
+		Box endCutPane = FileEditorCommon.createHorizontalBox(new Component[] {
 				this.endCutLabel, this.endCutField }, true);
 
-		Box probDescFileWriteBox = EditorCommon.createHorizontalBox(
+		Box probDescFileWriteBox = FileEditorCommon.createHorizontalBox(
 				new Component[] { this.problemDescFileWrite }, true);
 
-		Box probDescFileExtBox = EditorCommon.createHorizontalBox(
+		Box probDescFileExtBox = FileEditorCommon.createHorizontalBox(
 				new Component[] { Box.createHorizontalStrut(20),
 						this.problemDescFileLabel, this.problemDescFileField },
 				true);
@@ -292,7 +291,7 @@ public class EditConfig extends JPanel implements ActionListener,
 	public boolean savePreferences() {
 		if ((this.overrideFileNameField.isSelected())
 				&& (this.fileNameField.getText().trim().equals(""))) {
-			EditorCommon.showMessage("Error", "You must specify a filename",
+			FileEditorCommon.showMessage("Error", "You must specify a filename",
 					null);
 			return false;
 		}
@@ -301,7 +300,7 @@ public class EditConfig extends JPanel implements ActionListener,
 		try {
 			breakAt = Integer.parseInt(this.breakAtField.getText());
 		} catch (NumberFormatException e) {
-			EditorCommon.showMessage("Error", "The break at is not a number",
+			FileEditorCommon.showMessage("Error", "The break at is not a number",
 					null);
 			return false;
 		}
