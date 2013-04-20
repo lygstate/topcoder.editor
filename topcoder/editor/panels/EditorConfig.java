@@ -18,7 +18,7 @@ import javax.swing.event.DocumentListener;
 
 import topcoder.editor.Preferences;
 
-public class EditConfig extends JPanel implements ActionListener,
+public class EditorConfig extends JPanel implements ActionListener,
 		DocumentListener, ConfigurationInterface {
 	/**
 	 * 
@@ -64,7 +64,7 @@ public class EditConfig extends JPanel implements ActionListener,
 
 	boolean savePending = false;
 
-	public EditConfig(Preferences pref) {
+	public EditorConfig(Preferences pref) {
 		this.pref = pref;
 		Common.setDefaultAttributes(this, new BorderLayout());
 
@@ -328,7 +328,7 @@ public class EditConfig extends JPanel implements ActionListener,
 		frame.setDefaultCloseOperation(3);
 		Preferences pref = new Preferences();
 		pref.removeAllProperties();
-		frame.getContentPane().add(new EditConfig(pref));
+		frame.getContentPane().add(new EditorConfig(pref));
 		frame.pack();
 		frame.setVisible(true);
 	}

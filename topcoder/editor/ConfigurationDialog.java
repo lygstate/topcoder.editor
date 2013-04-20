@@ -20,7 +20,7 @@ import javax.swing.JTabbedPane;
 import topcoder.editor.panels.CodeTemplateConfig;
 import topcoder.editor.panels.CodeProcessorConfig;
 import topcoder.editor.panels.ConfigurationInterface;
-import topcoder.editor.panels.EditConfig;
+import topcoder.editor.panels.EditorConfig;
 import topcoder.editor.panels.Common;
 
 public class ConfigurationDialog extends JDialog implements ActionListener {
@@ -35,7 +35,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 	private ConfigurationInterface[] config = {
 			new CodeProcessorConfig(pref),
-			new EditConfig(this.pref),
+			new EditorConfig(this.pref),
 			new CodeTemplateConfig(this.pref),
 			};
 	private WindowHandler windowHandler = new WindowHandler();
