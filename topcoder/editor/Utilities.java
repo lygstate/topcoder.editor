@@ -124,6 +124,8 @@ public class Utilities {
 		return str.toString();
 	}
 
+	// Try to comment the problem out, so that the problem description can be 
+	// placed into the code.
 	public static final String parseProblem(String problem) {
 		if (problem.length() < 1)
 			return problem;
