@@ -4,27 +4,22 @@ import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
 
-import java.awt.Dialog;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintStream;
 import java.io.StringReader;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import javax.swing.text.Document;
-import javax.swing.text.JTextComponent;
 
 import topcoder.editor.ui.Common;
 import topcoder.editor.ui.EditorPanel;
@@ -40,11 +35,10 @@ public class Editor implements Observer {
 	String endCut;
 	String initialSrc = null;
 	Preferences pref = new Preferences(this);
-	Map userDefinedTags = new HashMap();
+	Map<String, String> userDefinedTags = new HashMap<String, String>();
 	Language language;
 	ProblemComponentModel component = null;
 	Renderer renderer;
-	private static final String POWEREDBY = "// Powered by FileEdit";
 
 	public Editor() {
 		this.log.setForeground(Common.FG_COLOR);
@@ -55,7 +49,7 @@ public class Editor implements Observer {
 		this.panel = new EditorPanel(this.log);
 	}
 
-	public void setUserDefinedTags(Map userDefinedTags) {
+	public void setUserDefinedTags(Map<String, String> userDefinedTags) {
 		this.userDefinedTags = userDefinedTags;
 	}
 
@@ -165,6 +159,7 @@ public class Editor implements Observer {
 		return "";
 	}
 
+	@SuppressWarnings("deprecation")
 	public void setSource(String source) {
 		String className = this.component.getClassName();
 
@@ -177,12 +172,13 @@ public class Editor implements Observer {
 		String problemDescription;
 
 		try {
-			problemDescription = this.pref.isHTMLDesc() ? this.renderer
-					.toHTML(this.language) : this.renderer
-					.toPlainText(this.language);
+			problemDescription = this.pref.isHTMLDesc() ?
+					this.renderer.toHTML(this.language)
+					: this.renderer.toPlainText(this.language);
 		} catch (Exception e) {
 			System.err.println("Exception happened during rendering: " + e);
-			problemDescription = this.pref.isHTMLDesc() ? "<html><body>Error happened - see applet for problem text</body></html>"
+			problemDescription = this.pref.isHTMLDesc() ?
+					"<html><body>Error happened - see applet for problem text</body></html>"
 					: "Error happened - see applet for problem text";
 		}
 
@@ -248,25 +244,15 @@ public class Editor implements Observer {
 				out.write(Utilities.lineEnding);
 			}
 			writeLog("Source successfully written to " + this.fullPath);
+			in.close();
+			out.flush();
+			out.close();
 		} catch (IOException e) {
-		} finally {
-			break label849;
-			localObject1 = returnAddress;
-			try {
-				in.close();
-			} catch (IOException localIOException1) {
-			}
-			try {
-				out.flush();
-				out.close();
-			} catch (IOException e) {
-				writeLog("Error closing the file " + this.fullPath + ": "
-						+ e.toString());
-			}
-
+			writeLog("Error manipulating the file " + this.fullPath + ": "
+					+ e.toString());
 		}
 
-		label849: if (this.pref.isWriteProblemDescFile()) {
+		if (this.pref.isWriteProblemDescFile()) {
 			String pFileName = (this.overridefname ? this.fileName : className)
 					+ "." + this.pref.getProblemDescExtension();
 			File pFullPath = new File(this.directory, pFileName);
@@ -285,23 +271,14 @@ public class Editor implements Observer {
 					out.write(line);
 					out.write(Utilities.lineEnding);
 				}
+				in.close();
+				out.flush();
+				out.close();
 				writeLog("Problem Description successfully written to "
 						+ pFullPath);
 			} catch (IOException e) {
-			} finally {
-				return;
-				e = returnAddress;
-				try {
-					in.close();
-				} catch (IOException localIOException2) {
-				}
-				try {
-					out.flush();
-					out.close();
-				} catch (IOException e) {
-					writeLog("Error closing the file " + pFullPath + ": "
-							+ e.toString());
-				}
+				writeLog("Error manipulating the file " + pFullPath + ": "
+						+ e.toString());
 			}
 		}
 	}
@@ -323,13 +300,14 @@ public class Editor implements Observer {
 	}
 
 	private final void writeLog(String text) {
+		System.out.println(text);
 		this.log.append(text);
 		this.log.append("\n");
 		this.log.setCaretPosition(this.log.getDocument().getLength() - 1);
 	}
 
 	public static void main(String[] args) {
-		ArrayList parms = new ArrayList();
+		List<String> parms = new ArrayList<String>();
 		parms.add("String");
 		parms.add("String");
 		parms.add("int");
