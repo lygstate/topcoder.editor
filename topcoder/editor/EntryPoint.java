@@ -92,9 +92,6 @@ public class EntryPoint {
 			userDefinedTags.putAll(temp);
 		}
 
-		// Pass it to the editor
-		if(editor==null) return;
-
 		editor.setUserDefinedTags(userDefinedTags);
 		editor.setSource(newSource);
 	}
