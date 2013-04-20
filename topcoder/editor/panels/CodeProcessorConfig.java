@@ -181,11 +181,14 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 		if (processorTable.getCellEditor() != null)
 			processorTable.getCellEditor().stopCellEditing();
 
+		/* Zero code processor is acceptable */
+		/*
 		if (myModel.getModel().length == 0) {
 			Common.showMessage("Error",
 					"Please specify at least one code processor class", null);
 			return false;
 		}
+		*/
 
 		int row = processorTable.getSelectedRow();
 		for (int x = 0; x < myModel.getModel().length; x++) {
