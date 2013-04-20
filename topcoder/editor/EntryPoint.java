@@ -158,6 +158,7 @@ public class EntryPoint {
 	public boolean isCacheable() {
 		return true;
 	}
+
 	// Pass through to editor
 	public Boolean setCompileResults(Boolean success, String message) { 
 		loadPreferences();

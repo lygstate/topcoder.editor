@@ -64,6 +64,34 @@ public class Editor implements Observer {
 		return this.panel;
 	}
 
+	protected String getSignature() {
+		String sigFileName = this.pref.getSignatureFileName().trim();
+		if (!sigFileName.equals("")) {
+			File sigFile = new File(sigFileName);
+
+			if (sigFile.exists()) {
+				StringBuffer sig = new StringBuffer((int) sigFile.length());
+				try {
+					BufferedReader in = new BufferedReader(new FileReader(sigFile));
+					while (true) {
+						String line = in.readLine();
+						if (line == null)
+							break;
+						sig.append(line);
+						sig.append(Utilities.lineEnding);
+					}
+					in.close();
+					return sig.toString();
+				} catch (IOException e) {
+					writeLog("Error reading the signature file " + sigFileName
+							+ ":" + e.toString() + Utilities.lineEnding
+							+ "SigFile ignored");
+				}
+			}
+		}
+		return "";
+	}
+
 	public String getSource() {
 		if (this.fullPath == null) {
 			writeLog("Trying to read source but file isn't initialized!.  Returning nothing.");
@@ -129,34 +157,6 @@ public class Editor implements Observer {
 		}
 
 		return source.toString();
-	}
-
-	protected String getSignature() {
-		String sigFileName = this.pref.getSignatureFileName().trim();
-		if (!sigFileName.equals("")) {
-			File sigFile = new File(sigFileName);
-
-			if (sigFile.exists()) {
-				StringBuffer sig = new StringBuffer((int) sigFile.length());
-				try {
-					BufferedReader in = new BufferedReader(new FileReader(sigFile));
-					while (true) {
-						String line = in.readLine();
-						if (line == null)
-							break;
-						sig.append(line);
-						sig.append(Utilities.lineEnding);
-					}
-					in.close();
-					return sig.toString();
-				} catch (IOException e) {
-					writeLog("Error reading the signature file " + sigFileName
-							+ ":" + e.toString() + Utilities.lineEnding
-							+ "SigFile ignored");
-				}
-			}
-		}
-		return "";
 	}
 
 	@SuppressWarnings("deprecation")
@@ -313,7 +313,7 @@ public class Editor implements Observer {
 		parms.add("int");
 
 		Editor en = new Editor();
-
+		en.fullPath = new File("test.java");
 		System.out.println(en.getSource());
 	}
 }
