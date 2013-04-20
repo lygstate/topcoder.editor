@@ -19,7 +19,7 @@ import com.topcoder.shared.problem.Renderer;
 public class EntryPoint {
 	
 	// The dynamic editor proxy
-	private DynamicEditor editor=null;
+	private Editor editor=null;
 
 	// The Code Processor, process code with the 
 	// need replacement.
@@ -156,7 +156,7 @@ public class EntryPoint {
 		// If already loaded - ignore
 		if(pref!=null) return;
 		processor = new ExampleProcessor();
-		
+		editor = new Editor();
 		// Create the preferences
 		pref = new Preferences(name);
 		

@@ -24,7 +24,7 @@ public class CodeTemplatePanel extends JPanel
 	public static final String CPP = "C++";
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
-	private final EditorPreferences pref;
+	private final Preferences pref;
 	private JComboBox language = EditorCommon.createJComboBox(new String[] { "C++",
 			"Java", "C#" });
 	private JLabel languageLabel = EditorCommon.createJLabel("Language: ");
@@ -41,7 +41,7 @@ public class CodeTemplatePanel extends JPanel
 	private String JAVAExtension;
 	private boolean initializing = true;
 
-	public CodeTemplatePanel(EditorPreferences pref) {
+	public CodeTemplatePanel(Preferences pref) {
 		this.pref = pref;
 
 		this.JAVATemplate = pref.getJAVATemplate();

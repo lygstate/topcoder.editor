@@ -21,7 +21,7 @@ public class EditorConfigurationDialog extends JDialog implements ActionListener
 	 * 
 	 */
 	private static final long serialVersionUID = 1712681747171330702L;
-	private EditorPreferences pref = new EditorPreferences();
+	private Preferences pref = new Preferences();
 	private JTabbedPane tab = new JTabbedPane();
 	private JButton saveButton = new JButton("Save");
 	private JButton closeButton = new JButton("Close");

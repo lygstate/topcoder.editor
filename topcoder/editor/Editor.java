@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-public class EditorEntryPoint implements Observer {
+public class Editor implements Observer {
 	JPanel panel;
 	JTextArea log = new JTextArea();
 	boolean overridefname;
@@ -34,14 +34,14 @@ public class EditorEntryPoint implements Observer {
 	String beginCut;
 	String endCut;
 	String initialSrc = null;
-	EditorPreferences pref = new EditorPreferences(this);
+	Preferences pref = new Preferences(this);
 	Map userDefinedTags = new HashMap();
 	Language language;
 	ProblemComponentModel component = null;
 	Renderer renderer;
 	private static final String POWEREDBY = "// Powered by FileEdit";
 
-	public EditorEntryPoint() {
+	public Editor() {
 		this.log.setForeground(EditorCommon.FG_COLOR);
 		this.log.setBackground(EditorCommon.BG_COLOR);
 
@@ -350,7 +350,7 @@ public class EditorEntryPoint implements Observer {
 		parms.add("String");
 		parms.add("int");
 
-		EditorEntryPoint en = new EditorEntryPoint();
+		Editor en = new Editor();
 
 		System.out.println(en.getSource());
 	}
