@@ -1,4 +1,4 @@
-package topcoder.editor.panels;
+package topcoder.editor.ui;
 
 import javax.swing.Icon;
 

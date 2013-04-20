@@ -5,7 +5,7 @@ import java.awt.Insets;
 
 import javax.swing.JTextArea;
 
-import topcoder.editor.panels.Common;
+import topcoder.editor.ui.Common;
 
 public class FileEditor extends JTextArea {
 	/**

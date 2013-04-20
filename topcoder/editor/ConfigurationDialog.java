@@ -17,11 +17,11 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
 
-import topcoder.editor.panels.CodeTemplateConfig;
-import topcoder.editor.panels.CodeProcessorConfig;
-import topcoder.editor.panels.ConfigurationInterface;
-import topcoder.editor.panels.EditorConfig;
-import topcoder.editor.panels.Common;
+import topcoder.editor.ui.CodeProcessorConfig;
+import topcoder.editor.ui.CodeTemplateConfig;
+import topcoder.editor.ui.Common;
+import topcoder.editor.ui.ConfigurationInterface;
+import topcoder.editor.ui.EditorConfig;
 
 public class ConfigurationDialog extends JDialog implements ActionListener {
 	/**

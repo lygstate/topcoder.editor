@@ -1,4 +1,4 @@
-package topcoder.editor.panels;
+package topcoder.editor.ui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

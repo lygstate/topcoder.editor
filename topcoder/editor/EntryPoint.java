@@ -12,7 +12,7 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
-import topcoder.editor.panels.Common;
+import topcoder.editor.ui.Common;
 
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;

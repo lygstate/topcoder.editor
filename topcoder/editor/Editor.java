@@ -26,7 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import topcoder.editor.panels.Common;
+import topcoder.editor.ui.Common;
 
 public class Editor implements Observer {
 	JPanel panel;

@@ -6,7 +6,7 @@
  * @version			3.0
  */
 
-package topcoder.editor.panels;
+package topcoder.editor.ui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

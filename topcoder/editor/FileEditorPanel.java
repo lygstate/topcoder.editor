@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import topcoder.editor.panels.Common;
+import topcoder.editor.ui.Common;
 
 public class FileEditorPanel extends JPanel {
 	/**
