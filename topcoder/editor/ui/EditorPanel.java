@@ -1,4 +1,4 @@
-package topcoder.editor;
+package topcoder.editor.ui;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -10,15 +10,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import topcoder.editor.ui.Common;
-
-public class FileEditorPanel extends JPanel {
+public class EditorPanel extends JPanel {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -4611382144783069067L;
 
-	public FileEditorPanel(JTextArea textArea) {
+	public EditorPanel(JTextArea textArea) {
 		Common.setDefaultAttributes(this);
 
 		JLabel statusLabel = Common.createJLabel("TopCoder Editor v0.10",
@@ -46,7 +44,7 @@ public class FileEditorPanel extends JPanel {
 		JTextArea text = new JTextArea();
 		text.setForeground(Common.FG_COLOR);
 		text.setBackground(Common.BG_COLOR);
-		frame.getContentPane().add(new FileEditorPanel(text));
+		frame.getContentPane().add(new EditorPanel(text));
 		frame.pack();
 		frame.setVisible(true);
 	}

@@ -27,6 +27,7 @@ import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
 import topcoder.editor.ui.Common;
+import topcoder.editor.ui.EditorPanel;
 
 public class Editor implements Observer {
 	JPanel panel;
@@ -51,7 +52,7 @@ public class Editor implements Observer {
 
 		loadPreferences();
 
-		this.panel = new FileEditorPanel(this.log);
+		this.panel = new EditorPanel(this.log);
 	}
 
 	public void configure() {
