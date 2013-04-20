@@ -28,12 +28,22 @@ public class CodeTemplateConfig extends JPanel
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
 	private final Preferences pref;
+
+	private JLabel languageLabel = Common.createJLabel("Language:", new Dimension(80, 20));
 	private JComboBox language = Common.createJComboBox(new String[] {
 			"C++", "Java", "C#" });
-	private JLabel languageLabel = Common.createJLabel("Language: ");
-	private JLabel extensionLabel = Common.createJLabel("Extension: ");
-	private JTextField extension = Common.createJTextField(5,
-			new Dimension(150, 20));
+	
+
+	private JLabel extensionLabel = Common.createJLabel("Extension:", new Dimension(80, 20));
+	private JTextField extension = Common.createJTextField(5, new Dimension(150, 20));
+
+	private JLabel identLabel =  Common.createJLabel("Ident:", new Dimension(80, 20));
+	private JComboBox identType = Common.createJComboBox(new String[] {
+			"Space", "Tab"});
+
+	private JLabel tabSizeLabel =  Common.createJLabel("Tab Size:", new Dimension(80, 20));
+	private JTextField tabSize = Common.createJTextField(5, new Dimension(150, 20));
+
 	private JTextArea template = Common.createJTextArea("");
 	private boolean savePending = false;
 	private String CPPTemplate;
@@ -60,11 +70,17 @@ public class CodeTemplateConfig extends JPanel
 				this.languageLabel, this.language, Box.createHorizontalGlue(),
 				this.extensionLabel, this.extension });
 
+		Box indent = Common.createHorizontalBox(new Component[] {
+				this.identLabel, this.identType, Box.createHorizontalGlue(),
+				this.tabSizeLabel, this.tabSize });
+
+		Box upperBoxs = Common.createVerticalBox(new Component[] {lang, indent});
+
 		JScrollPane scroll = Common.createJScrollPane(this.template);
 		this.template.getDocument().addDocumentListener(this);
 		this.extension.getDocument().addDocumentListener(this);
 
-		add(lang, "North");
+		add(upperBoxs, "North");
 		add(scroll, "Center");
 
 		this.language.addItemListener(this);

@@ -43,8 +43,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		setSize(new Dimension(600, 400));
 		this.pref = pref;
 		this.config = new ConfigurationInterface[] {
-				new CodeProcessorConfig(pref),
 				new EditorConfig(this.pref),
+				new CodeProcessorConfig(pref),
 				new CodeTemplateConfig(this.pref),
 				};
 

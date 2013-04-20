@@ -116,11 +116,11 @@ public class EditorConfig extends JPanel implements ActionListener,
 			this.provideBreakField.setEnabled(false);
 			this.breakAtField.setEnabled(false);
 
-			this.problemDescFileWrite.setEnabled(true);
-			this.problemDescFileWrite.setSelected(true);
+			this.problemDescFileWrite.setEnabled(false);
+			this.problemDescFileWrite.setSelected(false);
 
-			this.problemDescFileLabel.setEnabled(true);
-			this.problemDescFileField.setEnabled(true);
+			this.problemDescFileLabel.setEnabled(false);
+			this.problemDescFileField.setEnabled(false);
 		}
 
 		Box dirNamePane = Common.createHorizontalBox(new Component[] {
@@ -273,7 +273,7 @@ public class EditorConfig extends JPanel implements ActionListener,
 	}
 
 	public String getTabToolTip() {
-		return "General Configuration";
+		return "Editor";
 	}
 
 	public boolean isSavePending() {

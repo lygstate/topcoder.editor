@@ -163,7 +163,7 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 	}
 
 	public String getTabToolTip() {
-		return "General Configuration";
+		return "Code Processors";
 	}
 
 	public boolean isSavePending() {

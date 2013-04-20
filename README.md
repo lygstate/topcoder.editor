@@ -11,3 +11,8 @@ userDefinedTags
 The output indent is tab|space. (2 space, 4 space).
 
 Try to automatically genearte package data for Java.
+
+1. Select if write HTML file. The extension is always .html
+2. Select if generate the problem description into code.
+3. Select if generate the problem description in text file. Extension specified by user.
+These three option can co-exist. So user didn't bother the relationship between these options.

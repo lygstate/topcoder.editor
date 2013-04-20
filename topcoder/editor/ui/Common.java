@@ -74,6 +74,10 @@ public class Common {
 		return temp;
 	}
 
+	public static final Box createVerticalBox(Component[] a) {
+		return createVerticalBox(a, true);
+	}
+	
 	public static final Box createVerticalBox(Component[] a, boolean endGlue) {
 		Box temp = Box.createVerticalBox();
 		if (a.length == 0)
