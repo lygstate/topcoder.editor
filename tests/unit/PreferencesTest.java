@@ -2,9 +2,6 @@ package tests.unit;
 
 import static org.junit.Assert.*;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
