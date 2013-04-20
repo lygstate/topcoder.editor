@@ -342,7 +342,7 @@ public class Preferences {
 		return propertyKeys;
 	}
 
-	public void removeAllProperty() {
+	public void removeAllProperties() {
 		for (String propertyKey : getPropertyKeys()) {
 			pref.removeProperty(propertyKey);
 		}

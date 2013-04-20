@@ -3,6 +3,7 @@ package topcoder.editor;
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.DataType;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.LineNumberReader;
@@ -11,12 +12,13 @@ import java.io.StringReader;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 public class Utilities {
 	public static final String lineEnding = System
 			.getProperty("line.separator");
-	private static final Preferences pref = new Preferences();
+	public static final Preferences pref = new Preferences();
 
 	public static final String getSource(Language language,
 			ProblemComponentModel component, String fileName, String problemText) {
@@ -126,10 +128,10 @@ public class Utilities {
 		if (problem.length() < 1)
 			return problem;
 
-		int breakAt = pref.isProvideBreaks() ? pref.getBreakAt() : 2147483647;
+		int breakAt = pref.isProvideBreaks() ? pref.getBreakAt() : Integer.MAX_VALUE;
 		boolean lineComments = pref.isLineComments();
 
-		StringBuffer buf = new StringBuffer(problem.length() + 50);
+		StringBuffer buf = new StringBuffer(problem.length());
 		BreakIterator itr = BreakIterator.getLineInstance();
 		itr.setText(problem);
 
@@ -139,27 +141,28 @@ public class Utilities {
 		if (lineComments)
 			buf.append("// ");
 
-		while (end != -1) {
+		while (end != -1 && start < problem.length()) {
 			int p1 = problem.indexOf("\r\n", start);
 			if (p1 < 0)
-				p1 = 2147483647;
+				p1 = problem.length();
 
 			int p2 = problem.indexOf("\n", start);
 			if (p2 < 0)
-				p2 = 2147483647;
+				p2 = problem.length();
 
 			int p3 = problem.indexOf("\r", start);
 			if (p3 < 0)
-				p3 = 2147483647;
+				p3 = problem.length();
 
 			int pos = Math.min(p1, Math.min(p2, p3));
-			if ((pos >= start) && (pos <= start + breakAt)) {
+
+			if ((pos >= start) && (pos - start <= breakAt)) {
 				buf.append(problem.substring(start, pos));
 				buf.append(lineEnding);
 				if (lineComments)
 					buf.append("// ");
 				start = pos;
-				if ((pos + 2 < problem.length())
+				if ((pos < problem.length() - 2)
 						&& (problem.substring(pos, pos + 2).equals("\r\n")))
 					start += 2;
 				else {
@@ -192,7 +195,7 @@ public class Utilities {
 	}
 
 	public static void main(String[] args) {
-		ArrayList<String> parms = new ArrayList<String>();
+		List<String> parms = new ArrayList<String>();
 		parms.add("String");
 		parms.add("String");
 		parms.add("int");

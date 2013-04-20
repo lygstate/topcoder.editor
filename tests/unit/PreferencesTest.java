@@ -2,6 +2,9 @@ package tests.unit;
 
 import static org.junit.Assert.*;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,8 +32,8 @@ public class PreferencesTest extends Preferences {
 	}
 
 	@Test
-	public void test() {
-		removeAllProperty();
+	public void testGetProperties() {
+		removeAllProperties();
 		String[] x = getCodeProcessors();
 		assertArrayEquals(new String[]{"topcoder.editor.ExampleProcessor"}, x);
 	}
