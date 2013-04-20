@@ -32,7 +32,8 @@ public class PreferencesTest extends Preferences {
 	public void testGetProperties() {
 		removeAllProperties();
 		String[] x = getCodeProcessors();
-		assertArrayEquals(new String[]{"topcoder.editor.ExampleProcessor"}, x);
+		assertArrayEquals(new String[] { "topcoder.editor.ExampleProcessor" },
+				x);
 	}
 
 }

@@ -26,6 +26,6 @@ public abstract class CodeProcessor {
 		return source;
 	}
 
-	public void configure()	{
+	public void configure() {
 	}
 }

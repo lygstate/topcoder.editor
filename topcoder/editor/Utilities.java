@@ -106,8 +106,7 @@ public class Utilities {
 		try {
 			while (true) {
 				String temp = in.readLine();
-				if (temp == null)
-				{
+				if (temp == null) {
 					break;
 				}
 				temp = replaceAll(temp, "$LINENUMBER$",
@@ -124,7 +123,7 @@ public class Utilities {
 		return str.toString();
 	}
 
-	// Try to comment the problem out, so that the problem description can be 
+	// Try to comment the problem out, so that the problem description can be
 	// placed into the code.
 	public static final String parseProblem(String problem) {
 		if (problem.length() < 1)

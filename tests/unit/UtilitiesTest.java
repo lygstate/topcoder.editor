@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import topcoder.editor.Utilities;
 
-public class UtilitiesTest{
+public class UtilitiesTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -40,7 +40,10 @@ public class UtilitiesTest{
 
 	@Test
 	public void testReplaceLineNumber() {
-		String ret = Utilities.replaceLineNumber("Test it $LINENUMBER$ again!\r\n Hello, the world\r\n Haha $NEXTLINENUMBER$ Done\r\n What's do you mean$NEXTLINENUMBER$");
-		assertEquals("Test it 1 again!\r\n Hello, the world\r\n Haha 4 Done\r\n What's do you mean5\r\n", ret);
+		String ret = Utilities
+				.replaceLineNumber("Test it $LINENUMBER$ again!\r\n Hello, the world\r\n Haha $NEXTLINENUMBER$ Done\r\n What's do you mean$NEXTLINENUMBER$");
+		assertEquals(
+				"Test it 1 again!\r\n Hello, the world\r\n Haha 4 Done\r\n What's do you mean5\r\n",
+				ret);
 	}
 }

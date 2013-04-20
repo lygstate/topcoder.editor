@@ -70,9 +70,8 @@ public class Preferences {
 	public String[] getCodeProcessors() {
 		boolean needUpdate = false;
 		int num = getIntProperty(Preferences.NUMCODEPROCESSORS, -1);
-		if (num == -1)
-		{
-			String[] codeProcessors = {"topcoder.editor.ExampleProcessor"};
+		if (num == -1) {
+			String[] codeProcessors = { "topcoder.editor.ExampleProcessor" };
 			setCodeProcessors(codeProcessors);
 			return codeProcessors;
 		}
@@ -80,16 +79,14 @@ public class Preferences {
 		for (int x = 0; x < num; x++) {
 			String codeProcessor =
 					getStringProperty(Preferences.CODEPROCESSOR+ x, "");
-			if (codeProcessor == null || codeProcessor.trim().length() == 0)
-			{
+			if (codeProcessor == null || codeProcessor.trim().length() == 0) {
 				needUpdate = true;
 				continue;
 			}
 			rc.add(codeProcessor);
 		}
-		String [] ret = rc.toArray(new String[0]);
-		if (needUpdate)
-		{
+		String[] ret = rc.toArray(new String[0]);
+		if (needUpdate) {
 			setCodeProcessors(ret);
 		}
 		return ret;
@@ -107,7 +104,8 @@ public class Preferences {
 
 		// Save/overlay the existing ones
 		for (int x = 0; x < codeProcessors.length; x++) {
-			setStringProperty(CODEPROCESSOR + x, codeProcessors[x] == null ? "" : codeProcessors[x]);
+			setStringProperty(CODEPROCESSOR + x, codeProcessors[x] == null ? ""
+					: codeProcessors[x]);
 		}
 
 		// Sync the number

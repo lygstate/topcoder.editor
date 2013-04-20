@@ -77,8 +77,7 @@ public class EditorTitledBorder extends TitledBorder {
 
 		int titlePos = getTitlePosition();
 		switch (titlePos) {
-		case 1:
-		{
+		case 1: {
 			int diff = ascent + descent + (Math.max(3, 6) - 3);
 			grooveRect.y += diff;
 			grooveRect.height -= diff;
@@ -86,8 +85,7 @@ public class EditorTitledBorder extends TitledBorder {
 			break;
 		}
 		case 0:
-		case 2:
-		{
+		case 2: {
 			int diff = Math.max(0, ascent / 2 + 3 - 3);
 			grooveRect.y += diff;
 			grooveRect.height -= diff;

@@ -19,8 +19,8 @@ public class EditorPanel extends JPanel {
 	public EditorPanel(JTextArea textArea) {
 		Common.setDefaultAttributes(this);
 
-		JLabel statusLabel = Common.createJLabel(Common.PRODUCT_NAME,
-				new Font(getFont().getFontName(), 3, getFont().getSize()));
+		JLabel statusLabel = Common.createJLabel(Common.PRODUCT_NAME, new Font(
+				getFont().getFontName(), 3, getFont().getSize()));
 		JLabel reminderLabel = Common.createJLabel(
 				"*** Make sure you remotely compile before test/submit ***",
 				new Font(getFont().getFontName(), 3, getFont().getSize()));
@@ -28,11 +28,8 @@ public class EditorPanel extends JPanel {
 		JScrollPane scrollPane = Common.createJScrollPane(textArea);
 		scrollPane.setBorder(Common.getTitledBorder("Activity Log"));
 
-		Box status = Common
-				.createVerticalBox(
-						new Component[] { statusLabel,
-								Box.createVerticalGlue(), reminderLabel },
-						false);
+		Box status = Common.createVerticalBox(new Component[] { statusLabel,
+				Box.createVerticalGlue(), reminderLabel }, false);
 
 		add(scrollPane, "Center");
 		add(status, "South");
