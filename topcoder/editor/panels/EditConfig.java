@@ -16,7 +16,6 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import topcoder.editor.ConfigurationInterface;
 import topcoder.editor.EditorCommon;
 import topcoder.editor.Preferences;
 

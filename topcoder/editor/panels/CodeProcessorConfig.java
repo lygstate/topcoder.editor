@@ -20,7 +20,6 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import topcoder.editor.ConfigurationInterface;
 import topcoder.editor.Preferences;
 
 public class CodeProcessorConfig extends JPanel implements ActionListener,

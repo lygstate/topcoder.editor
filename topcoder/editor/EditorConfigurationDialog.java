@@ -19,6 +19,7 @@ import javax.swing.JTabbedPane;
 
 import topcoder.editor.panels.CodeTemplateConfig;
 import topcoder.editor.panels.CodeProcessorConfig;
+import topcoder.editor.panels.ConfigurationInterface;
 import topcoder.editor.panels.EditConfig;
 
 public class EditorConfigurationDialog extends JDialog implements ActionListener {
