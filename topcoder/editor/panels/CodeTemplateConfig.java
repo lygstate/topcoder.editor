@@ -28,13 +28,13 @@ public class CodeTemplateConfig extends JPanel
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
 	private final Preferences pref;
-	private JComboBox language = FileEditorCommon.createJComboBox(new String[] {
+	private JComboBox language = Common.createJComboBox(new String[] {
 			"C++", "Java", "C#" });
-	private JLabel languageLabel = FileEditorCommon.createJLabel("Language: ");
-	private JLabel extensionLabel = FileEditorCommon.createJLabel("Extension: ");
-	private JTextField extension = FileEditorCommon.createJTextField(5,
+	private JLabel languageLabel = Common.createJLabel("Language: ");
+	private JLabel extensionLabel = Common.createJLabel("Extension: ");
+	private JTextField extension = Common.createJTextField(5,
 			new Dimension(150, 20));
-	private JTextArea template = FileEditorCommon.createJTextArea("");
+	private JTextArea template = Common.createJTextArea("");
 	private boolean savePending = false;
 	private String CPPTemplate;
 	private String CPPExtension;
@@ -54,13 +54,13 @@ public class CodeTemplateConfig extends JPanel
 		this.CPPExtension = pref.getCPPExtension();
 		this.CSHARPExtension = pref.getCSHARPExtension();
 
-		FileEditorCommon.setDefaultAttributes(this);
+		Common.setDefaultAttributes(this);
 
-		Box lang = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box lang = Common.createHorizontalBox(new Component[] {
 				this.languageLabel, this.language, Box.createHorizontalGlue(),
 				this.extensionLabel, this.extension });
 
-		JScrollPane scroll = FileEditorCommon.createJScrollPane(this.template);
+		JScrollPane scroll = Common.createJScrollPane(this.template);
 		this.template.getDocument().addDocumentListener(this);
 		this.extension.getDocument().addDocumentListener(this);
 

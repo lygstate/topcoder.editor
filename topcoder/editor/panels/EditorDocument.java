@@ -1,10 +1,10 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
 
-public class FileEditorDocument extends PlainDocument {
+public class EditorDocument extends PlainDocument {
 	/**
 	 * 
 	 */
@@ -12,11 +12,11 @@ public class FileEditorDocument extends PlainDocument {
 	private int limit;
 	private boolean toUppercase = false;
 
-	public FileEditorDocument(int limit) {
+	public EditorDocument(int limit) {
 		this.limit = limit;
 	}
 
-	public FileEditorDocument(int limit, boolean upper) {
+	public EditorDocument(int limit, boolean upper) {
 		this.limit = limit;
 		this.toUppercase = upper;
 	}

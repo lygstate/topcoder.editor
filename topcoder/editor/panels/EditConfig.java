@@ -25,50 +25,50 @@ public class EditConfig extends JPanel implements ActionListener,
 	 */
 	private static final long serialVersionUID = 2663430179796252986L;
 	Preferences pref;
-	JLabel dirNameLabel = FileEditorCommon
+	JLabel dirNameLabel = Common
 			.createJLabel("Enter directory to read/write problems to:");
-	JTextField dirNameField = FileEditorCommon.createJTextField(40, new Dimension(
+	JTextField dirNameField = Common.createJTextField(40, new Dimension(
 			400, 21));
-	JCheckBox backup = FileEditorCommon
+	JCheckBox backup = Common
 			.createJCheckBox("Backup existing file then overwrite (uncheck if you want to keep existing file)");
-	JLabel fileNameLabel = FileEditorCommon
+	JLabel fileNameLabel = Common
 			.createJLabel("Enter filename to use (no extension):");
-	JTextField fileNameField = FileEditorCommon.createJTextField(40, new Dimension(
+	JTextField fileNameField = Common.createJTextField(40, new Dimension(
 			400, 21));
-	JCheckBox htmlDesc = FileEditorCommon
+	JCheckBox htmlDesc = Common
 			.createJCheckBox("Write the problem description using HTML");
-	JCheckBox useLineComments = FileEditorCommon
+	JCheckBox useLineComments = Common
 			.createJCheckBox("Use Line Comments for Problem Description");
-	JCheckBox overrideFileNameField = FileEditorCommon
+	JCheckBox overrideFileNameField = Common
 			.createJCheckBox("Make filename equal to classname");
-	JCheckBox provideBreakField = FileEditorCommon
+	JCheckBox provideBreakField = Common
 			.createJCheckBox("Force Breaks at");
-	JTextField breakAtField = FileEditorCommon.createJTextField(4, new Dimension(
+	JTextField breakAtField = Common.createJTextField(4, new Dimension(
 			75, 21));
-	JLabel beginCutLabel = FileEditorCommon.createJLabel("$BEGINCUT$ ");
-	JTextField beginCutField = FileEditorCommon.createJTextField(40, new Dimension(
+	JLabel beginCutLabel = Common.createJLabel("$BEGINCUT$ ");
+	JTextField beginCutField = Common.createJTextField(40, new Dimension(
 			400, 21));
-	JLabel endCutLabel = FileEditorCommon.createJLabel("$ENDCUT$ ");
-	JTextField endCutField = FileEditorCommon.createJTextField(40, new Dimension(
+	JLabel endCutLabel = Common.createJLabel("$ENDCUT$ ");
+	JTextField endCutField = Common.createJTextField(40, new Dimension(
 			400, 21));
 
-	JCheckBox problemDescFileWrite = FileEditorCommon
+	JCheckBox problemDescFileWrite = Common
 			.createJCheckBox("Write Problem Description to separate file");
-	JLabel problemDescFileLabel = FileEditorCommon.createJLabel("File Extension: ");
-	JTextField problemDescFileField = FileEditorCommon.createJTextField(4,
+	JLabel problemDescFileLabel = Common.createJLabel("File Extension: ");
+	JTextField problemDescFileField = Common.createJTextField(4,
 			new Dimension(75, 21));
-	JLabel sigFileLabel = FileEditorCommon
+	JLabel sigFileLabel = Common
 			.createJLabel("Enter signature filename: ");
-	JTextField sigFileField = FileEditorCommon.createJTextField(40, new Dimension(
+	JTextField sigFileField = Common.createJTextField(40, new Dimension(
 			400, 21));
 
 	boolean savePending = false;
 
 	public EditConfig(Preferences pref) {
 		this.pref = pref;
-		FileEditorCommon.setDefaultAttributes(this, new BorderLayout());
+		Common.setDefaultAttributes(this, new BorderLayout());
 
-		setBackground(FileEditorCommon.WPB_COLOR);
+		setBackground(Common.WPB_COLOR);
 
 		String dirName = pref.getDirectoryName();
 		this.dirNameField.setText(dirName);
@@ -126,41 +126,41 @@ public class EditConfig extends JPanel implements ActionListener,
 			this.problemDescFileField.setEnabled(true);
 		}
 
-		Box dirNamePane = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box dirNamePane = Common.createHorizontalBox(new Component[] {
 				this.dirNameLabel, this.dirNameField }, true);
 
-		Box backupPane = FileEditorCommon.createHorizontalBox(
+		Box backupPane = Common.createHorizontalBox(
 				new Component[] { this.backup }, true);
 
-		Box fileNamePane = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box fileNamePane = Common.createHorizontalBox(new Component[] {
 				Box.createHorizontalStrut(20), this.fileNameLabel,
 				this.fileNameField }, true);
 
-		Box sigFilePane = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box sigFilePane = Common.createHorizontalBox(new Component[] {
 				this.sigFileLabel, this.sigFileField }, true);
 
-		Box overridePane = FileEditorCommon.createHorizontalBox(
+		Box overridePane = Common.createHorizontalBox(
 				new Component[] { this.overrideFileNameField }, true);
 
-		Box lineCommentsPane = FileEditorCommon.createHorizontalBox(
+		Box lineCommentsPane = Common.createHorizontalBox(
 				new Component[] { this.useLineComments }, true);
 
-		Box htmlDescPane = FileEditorCommon.createHorizontalBox(
+		Box htmlDescPane = Common.createHorizontalBox(
 				new Component[] { this.htmlDesc }, true);
 
-		Box breakAtPane = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box breakAtPane = Common.createHorizontalBox(new Component[] {
 				this.provideBreakField, this.breakAtField }, true);
 
-		Box beginCutPane = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box beginCutPane = Common.createHorizontalBox(new Component[] {
 				this.beginCutLabel, this.beginCutField }, true);
 
-		Box endCutPane = FileEditorCommon.createHorizontalBox(new Component[] {
+		Box endCutPane = Common.createHorizontalBox(new Component[] {
 				this.endCutLabel, this.endCutField }, true);
 
-		Box probDescFileWriteBox = FileEditorCommon.createHorizontalBox(
+		Box probDescFileWriteBox = Common.createHorizontalBox(
 				new Component[] { this.problemDescFileWrite }, true);
 
-		Box probDescFileExtBox = FileEditorCommon.createHorizontalBox(
+		Box probDescFileExtBox = Common.createHorizontalBox(
 				new Component[] { Box.createHorizontalStrut(20),
 						this.problemDescFileLabel, this.problemDescFileField },
 				true);
@@ -291,7 +291,7 @@ public class EditConfig extends JPanel implements ActionListener,
 	public boolean savePreferences() {
 		if ((this.overrideFileNameField.isSelected())
 				&& (this.fileNameField.getText().trim().equals(""))) {
-			FileEditorCommon.showMessage("Error", "You must specify a filename",
+			Common.showMessage("Error", "You must specify a filename",
 					null);
 			return false;
 		}
@@ -300,7 +300,7 @@ public class EditConfig extends JPanel implements ActionListener,
 		try {
 			breakAt = Integer.parseInt(this.breakAtField.getText());
 		} catch (NumberFormatException e) {
-			FileEditorCommon.showMessage("Error", "The break at is not a number",
+			Common.showMessage("Error", "The break at is not a number",
 					null);
 			return false;
 		}

@@ -26,7 +26,7 @@ import javax.swing.JTextArea;
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import topcoder.editor.panels.FileEditorCommon;
+import topcoder.editor.panels.Common;
 
 public class Editor implements Observer {
 	JPanel panel;
@@ -46,8 +46,8 @@ public class Editor implements Observer {
 	private static final String POWEREDBY = "// Powered by FileEdit";
 
 	public Editor() {
-		this.log.setForeground(FileEditorCommon.FG_COLOR);
-		this.log.setBackground(FileEditorCommon.BG_COLOR);
+		this.log.setForeground(Common.FG_COLOR);
+		this.log.setBackground(Common.BG_COLOR);
 
 		loadPreferences();
 

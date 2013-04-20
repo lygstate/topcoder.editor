@@ -1,4 +1,4 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -11,7 +11,7 @@ import java.awt.Rectangle;
 import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 
-public class FileEditorTitledBorder extends TitledBorder {
+public class EditorTitledBorder extends TitledBorder {
 	/**
 	 * 
 	 */
@@ -22,7 +22,7 @@ public class FileEditorTitledBorder extends TitledBorder {
 	protected static final int TEXT_INSET_H = 5;
 	private Point textLoc = new Point();
 
-	public FileEditorTitledBorder(Border b, String t, int j, int p) {
+	public EditorTitledBorder(Border b, String t, int j, int p) {
 		super(b, t, j, p);
 	}
 

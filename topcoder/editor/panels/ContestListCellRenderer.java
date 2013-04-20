@@ -1,12 +1,10 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import java.awt.Component;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-
-import topcoder.editor.panels.FileEditorCommon;
 
 public class ContestListCellRenderer extends JLabel implements ListCellRenderer {
 	/**
@@ -24,16 +22,16 @@ public class ContestListCellRenderer extends JLabel implements ListCellRenderer 
 		if ((this.internalList != list) && (list != null)) {
 			this.internalList = list;
 
-			list.setSelectionForeground(FileEditorCommon.TF_COLOR);
-			list.setSelectionBackground(FileEditorCommon.TB_COLOR);
+			list.setSelectionForeground(Common.TF_COLOR);
+			list.setSelectionBackground(Common.TB_COLOR);
 		}
 
 		if (isSelected) {
-			setForeground(FileEditorCommon.HF_COLOR);
-			setBackground(FileEditorCommon.HB_COLOR);
+			setForeground(Common.HF_COLOR);
+			setBackground(Common.HB_COLOR);
 		} else {
-			setForeground(FileEditorCommon.TF_COLOR);
-			setBackground(FileEditorCommon.TB_COLOR);
+			setForeground(Common.TF_COLOR);
+			setBackground(Common.TB_COLOR);
 		}
 
 		if (value != null) {

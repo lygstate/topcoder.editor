@@ -5,7 +5,7 @@ import java.awt.Insets;
 
 import javax.swing.JTextArea;
 
-import topcoder.editor.panels.FileEditorCommon;
+import topcoder.editor.panels.Common;
 
 public class FileEditor extends JTextArea {
 	/**
@@ -27,11 +27,11 @@ public class FileEditor extends JTextArea {
 
 		setFont(new Font("Courier", 0, 12));
 		setMargin(new Insets(5, 5, 5, 5));
-		setSelectedTextColor(FileEditorCommon.HF_COLOR);
-		setSelectionColor(FileEditorCommon.HB_COLOR);
-		setCaretColor(FileEditorCommon.FG_COLOR);
-		setForeground(FileEditorCommon.FG_COLOR);
-		setBackground(FileEditorCommon.BG_COLOR);
+		setSelectedTextColor(Common.HF_COLOR);
+		setSelectionColor(Common.HB_COLOR);
+		setCaretColor(Common.FG_COLOR);
+		setForeground(Common.FG_COLOR);
+		setBackground(Common.BG_COLOR);
 		setEditable(false);
 	}
 

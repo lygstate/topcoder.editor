@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import topcoder.editor.panels.FileEditorCommon;
+import topcoder.editor.panels.Common;
 
 public class FileEditorPanel extends JPanel {
 	/**
@@ -19,18 +19,18 @@ public class FileEditorPanel extends JPanel {
 	private static final long serialVersionUID = -4611382144783069067L;
 
 	public FileEditorPanel(JTextArea textArea) {
-		FileEditorCommon.setDefaultAttributes(this);
+		Common.setDefaultAttributes(this);
 
-		JLabel statusLabel = FileEditorCommon.createJLabel("TopCoder Editor v0.10",
+		JLabel statusLabel = Common.createJLabel("TopCoder Editor v0.10",
 				new Font(getFont().getFontName(), 3, getFont().getSize()));
-		JLabel reminderLabel = FileEditorCommon.createJLabel(
+		JLabel reminderLabel = Common.createJLabel(
 				"*** Make sure you remotely compile before test/submit ***",
 				new Font(getFont().getFontName(), 3, getFont().getSize()));
 
-		JScrollPane scrollPane = FileEditorCommon.createJScrollPane(textArea);
-		scrollPane.setBorder(FileEditorCommon.getTitledBorder("Activity Log"));
+		JScrollPane scrollPane = Common.createJScrollPane(textArea);
+		scrollPane.setBorder(Common.getTitledBorder("Activity Log"));
 
-		Box status = FileEditorCommon
+		Box status = Common
 				.createHorizontalBox(
 						new Component[] { statusLabel,
 								Box.createHorizontalGlue(), reminderLabel },
@@ -44,8 +44,8 @@ public class FileEditorPanel extends JPanel {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(3);
 		JTextArea text = new JTextArea();
-		text.setForeground(FileEditorCommon.FG_COLOR);
-		text.setBackground(FileEditorCommon.BG_COLOR);
+		text.setForeground(Common.FG_COLOR);
+		text.setBackground(Common.BG_COLOR);
 		frame.getContentPane().add(new FileEditorPanel(text));
 		frame.pack();
 		frame.setVisible(true);

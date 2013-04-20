@@ -21,7 +21,7 @@ import topcoder.editor.panels.CodeTemplateConfig;
 import topcoder.editor.panels.CodeProcessorConfig;
 import topcoder.editor.panels.ConfigurationInterface;
 import topcoder.editor.panels.EditConfig;
-import topcoder.editor.panels.FileEditorCommon;
+import topcoder.editor.panels.Common;
 
 public class ConfigurationDialog extends JDialog implements ActionListener {
 	/**
@@ -46,11 +46,11 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BoxLayout(contentPane, 0));
-		contentPane.setForeground(FileEditorCommon.FG_COLOR);
-		contentPane.setBackground(FileEditorCommon.WPB_COLOR);
+		contentPane.setForeground(Common.FG_COLOR);
+		contentPane.setBackground(Common.WPB_COLOR);
 
-		this.tab.setForeground(FileEditorCommon.FG_COLOR);
-		this.tab.setBackground(FileEditorCommon.WPB_COLOR);
+		this.tab.setForeground(Common.FG_COLOR);
+		this.tab.setBackground(Common.WPB_COLOR);
 
 		for (int x = 0; x < this.config.length; x++) {
 			this.tab.addTab(this.config[x].getTabTitle(),
@@ -104,7 +104,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 			this.pref.save();
 			for (int x = 0; x < this.config.length; x++)
 				this.config[x].resetSavePending();
-			FileEditorCommon.showMessage("Save", "Preferences were saved successfully",
+			Common.showMessage("Save", "Preferences were saved successfully",
 					null);
 			return true;
 		} catch (IOException e) {
@@ -127,7 +127,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 				}
 
 			if (savePending) {
-				if (FileEditorCommon
+				if (Common
 						.confirm(
 								"Save Pending",
 								"Changes are pending.  Do you want to save before closing?",

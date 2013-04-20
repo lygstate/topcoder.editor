@@ -1,27 +1,27 @@
-package topcoder.editor;
+package topcoder.editor.panels;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Graphics;
 import javax.swing.border.LineBorder;
 
-public class FileEditorRoundBorder extends LineBorder {
+public class EditorRoundBorder extends LineBorder {
 	/**
 	 * RoundBorder serialVersionUID
 	 */
 	private static final long serialVersionUID = -3016467626337207467L;
 
-	public FileEditorRoundBorder(Color color) {
+	public EditorRoundBorder(Color color) {
 		super(color, 1);
 		this.roundedCorners = false;
 	}
 
-	public FileEditorRoundBorder(Color color, int thickness) {
+	public EditorRoundBorder(Color color, int thickness) {
 		super(color, thickness);
 		this.roundedCorners = false;
 	}
 
-	public FileEditorRoundBorder(Color color, int thickness, boolean roundedCorners) {
+	public EditorRoundBorder(Color color, int thickness, boolean roundedCorners) {
 		super(color, thickness);
 		this.roundedCorners = roundedCorners;
 	}
