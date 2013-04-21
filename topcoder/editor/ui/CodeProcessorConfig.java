@@ -28,8 +28,6 @@ public class CodeProcessorConfig extends JPanel
 	 */
 	private static final long serialVersionUID = 8321962248388177104L;
 
-	private Preferences pref;
-
 	private JButton codeProcessorConfigure = Common.createJButton("Configure");
 	private JButton verify = Common.createJButton("Verify");
 	private JButton upAction = Common.createJButton("Up");
@@ -43,8 +41,6 @@ public class CodeProcessorConfig extends JPanel
 	private String[] prefCodeProcessors;
 
 	public CodeProcessorConfig(Preferences pref) {
-
-		this.pref = pref;
 		Common.setDefaultAttributes(this);
 		this.setLayout(new GridBagLayout());
 
@@ -167,8 +163,7 @@ public class CodeProcessorConfig extends JPanel
 		if (row >= 0) {
 			processorTable.getSelectionModel().setSelectionInterval(row, row);
 		}
-
-		pref.setCodeProcessors(myModel.getModel());
+		this.prefCodeProcessors = myModel.getModel();
 		return true;
 	}
 

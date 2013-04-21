@@ -33,6 +33,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	ConfigurationInterface[] config;
 
 	private JTabbedPane tab = new JTabbedPane();
+	private JButton resetButton = new JButton("Reset");
 	private JButton saveButton = new JButton("Save");
 	private JButton closeButton = new JButton("Close");
 
@@ -66,6 +67,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 		Box buttonPanel = Box.createHorizontalBox();
 		buttonPanel.add(Box.createHorizontalGlue());
+		buttonPanel.add(this.resetButton);
+		buttonPanel.add(Box.createHorizontalStrut(10));
 		buttonPanel.add(this.saveButton);
 		buttonPanel.add(Box.createHorizontalStrut(10));
 		buttonPanel.add(this.closeButton);
@@ -83,6 +86,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 		this.load();
 
+		this.resetButton.addActionListener(this);
 		this.saveButton.addActionListener(this);
 		this.closeButton.addActionListener(this);
 
@@ -103,6 +107,15 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 			save();
 		} else if (src == this.closeButton) {
 			this.windowHandler.windowClosing(new WindowEvent(this, 201));
+		} else if (src == this.resetButton) {
+			if (Common
+					.confirm(
+							"Reset configuration",
+							"Do you want to reset all TopCoder Editor settings?",
+							null)) {
+				this.pref.removeAllProperties();
+				this.load();
+			}
 		}
 	}
 
@@ -115,7 +128,6 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 			/* Load preferences from config variable into config UI */
 			configX.loadPreferencesToUI();
 		}
-		return;
 	}
 
 	/* Save the preferences in the config variables into pref variable.

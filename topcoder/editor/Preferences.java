@@ -51,8 +51,18 @@ public class Preferences {
 	public static final String HTMLDESC = "topcoder.editor.config.htmldesc";
 	public static final String BACKUP = "topcoder.editor.config.backup";
 
-	/* The method main body, and the getter function name */ 
-	private static Map<String, Method> methodMap = Preferences.getPropertyMethods();
+	public final static class Tuple<X, Y> {
+		public final X x;
+		public final Y y;
+
+		public Tuple(X x, Y y) {
+			this.x = x;
+			this.y = y;
+		}
+	}
+
+	/* The method main body, and the getter/setter method tuple */ 
+	private static Map<String, Tuple<Method, Method>> methodMap = Preferences.getPropertyMethods();
 	private static List<Class<?>> supportedClass = Arrays.asList(new Class<?>[] {int.class, boolean.class, String.class, String[].class}); 
 
 	public Preferences() {
@@ -375,9 +385,9 @@ public class Preferences {
 		return null;
 	}
 
-	public static Map<String, Method> getPropertyMethods() {
+	public static Map<String, Tuple<Method, Method>> getPropertyMethods() {
 		Method[] declaredMethods = Preferences.class.getDeclaredMethods();
-		Map<String, Method> map = new HashMap<String, Method>();
+		Map<String, Tuple<Method, Method>> map = new HashMap<String, Tuple<Method, Method>>();
 		for (Method field : declaredMethods) {
 			int mod = field.getModifiers();
 			String name = field.getName();
@@ -394,9 +404,9 @@ public class Preferences {
 			}
 			Method m = null; 
 			if ( (m = getMethod(Preferences.class, "get" + name)) != null) {
-				map.put(name, m);
+				map.put(name, new Tuple<Method, Method>(m, field));
 			} else if ( (m = getMethod(Preferences.class, "is" + name)) != null) {
-				map.put(name, m);
+				map.put(name, new Tuple<Method, Method>(m, field));
 			}
 		}
 		return map;
@@ -437,10 +447,10 @@ public class Preferences {
 	public void loadInto(Object o) {
 		Map<String, Field> fields = getPreferenceFields(o);
 		for (String name: fields.keySet()) {
-			Method m = methodMap.get(name);
+			Tuple<Method,Method> m = methodMap.get(name);
 			Field f = fields.get(name);
 			try {
-				Object x = m.invoke(this, new Object[0]);
+				Object x = m.x.invoke(this);
 				Class <?> type = f.getType();
 				f.setAccessible(true);
 				if (type.equals(int.class)) {
@@ -460,9 +470,9 @@ public class Preferences {
 	public boolean isDifferentWith(Object o) {
 		Map<String, Field> fields = getPreferenceFields(o);
 		for (String name: fields.keySet()) {
-			Method m = methodMap.get(name);
+			Tuple<Method,Method> m = methodMap.get(name);
 			try {
-				Object x = m.invoke(this, new Object[0]);
+				Object x = m.x.invoke(this);
 				Field f = fields.get(name);
 				f.setAccessible(true);
 				Object y = f.get(o);
@@ -483,7 +493,25 @@ public class Preferences {
 
 	/* Local variable -> Preferences */
 	public void saveFrom(Object o) {
-		
+		Map<String, Field> fields = getPreferenceFields(o);
+		for (String name: fields.keySet()) {
+			Tuple<Method,Method> m = methodMap.get(name);
+			Field f = fields.get(name);
+			try {
+				Class <?> type = f.getType();
+				f.setAccessible(true);
+				Object y = f.get(o);
+				if (type.equals(int.class)) {
+					m.y.invoke(this, (int)(Integer)y);
+				} else if (type.equals(boolean.class)) {
+					m.y.invoke(this, (boolean)(Boolean)y);
+				} else { 
+					m.y.invoke(this, y);
+				}
+			} catch (Exception e) {
+				//Ignore all exceptions
+			}
+		}
 	}
 
 	public void removeAllProperties() {
