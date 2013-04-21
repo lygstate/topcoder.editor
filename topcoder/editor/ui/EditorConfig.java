@@ -265,7 +265,7 @@ public class EditorConfig extends JPanel implements ActionListener,
 	}
 
 	public String getTabTitle() {
-		return "General";
+		return "Editor";
 	}
 
 	public Icon getTabIcon() {
@@ -273,7 +273,7 @@ public class EditorConfig extends JPanel implements ActionListener,
 	}
 
 	public String getTabToolTip() {
-		return "Editor";
+		return "Editor configuration";
 	}
 
 	public boolean isSavePending() {

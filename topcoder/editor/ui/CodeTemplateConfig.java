@@ -13,13 +13,16 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.PlainDocument;
 
 import topcoder.editor.Preferences;
 
 public class CodeTemplateConfig extends JPanel
-	implements ItemListener, DocumentListener, ConfigurationInterface {
+	implements ItemListener, ConfigurationInterface {
 	/**
 	 * 
 	 */
@@ -38,31 +41,37 @@ public class CodeTemplateConfig extends JPanel
 	private JTextField extension = Common.createJTextField(5, new Dimension(150, 20));
 
 	private JLabel identLabel =  Common.createJLabel("Ident:", new Dimension(80, 20));
-	private JComboBox identType = Common.createJComboBox(new String[] {
+	private JComboBox indent = Common.createJComboBox(new String[] {
 			"Space", "Tab"});
 
 	private JLabel tabSizeLabel =  Common.createJLabel("Tab Size:", new Dimension(80, 20));
-	private JTextField tabSize = Common.createJTextField(5, new Dimension(150, 20));
+	private JTextField tabSizeField = Common.createJTextField(5, new Dimension(150, 20));
 
 	private JTextArea template = Common.createJTextArea("");
-	private boolean savePending = false;
-	private String CPPTemplate;
-	private String CPPExtension;
-	private String CSHARPTemplate;
-	private String CSHARPExtension;
-	private String JAVATemplate;
-	private String JAVAExtension;
+
+	private String prefCPPTemplate;
+	private String prefCPPExtension;
+	private String prefCSHARPTemplate;
+	private String prefCSHARPExtension;
+	private String prefJAVATemplate;
+	private String prefJAVAExtension;
+
+	private String prefIndentType;
+	private int prefTabSize;
+
 	private boolean initializing = true;
 
 	public CodeTemplateConfig(Preferences pref) {
 		this.pref = pref;
 
-		this.JAVATemplate = pref.getJAVATemplate();
-		this.CPPTemplate = pref.getCPPTemplate();
-		this.CSHARPTemplate = pref.getCSHARPTemplate();
-		this.JAVAExtension = pref.getJAVAExtension();
-		this.CPPExtension = pref.getCPPExtension();
-		this.CSHARPExtension = pref.getCSHARPExtension();
+		this.prefJAVATemplate = pref.getJAVATemplate();
+		this.prefCPPTemplate = pref.getCPPTemplate();
+		this.prefCSHARPTemplate = pref.getCSHARPTemplate();
+		this.prefJAVAExtension = pref.getJAVAExtension();
+		this.prefCPPExtension = pref.getCPPExtension();
+		this.prefCSHARPExtension = pref.getCSHARPExtension();
+		this.prefIndentType = pref.getIndentType();
+		this.prefTabSize = pref.getTabSize();
 
 		Common.setDefaultAttributes(this);
 
@@ -71,33 +80,54 @@ public class CodeTemplateConfig extends JPanel
 				this.extensionLabel, this.extension });
 
 		Box indent = Common.createHorizontalBox(new Component[] {
-				this.identLabel, this.identType, Box.createHorizontalGlue(),
-				this.tabSizeLabel, this.tabSize });
+				this.identLabel, this.indent, Box.createHorizontalGlue(),
+				this.tabSizeLabel, this.tabSizeField });
 
 		Box upperBoxs = Common.createVerticalBox(new Component[] {lang, indent});
 
 		JScrollPane scroll = Common.createJScrollPane(this.template);
-		this.template.getDocument().addDocumentListener(this);
-		this.extension.getDocument().addDocumentListener(this);
+
+		/* Filter integer document for TabSize,  */
+		((PlainDocument)this.tabSizeField.getDocument())
+			.setDocumentFilter(new IntFilter());
 
 		add(upperBoxs, "North");
 		add(scroll, "Center");
 
 		this.language.addItemListener(this);
+		this.indent.addItemListener(this);
 
-		this.template.setText(this.JAVATemplate);
-		this.extension.setText(this.JAVAExtension);
 		this.language.setSelectedItem("Java");
-
-		this.savePending = false;
+		this.loadPrefLangToUI("Java");
+		this.indent.setSelectedItem(prefIndentType);
+		this.tabSizeField.setText(String.valueOf(this.prefTabSize));
 
 		this.initializing = false;
 	}
 
-	public void itemStateChanged(ItemEvent e) {
-		if (this.initializing)
-			return;
+	/* Switch to one of languages C/C++,Java, C#,
+	 *  load the extension and template content from variable
+	 *  to the UI controls
+	 */
+	private void loadPrefLangToUI(String lang) {
+		if (lang.equals("Java")) {
+			this.template.setText(this.prefJAVATemplate);
+			this.extension.setText(this.prefJAVAExtension);
+		} else if (lang.equals("C++")) {
+			this.template.setText(this.prefCPPTemplate);
+			this.extension.setText(this.prefCPPExtension);
+		} else {
+			this.template.setText(this.prefCSHARPTemplate);
+			this.extension.setText(this.prefCSHARPExtension);
+		}
+	}
 
+	/* Switch from one of languages C/C++,Java, C#,
+	 *  save the extension and template content into variable
+	 *  from the UI controls
+	 */
+	private void savePrefLangFromUI(String lang)
+	{
 		String templateText = this.template.getText();
 		if (templateText == null)
 			templateText = "";
@@ -105,42 +135,37 @@ public class CodeTemplateConfig extends JPanel
 		String templateExt = this.extension.getText();
 		if (templateExt == null)
 			templateExt = "";
-		String lang = (String) e.getItem();
-		boolean isSelected = e.getStateChange() == 1;
 
-		if (isSelected) {
-			if (lang.equals("Java")) {
-				this.template.setText(this.JAVATemplate);
-				this.extension.setText(this.JAVAExtension);
-			} else if (lang.equals("C++")) {
-				this.template.setText(this.CPPTemplate);
-				this.extension.setText(this.CPPExtension);
-			} else {
-				this.template.setText(this.CSHARPTemplate);
-				this.extension.setText(this.CSHARPExtension);
-			}
-		} else if (lang.equals("Java")) {
-			this.JAVATemplate = templateText;
-			this.JAVAExtension = templateExt;
+		if (lang.equals("Java")) {
+			this.prefJAVATemplate = templateText;
+			this.prefJAVAExtension = templateExt;
 		} else if (lang.equals("C++")) {
-			this.CPPTemplate = templateText;
-			this.CPPExtension = templateExt;
+			this.prefCPPTemplate = templateText;
+			this.prefCPPExtension = templateExt;
 		} else {
-			this.CSHARPTemplate = templateText;
-			this.CSHARPExtension = templateExt;
+			this.prefCSHARPTemplate = templateText;
+			this.prefCSHARPExtension = templateExt;
 		}
 	}
 
-	public void changedUpdate(DocumentEvent e) {
-		this.savePending = true;
-	}
-
-	public void insertUpdate(DocumentEvent e) {
-		this.savePending = true;
-	}
-
-	public void removeUpdate(DocumentEvent e) {
-		this.savePending = true;
+	public void itemStateChanged(ItemEvent e) {
+		if (this.initializing)
+			return;
+		Object source = e.getSource();
+		if (source == this.language) {
+			String lang = (String) e.getItem();
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				loadPrefLangToUI(lang);
+			} else {
+				savePrefLangFromUI(lang);
+			}
+		}
+		else if (source == this.indent) {
+			String indentType = (String) e.getItem();
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				this.prefIndentType = indentType;
+			}
+		}
 	}
 
 	public String getTabTitle() {
@@ -152,36 +177,108 @@ public class CodeTemplateConfig extends JPanel
 	}
 
 	public String getTabToolTip() {
-		return "Specify code templates";
+		return "Specify code templates, please use leading Tab for template content.";
+	}
+
+	private void updatePreferences() {
+		try {
+			this.prefTabSize = Integer.parseInt(this.tabSizeField.getText());
+		}
+		catch (Exception e) {
+			this.prefTabSize = this.pref.getTabSize();
+		}
+		this.savePrefLangFromUI((String) this.language.getSelectedItem());
 	}
 
 	public boolean isSavePending() {
-		return this.savePending;
+		this.updatePreferences();
+		if (!this.pref.getJAVATemplate().equals(this.prefJAVATemplate)
+			|| !this.pref.getCPPTemplate().equals(this.prefCPPTemplate)
+			|| !this.pref.getCSHARPTemplate().equals(this.prefCSHARPTemplate)
+			|| !this.pref.getJAVAExtension().equals(this.prefJAVAExtension)
+			|| !this.pref.getCPPExtension().equals(this.prefCPPExtension)
+			|| !this.pref.getCSHARPExtension().equals(this.prefCSHARPExtension)
+			|| !this.pref.getIndentType().equals(this.prefIndentType)
+			|| !(this.pref.getTabSize() == this.prefTabSize)
+			) {
+			return true;
+		}
+		return false;
 	}
 
 	public void resetSavePending() {
-		this.savePending = false;
 	}
 
 	public boolean savePreferences() {
-		String lang = (String) this.language.getSelectedItem();
-		if (lang.equals("Java")) {
-			this.JAVATemplate = this.template.getText();
-			this.JAVAExtension = this.extension.getText();
-		} else if (lang.equals("C++")) {
-			this.CPPTemplate = this.template.getText();
-			this.CPPExtension = this.extension.getText();
-		} else {
-			this.CSHARPTemplate = this.template.getText();
-			this.CSHARPExtension = this.extension.getText();
+		this.updatePreferences();
+		this.pref.setJAVATemplate(this.prefJAVATemplate);
+		this.pref.setCPPTemplate(this.prefCPPTemplate);
+		this.pref.setCSHARPTemplate(this.prefCSHARPTemplate);
+		this.pref.setJAVAExtension(this.prefJAVAExtension);
+		this.pref.setCPPExtension(this.prefCPPExtension);
+		this.pref.setCSHARPExtension(this.prefCSHARPExtension);
+		this.pref.setIndentType(this.prefIndentType);
+		this.pref.setTabSize(this.prefTabSize);
+		return true;
+	}
+
+	class IntFilter extends DocumentFilter {
+		@Override
+		public void insertString(FilterBypass fb, int offset, String string,
+				AttributeSet attr) throws BadLocationException {
+
+			Document doc = fb.getDocument();
+			StringBuilder sb = new StringBuilder();
+			sb.append(doc.getText(0, doc.getLength()));
+			sb.insert(offset, string);
+
+			if (test(sb.toString())) {
+				super.insertString(fb, offset, string, attr);
+			} else {
+				// warn the user and don't allow the insert
+			}
 		}
 
-		this.pref.setJAVATemplate(this.JAVATemplate);
-		this.pref.setCPPTemplate(this.CPPTemplate);
-		this.pref.setCSHARPTemplate(this.CSHARPTemplate);
-		this.pref.setJAVAExtension(this.JAVAExtension);
-		this.pref.setCPPExtension(this.CPPExtension);
-		this.pref.setCSHARPExtension(this.CSHARPExtension);
-		return true;
+		private boolean test(String text) {
+			try {
+				Integer.parseInt(text);
+				return true;
+			} catch (NumberFormatException e) {
+				return false;
+			}
+		}
+
+		@Override
+		public void replace(FilterBypass fb, int offset, int length,
+				String text, AttributeSet attrs) throws BadLocationException {
+
+			Document doc = fb.getDocument();
+			StringBuilder sb = new StringBuilder();
+			sb.append(doc.getText(0, doc.getLength()));
+			sb.replace(offset, offset + length, text);
+
+			if (test(sb.toString())) {
+				super.replace(fb, offset, length, text, attrs);
+			} else {
+				// warn the user and don't allow the insert
+			}
+
+		}
+
+		@Override
+		public void remove(FilterBypass fb, int offset, int length)
+				throws BadLocationException {
+			Document doc = fb.getDocument();
+			StringBuilder sb = new StringBuilder();
+			sb.append(doc.getText(0, doc.getLength()));
+			sb.delete(offset, offset + length);
+
+			if (test(sb.toString())) {
+				super.remove(fb, offset, length);
+			} else {
+				// warn the user and don't allow the insert
+			}
+
+		}
 	}
 }

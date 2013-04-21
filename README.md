@@ -16,3 +16,7 @@ Try to automatically genearte package data for Java.
 2. Select if generate the problem description into code.
 3. Select if generate the problem description in text file. Extension specified by user.
 These three option can co-exist. So user didn't bother the relationship between these options.
+
+4. Automatically Compare and Save preferences. building the relationship between the local variable with the
+  preferences saved in the Preferences class.
+  

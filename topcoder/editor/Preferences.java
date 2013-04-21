@@ -31,6 +31,9 @@ public class Preferences {
 	public static final String JAVAEXTENSION = "topcoder.editor.config.javaextension";
 	public static final String CPPEXTENSION = "topcoder.editor.config.cppextension";
 	public static final String CSHARPEXTENSION = "topcoder.editor.config.csharpextension";
+	public static final String INDENTTYPE = "topcoder.editor.config.indenttype";
+	public static final String TABSIZE = "topcoder.editor.config.tabsize";
+
 	public static final String DIRNAMEKEY = "topcoder.editor.config.dirName";
 	public static final String FILENAMEKEY = "topcoder.editor.config.fileName";
 	public static final String OVERRIDEFILENAME = "topcoder.editor.config.overrideFileName";
@@ -166,6 +169,22 @@ public class Preferences {
 
 	public void setCPPExtension(String extension) {
 		setStringProperty(CPPEXTENSION, extension);
+	}
+
+	public String getIndentType() {
+		return getStringProperty(INDENTTYPE, "Tab");
+	}
+
+	public void setIndentType(String indenType) {
+		setStringProperty(INDENTTYPE, indenType);
+	}
+
+	public int getTabSize() {
+		return getIntProperty(TABSIZE, 4);
+	}
+
+	public void setTabSize(int tabSize) {
+		setIntProperty(TABSIZE, tabSize);
 	}
 
 	public String getDirectoryName() {
@@ -338,6 +357,24 @@ public class Preferences {
 			}
 		}
 		return propertyKeys;
+	}
+
+	public static List<Field> getPreferenceFields(Object o, Class<?> c) {
+		Field[] prefFields = c.getDeclaredFields();
+		List<Field> prefs = new ArrayList<Field>();
+		for (Field field : prefFields) {
+			int mod = field.getModifiers();
+			Class<?> type = field.getType();
+			if (Modifier.isPrivate(mod)
+				&& (type == String.class
+				|| type == int.class
+				|| type == boolean.class)) {
+				try {
+				} catch (Exception e) {
+				}
+			}
+		}
+		return prefs;
 	}
 
 	public void removeAllProperties() {

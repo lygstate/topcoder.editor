@@ -155,7 +155,7 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 	}
 
 	public String getTabTitle() {
-		return "General";
+		return "Code Processors";
 	}
 
 	public Icon getTabIcon() {
@@ -163,7 +163,7 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 	}
 
 	public String getTabToolTip() {
-		return "Code Processors";
+		return "Specify code processors";
 	}
 
 	public boolean isSavePending() {
