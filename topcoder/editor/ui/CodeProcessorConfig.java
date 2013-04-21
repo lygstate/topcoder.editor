@@ -15,15 +15,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import topcoder.editor.Preferences;
 
-public class CodeProcessorConfig extends JPanel implements ActionListener,
-		DocumentListener, ConfigurationInterface {
+public class CodeProcessorConfig extends JPanel
+	implements ActionListener, ConfigurationInterface {
 
 	/**
 	 * 
@@ -42,7 +40,7 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 	private JTable processorTable = Common.createJTable();
 	private MyModel myModel;
 
-	private boolean savePending = false;
+	private String[] prefCodeProcessors;
 
 	public CodeProcessorConfig(Preferences pref) {
 
@@ -50,11 +48,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 		Common.setDefaultAttributes(this);
 		this.setLayout(new GridBagLayout());
 
-		// Setup the dirName field(s)
-		myModel = new MyModel(pref.getCodeProcessors());
-		processorTable.setModel(myModel);
-		processorTable.getSelectionModel().setSelectionMode(
-				ListSelectionModel.SINGLE_SELECTION);
 
 		// Setup actionlisteners (must be last to avoid savepending problems)
 
@@ -84,11 +77,40 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0,
 						0, 0, 10), 0, 0));
 
-		// reset pending flag
-		savePending = false;
-
 		codeProcessorConfigure.addActionListener(this);
 		verify.addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		// Stop any editing
+		if (processorTable.getCellEditor() != null)
+			processorTable.getCellEditor().stopCellEditing();
+
+		if (e.getSource() == verify) {
+		} else if (e.getSource() == codeProcessorConfigure) {
+		}
+
+	}
+
+	public String getTabTitle() {
+		return "Code Processors";
+	}
+
+	public Icon getTabIcon() {
+		return null;
+	}
+
+	public String getTabToolTip() {
+		return "Specify code processors";
+	}
+
+	@Override
+	public void loadPreferencesToUI() {
+		/* Create the table model */
+		myModel = new MyModel(prefCodeProcessors);
+		processorTable.setModel(myModel);
+		processorTable.getSelectionModel().setSelectionMode(
+				ListSelectionModel.SINGLE_SELECTION);
 
 		upAction.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -128,66 +150,15 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 				processorTable.setRowSelectionInterval(row, row);
 			}
 		});
-
 	}
 
-	public void actionPerformed(ActionEvent e) {
+	@Override
+	public boolean savePreferencesFromUI() {
 		// Stop any editing
 		if (processorTable.getCellEditor() != null)
 			processorTable.getCellEditor().stopCellEditing();
 
-		if (e.getSource() == verify) {
-		} else if (e.getSource() == codeProcessorConfigure) {
-		}
-
-	}
-
-	public void changedUpdate(DocumentEvent e) {
-		savePending = true;
-	}
-
-	public void insertUpdate(DocumentEvent e) {
-		savePending = true;
-	}
-
-	public void removeUpdate(DocumentEvent e) {
-		savePending = true;
-	}
-
-	public String getTabTitle() {
-		return "Code Processors";
-	}
-
-	public Icon getTabIcon() {
-		return null;
-	}
-
-	public String getTabToolTip() {
-		return "Specify code processors";
-	}
-
-	public boolean isSavePending() {
-		return savePending;
-	}
-
-	public void resetSavePending() {
-		savePending = false;
-	}
-
-	public boolean savePreferences() {
-
-		// Stop any editing
-		if (processorTable.getCellEditor() != null)
-			processorTable.getCellEditor().stopCellEditing();
-
-		/* Zero code processor is acceptable */
-		/*
-		if (myModel.getModel().length == 0) {
-			Common.showMessage("Error",
-					"Please specify at least one code processor class", null);
-			return false;
-		}
-		*/
+		/* TODO: Test the existence of the configuration CodePrecessor class */
 
 		int row = processorTable.getSelectedRow();
 		for (int x = 0; x < myModel.getModel().length; x++) {
@@ -198,9 +169,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 		}
 
 		pref.setCodeProcessors(myModel.getModel());
-
-		resetSavePending();
-
 		return true;
 	}
 
@@ -255,7 +223,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 			if (row < 0 || row >= model.size())
 				return;
 			model.set(row, v);
-			savePending = true;
 		}
 
 		public int moveUp(int row) {
@@ -266,7 +233,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 			model.set(row - 1, moveit);
 			model.set(row, orig);
 			this.fireTableRowsUpdated(row - 1, row);
-			savePending = true;
 			return row - 1;
 		}
 
@@ -278,7 +244,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 			model.set(row + 1, moveit);
 			model.set(row, orig);
 			this.fireTableRowsUpdated(row, row + 1);
-			savePending = true;
 			return row + 1;
 		}
 
@@ -287,7 +252,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 				return row;
 			model.remove(row);
 			this.fireTableRowsDeleted(row, row);
-			savePending = true;
 			if (row >= model.size())
 				row = model.size() - 1;
 			return row;
@@ -296,7 +260,6 @@ public class CodeProcessorConfig extends JPanel implements ActionListener,
 		public int addRow() {
 			model.add("");
 			this.fireTableRowsInserted(model.size() - 1, model.size() - 1);
-			savePending = true;
 			return model.size() - 1;
 		}
 	}

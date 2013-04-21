@@ -18,8 +18,8 @@ import javax.swing.event.DocumentListener;
 
 import topcoder.editor.Preferences;
 
-public class EditorConfig extends JPanel implements ActionListener,
-		DocumentListener, ConfigurationInterface {
+public class EditorConfig extends JPanel
+	implements ActionListener, DocumentListener, ConfigurationInterface {
 	/**
 	 * 
 	 */
@@ -325,5 +325,17 @@ public class EditorConfig extends JPanel implements ActionListener,
 		frame.getContentPane().add(new EditorConfig(pref));
 		frame.pack();
 		frame.setVisible(true);
+	}
+
+	@Override
+	public void loadPreferencesToUI() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean savePreferencesFromUI() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }

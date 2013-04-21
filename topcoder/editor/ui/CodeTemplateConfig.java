@@ -21,8 +21,8 @@ import javax.swing.text.PlainDocument;
 
 import topcoder.editor.Preferences;
 
-public class CodeTemplateConfig extends JPanel
-	implements ItemListener, ConfigurationInterface {
+public class CodeTemplateConfig extends JPanel implements ItemListener,
+		ConfigurationInterface {
 	/**
 	 * 
 	 */
@@ -30,22 +30,26 @@ public class CodeTemplateConfig extends JPanel
 	public static final String CPP = "C++";
 	public static final String CSHARP = "C#";
 	public static final String JAVA = "Java";
-	private final Preferences pref;
 
-	private JLabel languageLabel = Common.createJLabel("Language:", new Dimension(80, 20));
-	private JComboBox language = Common.createJComboBox(new String[] {
-			"C++", "Java", "C#" });
-	
+	private JLabel languageLabel = Common.createJLabel("Language:",
+			new Dimension(80, 20));
+	private JComboBox language = Common.createJComboBox(new String[] { "C++",
+			"Java", "C#" });
 
-	private JLabel extensionLabel = Common.createJLabel("Extension:", new Dimension(80, 20));
-	private JTextField extension = Common.createJTextField(5, new Dimension(150, 20));
+	private JLabel extensionLabel = Common.createJLabel("Extension:",
+			new Dimension(80, 20));
+	private JTextField extension = Common.createJTextField(5, new Dimension(
+			150, 20));
 
-	private JLabel identLabel =  Common.createJLabel("Ident:", new Dimension(80, 20));
-	private JComboBox indent = Common.createJComboBox(new String[] {
-			"Space", "Tab"});
+	private JLabel identLabel = Common.createJLabel("Ident:", new Dimension(80,
+			20));
+	private JComboBox indent = Common.createJComboBox(new String[] { "Space",
+			"Tab" });
 
-	private JLabel tabSizeLabel =  Common.createJLabel("Tab Size:", new Dimension(80, 20));
-	private JTextField tabSizeField = Common.createJTextField(5, new Dimension(150, 20));
+	private JLabel tabSizeLabel = Common.createJLabel("Tab Size:",
+			new Dimension(80, 20));
+	private JTextField tabSizeField = Common.createJTextField(5, new Dimension(
+			150, 20));
 
 	private JTextArea template = Common.createJTextArea("");
 
@@ -59,20 +63,7 @@ public class CodeTemplateConfig extends JPanel
 	private String prefIndentType;
 	private int prefTabSize;
 
-	private boolean initializing = true;
-
 	public CodeTemplateConfig(Preferences pref) {
-		this.pref = pref;
-
-		this.prefJAVATemplate = pref.getJAVATemplate();
-		this.prefCPPTemplate = pref.getCPPTemplate();
-		this.prefCSHARPTemplate = pref.getCSHARPTemplate();
-		this.prefJAVAExtension = pref.getJAVAExtension();
-		this.prefCPPExtension = pref.getCPPExtension();
-		this.prefCSHARPExtension = pref.getCSHARPExtension();
-		this.prefIndentType = pref.getIndentType();
-		this.prefTabSize = pref.getTabSize();
-
 		Common.setDefaultAttributes(this);
 
 		Box lang = Common.createHorizontalBox(new Component[] {
@@ -83,33 +74,28 @@ public class CodeTemplateConfig extends JPanel
 				this.identLabel, this.indent, Box.createHorizontalGlue(),
 				this.tabSizeLabel, this.tabSizeField });
 
-		Box upperBoxs = Common.createVerticalBox(new Component[] {lang, indent});
+		Box upperBoxs = Common
+				.createVerticalBox(new Component[] { lang, indent });
 
 		JScrollPane scroll = Common.createJScrollPane(this.template);
 
-		/* Filter integer document for TabSize,  */
-		((PlainDocument)this.tabSizeField.getDocument())
-			.setDocumentFilter(new IntFilter());
+		/* Filter integer document for TabSize */
+		((PlainDocument) this.tabSizeField.getDocument())
+				.setDocumentFilter(new IntFilter());
 
 		add(upperBoxs, "North");
 		add(scroll, "Center");
 
 		this.language.addItemListener(this);
 		this.indent.addItemListener(this);
-
-		this.language.setSelectedItem("Java");
-		this.loadPrefLangToUI("Java");
-		this.indent.setSelectedItem(prefIndentType);
-		this.tabSizeField.setText(String.valueOf(this.prefTabSize));
-
-		this.initializing = false;
 	}
 
-	/* Switch to one of languages C/C++,Java, C#,
-	 *  load the extension and template content from variable
-	 *  to the UI controls
+	/*
+	 * Switch to one of languages C/C++,Java, C#, load the extension and
+	 * template content from variable to the UI controls
 	 */
-	private void loadPrefLangToUI(String lang) {
+	private void loadPrefLangToUI() {
+		String lang = (String) language.getSelectedItem();
 		if (lang.equals("Java")) {
 			this.template.setText(this.prefJAVATemplate);
 			this.extension.setText(this.prefJAVAExtension);
@@ -122,12 +108,11 @@ public class CodeTemplateConfig extends JPanel
 		}
 	}
 
-	/* Switch from one of languages C/C++,Java, C#,
-	 *  save the extension and template content into variable
-	 *  from the UI controls
+	/*
+	 * Switch from one of languages C/C++,Java, C#, save the extension and
+	 * template content into variable from the UI controls
 	 */
-	private void savePrefLangFromUI(String lang)
-	{
+	private void savePrefLangFromUI(String lang) {
 		String templateText = this.template.getText();
 		if (templateText == null)
 			templateText = "";
@@ -149,18 +134,15 @@ public class CodeTemplateConfig extends JPanel
 	}
 
 	public void itemStateChanged(ItemEvent e) {
-		if (this.initializing)
-			return;
 		Object source = e.getSource();
 		if (source == this.language) {
-			String lang = (String) e.getItem();
-			if (e.getStateChange() == ItemEvent.SELECTED) {
-				loadPrefLangToUI(lang);
-			} else {
+			if (e.getStateChange() == ItemEvent.DESELECTED) {
+				String lang = (String) e.getItem();
 				savePrefLangFromUI(lang);
+			} else {
+				loadPrefLangToUI();
 			}
-		}
-		else if (source == this.indent) {
+		} else if (source == this.indent) {
 			String indentType = (String) e.getItem();
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				this.prefIndentType = indentType;
@@ -168,57 +150,40 @@ public class CodeTemplateConfig extends JPanel
 		}
 	}
 
+	@Override
 	public String getTabTitle() {
 		return "Code Template";
 	}
 
-	public Icon getTabIcon() {
-		return null;
-	}
-
+	@Override
 	public String getTabToolTip() {
 		return "Specify code templates, please use leading Tab for template content.";
 	}
 
-	private void updatePreferences() {
+	@Override
+	public Icon getTabIcon() {
+		return null;
+	}
+
+	@Override
+	public void loadPreferencesToUI() {
+		this.loadPrefLangToUI();
+		this.language.setSelectedItem("Java");
+
+		this.indent.setSelectedItem(prefIndentType);
+		this.tabSizeField.setText(String.valueOf(this.prefTabSize));
+	}
+
+	@Override
+	public boolean savePreferencesFromUI() {
+
 		try {
-			this.prefTabSize = Integer.parseInt(this.tabSizeField.getText());
-		}
-		catch (Exception e) {
-			this.prefTabSize = this.pref.getTabSize();
+			int tabSize = Integer.parseInt(this.tabSizeField.getText());
+			this.prefTabSize = tabSize;
+		} catch (Exception e) {
+			return false;
 		}
 		this.savePrefLangFromUI((String) this.language.getSelectedItem());
-	}
-
-	public boolean isSavePending() {
-		this.updatePreferences();
-		if (!this.pref.getJAVATemplate().equals(this.prefJAVATemplate)
-			|| !this.pref.getCPPTemplate().equals(this.prefCPPTemplate)
-			|| !this.pref.getCSHARPTemplate().equals(this.prefCSHARPTemplate)
-			|| !this.pref.getJAVAExtension().equals(this.prefJAVAExtension)
-			|| !this.pref.getCPPExtension().equals(this.prefCPPExtension)
-			|| !this.pref.getCSHARPExtension().equals(this.prefCSHARPExtension)
-			|| !this.pref.getIndentType().equals(this.prefIndentType)
-			|| !(this.pref.getTabSize() == this.prefTabSize)
-			) {
-			return true;
-		}
-		return false;
-	}
-
-	public void resetSavePending() {
-	}
-
-	public boolean savePreferences() {
-		this.updatePreferences();
-		this.pref.setJAVATemplate(this.prefJAVATemplate);
-		this.pref.setCPPTemplate(this.prefCPPTemplate);
-		this.pref.setCSHARPTemplate(this.prefCSHARPTemplate);
-		this.pref.setJAVAExtension(this.prefJAVAExtension);
-		this.pref.setCPPExtension(this.prefCPPExtension);
-		this.pref.setCSHARPExtension(this.prefCSHARPExtension);
-		this.pref.setIndentType(this.prefIndentType);
-		this.pref.setTabSize(this.prefTabSize);
 		return true;
 	}
 
@@ -281,4 +246,5 @@ public class CodeTemplateConfig extends JPanel
 
 		}
 	}
+
 }

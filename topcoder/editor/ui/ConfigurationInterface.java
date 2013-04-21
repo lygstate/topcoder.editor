@@ -9,9 +9,11 @@ public abstract interface ConfigurationInterface {
 
 	public abstract Icon getTabIcon();
 
-	public abstract boolean isSavePending();
-
-	public abstract boolean savePreferences();
-
-	public abstract void resetSavePending();
+	/* These two function should be implemented, because these are 
+	 * depending on the specific UI
+	 */
+	/* Local variable -> UI */
+	public abstract void loadPreferencesToUI();
+	/* UI -> Local variable */
+	public abstract boolean savePreferencesFromUI();
 }

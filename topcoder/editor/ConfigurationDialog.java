@@ -81,6 +81,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		contentPane.add(mainPanel);
 		contentPane.add(Box.createHorizontalStrut(10));
 
+		this.load();
+
 		this.saveButton.addActionListener(this);
 		this.closeButton.addActionListener(this);
 
@@ -92,24 +94,42 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		Object src = e.getSource();
-		if (src == this.saveButton)
+		if (src == this.saveButton) {
+			if (false == this.saveFromUI()) {
+				Common.showMessage("Save", "The UI contains wrong configuration, save failed.",
+						null);
+				return ;
+			}
 			save();
-		else if (src == this.closeButton)
+		} else if (src == this.closeButton) {
 			this.windowHandler.windowClosing(new WindowEvent(this, 201));
+		}
 	}
 
+	/* Load the preferences from File, and then load into the UI element */
+	public void load() {
+		for (int x = 0; x < this.config.length; x++) {
+			ConfigurationInterface configX = this.config[x];
+			/* Load preferences from the config file into config variable*/
+			pref.loadInto(configX);
+			/* Load preferences from config variable into config UI */
+			configX.loadPreferencesToUI();
+		}
+		return;
+	}
+
+	/* Save the preferences in the config variables into pref variable.
+	 * and then save into the preference file.  
+	 */
 	public boolean save() {
 		for (int x = 0; x < this.config.length; x++) {
-			if (!this.config[x].savePreferences()) {
-				this.tab.setSelectedIndex(x);
-				return false;
-			}
+			/* Save into the preference class */
+			pref.saveFrom(this.config[x]);
 		}
 
 		try {
+			/* Save into the preference file */
 			this.pref.save();
-			for (int x = 0; x < this.config.length; x++)
-				this.config[x].resetSavePending();
 			Common.showMessage("Save", "Preferences were saved successfully",
 					null);
 			return true;
@@ -120,19 +140,35 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 		return false;
 	}
 
+	public boolean saveFromUI() {
+		for (int x = 0; x < this.config.length; x++) {
+			/* The preferences contained in the UI is not correct */
+			if (false == this.config[x].savePreferencesFromUI()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public boolean isSavePending() {
+		for (int x = 0; x < this.config.length; x++) {
+			/* There is different between the config class and pref class */
+			if (pref.isDifferentWith(this.config[x])) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private class WindowHandler extends WindowAdapter {
 		WindowHandler() {
 		}
 
 		public void windowClosing(WindowEvent e) {
-			boolean savePending = false;
-			for (int x = 0; x < ConfigurationDialog.this.config.length; x++)
-				if (ConfigurationDialog.this.config[x].isSavePending()) {
-					savePending = true;
-					break;
-				}
-
-			if (savePending) {
+			if (false == ConfigurationDialog.this.saveFromUI()) {
+				Common.showMessage("Save", "The UI contains wrong configuration, can not save.",
+						null);
+			} else if (ConfigurationDialog.this.isSavePending()) {
 				if (Common
 						.confirm(
 								"Save Pending",

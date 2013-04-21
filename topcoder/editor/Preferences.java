@@ -9,7 +9,10 @@
 package topcoder.editor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observer;
 
 import com.topcoder.client.contestApplet.common.LocalPreferences;
@@ -47,6 +50,10 @@ public class Preferences {
 	public static final String SIGNATUREFILENAME = "topcoder.editor.config.signaturefilename";
 	public static final String HTMLDESC = "topcoder.editor.config.htmldesc";
 	public static final String BACKUP = "topcoder.editor.config.backup";
+
+	/* The method main body, and the getter function name */ 
+	private static Map<String, Method> methodMap = Preferences.getPropertyMethods();
+	private static List<Class<?>> supportedClass = Arrays.asList(new Class<?>[] {int.class, boolean.class, String.class, String[].class}); 
 
 	public Preferences() {
 	}
@@ -359,22 +366,124 @@ public class Preferences {
 		return propertyKeys;
 	}
 
-	public static List<Field> getPreferenceFields(Object o, Class<?> c) {
-		Field[] prefFields = c.getDeclaredFields();
-		List<Field> prefs = new ArrayList<Field>();
-		for (Field field : prefFields) {
+	static Method getMethod(Class<?> c, String name) {
+		try {
+			return c.getMethod(name);
+		} catch (SecurityException e) {
+		} catch (NoSuchMethodException e) {
+		}
+		return null;
+	}
+
+	public static Map<String, Method> getPropertyMethods() {
+		Method[] declaredMethods = Preferences.class.getDeclaredMethods();
+		Map<String, Method> map = new HashMap<String, Method>();
+		for (Method field : declaredMethods) {
 			int mod = field.getModifiers();
-			Class<?> type = field.getType();
-			if (Modifier.isPrivate(mod)
-				&& (type == String.class
-				|| type == int.class
-				|| type == boolean.class)) {
-				try {
-				} catch (Exception e) {
-				}
+			String name = field.getName();
+			if (name.startsWith("set")) {
+				name = name.substring("set".length());
+			} else {
+				name = null;
+			}
+			if (name == null || name.equals("")) {
+				continue;
+			}
+			if (!Modifier.isPublic(mod)) {
+				continue;
+			}
+			Method m = null; 
+			if ( (m = getMethod(Preferences.class, "get" + name)) != null) {
+				map.put(name, m);
+			} else if ( (m = getMethod(Preferences.class, "is" + name)) != null) {
+				map.put(name, m);
 			}
 		}
-		return prefs;
+		return map;
+	}
+
+	public static Map<String, Field> getPreferenceFields(Object o) {
+		Class<?> c = o.getClass();
+		Field[] prefFields = c.getDeclaredFields();
+		Map<String, Field> fields = new HashMap<String, Field>();
+
+		for (Field field : prefFields) {
+			int mod = field.getModifiers();
+			String name = field.getName();
+			Class<?> type = field.getType();
+			if (!supportedClass.contains(type)) {
+				continue;
+			}
+			if (name.startsWith("pref")) {
+				name = name.substring("pref".length());
+			} else {
+				name = null;
+			}
+			if (name == null || name.equals("")) {
+				continue;
+			}
+			if (!methodMap.containsKey(name)) {
+				continue;
+			}
+			if (Modifier.isPrivate(mod))
+			{
+				fields.put(name, field);
+			}
+		}
+		return fields;
+	}
+
+	/* Preferences -> Local variable */
+	public void loadInto(Object o) {
+		Map<String, Field> fields = getPreferenceFields(o);
+		for (String name: fields.keySet()) {
+			Method m = methodMap.get(name);
+			Field f = fields.get(name);
+			try {
+				Object x = m.invoke(this, new Object[0]);
+				Class <?> type = f.getType();
+				f.setAccessible(true);
+				if (type.equals(int.class)) {
+					f.setInt(o, (Integer) x);
+				} else if (type.equals(boolean.class)) {
+					f.setBoolean(o, (Boolean) x);
+				} else { 
+					f.set(o, x);
+				}
+			} catch (Exception e) {
+				//Ignore all exceptions
+			}
+		}
+	}
+
+	/* Different between Preferences and Local variable */
+	public boolean isDifferentWith(Object o) {
+		Map<String, Field> fields = getPreferenceFields(o);
+		for (String name: fields.keySet()) {
+			Method m = methodMap.get(name);
+			try {
+				Object x = m.invoke(this, new Object[0]);
+				Field f = fields.get(name);
+				f.setAccessible(true);
+				Object y = f.get(o);
+				Class <?> type = f.getType();
+				if (type.isArray()) {
+					if (!Arrays.equals((Object[])x, (Object[])y)) {
+						return true;
+					}
+				} else  if (!x.equals(y)) {
+					return true;
+				}
+			} catch (Exception e) {
+				//Ignore all exceptions
+			}
+		}
+		return false;
+	}
+
+	/* Local variable -> Preferences */
+	public void saveFrom(Object o) {
+		
 	}
 
 	public void removeAllProperties() {
@@ -383,15 +492,4 @@ public class Preferences {
 		}
 	}
 
-	public static void main(String[] args) {
-		Preferences pref = new Preferences();
-		pref.setJAVATemplate("kdjf");
-		pref.getBreakAt();
-		// pref.removeAllProperty();
-		try {
-			pref.save();
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-	}
 }
