@@ -97,7 +97,8 @@ public class Editor implements Observer {
 
 	public String getSource() {
 		this.loadDirFileNames();
-		File f = newFile(this.pref.getTextDescExtension());
+		String sourceExtension = getSourceExtension(this.pref, this.language.getName());
+		File f = newFile(sourceExtension);
 
 		if (f == null) {
 			writeLog("Trying to read source but file isn't initialized!.  Returning nothing.");
@@ -156,6 +157,7 @@ public class Editor implements Observer {
 			source.insert(0, sig);
 		}
 
+		writeLog(source.toString());
 		return source.toString();
 	}
 
@@ -343,9 +345,9 @@ public class Editor implements Observer {
 		writeFile(this.pref, f, source, pref.isBackup());
 	}
 	
-	private void writeCommitedSource(String source) {
+	private void writeCommittedSource(String source) {
 		String extension = getSourceExtension(this.pref, this.language.getName()); 
-		writeFile(this.pref, newFile("commited." + extension), source, true);
+		writeFile(this.pref, newFile("committed." + extension), source, true);
 	}
 
 	public void setSource(String source) {
@@ -366,7 +368,7 @@ public class Editor implements Observer {
 			 * The committed source code, if we doesn't committed before
 			 * then this condition won't happen.
 			 */ 
-			writeCommitedSource(source);
+			writeCommittedSource(source);
 		}
 	}
 
