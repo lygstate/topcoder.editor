@@ -301,11 +301,19 @@ public class Editor implements Observer {
 		if (source == null
 				|| source == ""
 				|| source.equals(this.component.getDefaultSolution())) {
+			/* 
+			 * The first time setting the source code, when opened the problem
+			 * We doesn't get the source yet.
+			 */
 			String textDesc = getTextDesc();
 			generateHtml();
 			generateText(textDesc);
 			generateSource(textDesc);
 		} else {
+			/* 
+			 * The committed source code, if we doesn't committed before
+			 * then this condition won't happen.
+			 */ 
 			writeCommitedSource(source);
 		}
 	}
