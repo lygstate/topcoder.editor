@@ -250,16 +250,8 @@ public class Preferences {
 		setStringProperty(ENDCUT, text);
 	}
 
-	public String getTextDescExtension() {
-		return getStringProperty(TEXTDESCFILEEXTENSION, "txt");
-	}
-
-	public void setTextDescExtension(String text) {
-		setStringProperty(TEXTDESCFILEEXTENSION, text);
-	}
-
 	public boolean isUseClassName() {
-		return getBooleanProperty(USECLASSNAME, false);
+		return getBooleanProperty(USECLASSNAME, true);
 	}
 
 	public void setUseClassName(boolean override) {
@@ -274,6 +266,26 @@ public class Preferences {
 		setBooleanProperty(PROVIDEBREAKS, provideBreaks);
 	}
 
+	public boolean isWriteHtmlDescFile() {
+		return getBooleanProperty(WRITEHTMLDESCFILE, true);
+	}
+
+	public void setWriteHtmlDescFile(boolean WriteHtmlDescFile) {
+		setBooleanProperty(WRITEHTMLDESCFILE, WriteHtmlDescFile);
+	}
+
+	public boolean isWriteTextDescFile() {
+		return getBooleanProperty(WRITETEXTDESCFILE, true);
+	}
+
+	public void setWriteTextDescFile(boolean probDescFile) {
+		setBooleanProperty(WRITETEXTDESCFILE, probDescFile);
+	}
+
+	public String getTextDescExtension() {
+		return getStringProperty(TEXTDESCFILEEXTENSION, "txt");
+	}
+
 	public boolean isWriteCodeDescFile() {
 		return getBooleanProperty(WRITECODEDESCFILE, true);
 	}
@@ -282,20 +294,8 @@ public class Preferences {
 		setBooleanProperty(WRITECODEDESCFILE, WriteCodeDescFile);
 	}
 
-	public boolean isWriteTextDescFile() {
-		return getBooleanProperty(WRITETEXTDESCFILE, false);
-	}
-
-	public void setWriteTextDescFile(boolean probDescFile) {
-		setBooleanProperty(WRITETEXTDESCFILE, probDescFile);
-	}
-
-	public boolean isWriteHtmlDescFile() {
-		return getBooleanProperty(WRITEHTMLDESCFILE, false);
-	}
-
-	public void setWriteHtmlDescFile(boolean WriteHtmlDescFile) {
-		setBooleanProperty(WRITEHTMLDESCFILE, WriteHtmlDescFile);
+	public void setTextDescExtension(String text) {
+		setStringProperty(TEXTDESCFILEEXTENSION, text);
 	}
 
 	public boolean isBackup() {

@@ -44,8 +44,6 @@ public class CodeProcessorConfig extends JPanel
 		Common.setDefaultAttributes(this);
 		this.setLayout(new GridBagLayout());
 
-		// Setup actionlisteners (must be last to avoid savepending problems)
-
 		this.add(Common.createJScrollPane(processorTable),
 				new GridBagConstraints(0, 1, 2, 7, 1, 1,
 						GridBagConstraints.NORTHWEST, GridBagConstraints.BOTH,
@@ -72,40 +70,8 @@ public class CodeProcessorConfig extends JPanel
 				GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0,
 						0, 0, 10), 0, 0));
 
-		configure.addActionListener(this);
-		verify.addActionListener(this);
-	}
-
-	public void actionPerformed(ActionEvent e) {
-		// Stop any editing
-		if (processorTable.getCellEditor() != null)
-			processorTable.getCellEditor().stopCellEditing();
-
-		if (e.getSource() == verify) {
-		} else if (e.getSource() == configure) {
-		}
-
-	}
-
-	@Override
-	public String getTabTitle() {
-		return "Code Processors";
-	}
-
-	@Override
-	public String getTabToolTip() {
-		return "Specify code processors";
-	}
-
-	@Override
-	public Icon getTabIcon() {
-		return null;
-	}
-
-	@Override
-	public void loadPreferencesToUI() {
 		/* Create the table model */
-		myModel = new MyModel(prefCodeProcessors);
+		myModel = new MyModel();
 		processorTable.setModel(myModel);
 		processorTable.getSelectionModel().setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
@@ -148,6 +114,43 @@ public class CodeProcessorConfig extends JPanel
 				processorTable.setRowSelectionInterval(row, row);
 			}
 		});
+
+		// Setup addActionListeners ()
+		configure.addActionListener(this);
+		verify.addActionListener(this);
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		// Stop any editing
+		if (processorTable.getCellEditor() != null)
+			processorTable.getCellEditor().stopCellEditing();
+
+		if (e.getSource() == verify) {
+		} else if (e.getSource() == configure) {
+		}
+
+	}
+
+	@Override
+	public String getTabTitle() {
+		return "Code Processors";
+	}
+
+	@Override
+	public String getTabToolTip() {
+		return "Specify code processors";
+	}
+
+	@Override
+	public Icon getTabIcon() {
+		return null;
+	}
+
+	@Override
+	public void loadPreferencesToUI() {
+		myModel.removeAll();
+		myModel.addAll(this.prefCodeProcessors);
+		processorTable.updateUI();
 	}
 
 	@Override
@@ -179,7 +182,14 @@ public class CodeProcessorConfig extends JPanel
 
 		private ArrayList<Object> model = new ArrayList<Object>();
 
-		public MyModel(String[] current) {
+		public MyModel() {
+		}
+
+		public void removeAll() {
+			model.clear();
+		}
+
+		public void addAll(String [] current) {
 			if (current != null)
 				model.addAll(Arrays.asList(current));
 		}
@@ -259,6 +269,7 @@ public class CodeProcessorConfig extends JPanel
 			this.fireTableRowsInserted(model.size() - 1, model.size() - 1);
 			return model.size() - 1;
 		}
+
 	}
 
 }
