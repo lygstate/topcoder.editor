@@ -1,6 +1,7 @@
 package topcoder.editor;
 
 import com.topcoder.client.contestant.ProblemComponentModel;
+import com.topcoder.client.contestant.RoundModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
 
@@ -17,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -28,6 +31,7 @@ public class Editor implements Observer {
 	JPanel panel;
 	static JTextArea log = new JTextArea();
 	String dirName;
+	String roundName;
 	String fileName;
 	String beginCut;
 	String endCut;
@@ -155,13 +159,60 @@ public class Editor implements Observer {
 		return source.toString();
 	}
 
+	static public String join(String[] list, String conjunction) {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for (String item : list) {
+			if (first)
+				first = false;
+			else
+				sb.append(conjunction);
+			sb.append(item);
+		}
+		return sb.toString();
+	}
+
+	public static String expandYear(String input, String prefix) {
+		Pattern p = Pattern.compile(prefix + "(\\d{2,2})");
+		Matcher m = p.matcher(input);
+		if (m.find()) {
+			return m.replaceAll(prefix + "20" + m.group(1));
+		}
+		return input;
+	}
+
 	private void loadDirFileNames() {
 		this.fileName = this.pref.isUseClassName()
 				? this.component.getClassName() : this.pref.getFileName();
 
-        String dirPrefix = this.pref.getDirectoryName();
-		String srmName = this.component.getProblem().getRound().getContestName();
-		File dir = new File(dirPrefix, srmName);
+		String dirPrefix = this.pref.getDirectoryName();
+		RoundModel round = this.component.getProblem().getRound();
+		roundName = round.getDisplayName();
+		roundName = roundName.replace((CharSequence) "-", "");
+		roundName = roundName.replace((CharSequence) "'", "");
+		if (roundName.matches("SRM")) {
+		} else if (roundName.matches("TCHS")) {
+			roundName = expandYear(roundName, "TCHS");
+		} else {
+			roundName = expandYear(roundName, "TCO");
+			roundName = expandYear(roundName, "TCCC");
+			roundName = roundName.replace((CharSequence) "Algorithm",
+					(CharSequence) "");
+			String[] names = roundName.split(" ");
+			try {
+				Integer.parseInt(names[0]);
+				String tmp = names[0];
+				names[0] = names[1];
+				names[1] = tmp;
+			} catch (Exception e) {
+
+			}
+			roundName = join(names, "");
+		}
+		roundName = join(roundName.split(" "), "");
+		roundName = roundName.replace((CharSequence) "DIV1", (CharSequence) "");
+		roundName = roundName.replace((CharSequence) "DIV2", (CharSequence) "");
+		File dir = new File(dirPrefix, roundName);
 		this.dirName = dir.getAbsolutePath();
 		if (!dir.exists()) {
 			if (dir.mkdirs()) {
