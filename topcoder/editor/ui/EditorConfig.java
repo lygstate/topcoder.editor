@@ -13,34 +13,41 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import topcoder.editor.Preferences;
 
 public class EditorConfig extends JPanel
-	implements ActionListener, DocumentListener, ConfigurationInterface {
+	implements ActionListener, ConfigurationInterface {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 2663430179796252986L;
-	Preferences pref;
+
 	JLabel dirNameLabel = Common
 			.createJLabel("Enter directory to read/write problems to:");
 	JTextField dirNameField = Common.createJTextField(40,
 			new Dimension(400, 21));
+
 	JCheckBox backup = Common
 			.createJCheckBox("Backup existing file then overwrite (uncheck if you want to keep existing file)");
+
 	JLabel fileNameLabel = Common
 			.createJLabel("Enter filename to use (no extension):");
+	JCheckBox overrideFileNameField = Common
+			.createJCheckBox("Make filename equal to classname");
+
 	JTextField fileNameField = Common.createJTextField(40, new Dimension(400,
 			21));
+
 	JCheckBox htmlDesc = Common
 			.createJCheckBox("Write the problem description using HTML");
 	JCheckBox useLineComments = Common
 			.createJCheckBox("Use Line Comments for Problem Description");
-	JCheckBox overrideFileNameField = Common
-			.createJCheckBox("Make filename equal to classname");
+	JCheckBox problemDescFileWrite = Common
+			.createJCheckBox("Write the problem description using plain text with extension name:");
+	JTextField problemDescFileField = Common.createJTextField(4, new Dimension(
+			75, 21));
+
 	JCheckBox provideBreakField = Common.createJCheckBox("Force Breaks at");
 	JTextField breakAtField = Common.createJTextField(4, new Dimension(75, 21));
 	JLabel beginCutLabel = Common.createJLabel("$BEGINCUT$ ");
@@ -50,78 +57,28 @@ public class EditorConfig extends JPanel
 	JTextField endCutField = Common
 			.createJTextField(40, new Dimension(400, 21));
 
-	JCheckBox problemDescFileWrite = Common
-			.createJCheckBox("Write Problem Description to separate file");
-	JLabel problemDescFileLabel = Common.createJLabel("File Extension: ");
-	JTextField problemDescFileField = Common.createJTextField(4, new Dimension(
-			75, 21));
 	JLabel sigFileLabel = Common.createJLabel("Enter signature filename: ");
 	JTextField sigFileField = Common.createJTextField(40,
 			new Dimension(400, 21));
 
-	boolean savePending = false;
+	private String prefDirectoryName;
+	private String prefFileName;
+	private String prefBeginCut;
+	private String prefEndCut;
+	private String prefProblemDescExtension;
+	private String prefSignatureFileName;
+	private boolean prefLineComments;
+	private boolean prefOverrideFileName;
+	private boolean prefProvideBreaks;
+	private boolean prefWriteProblemDescFile;
+	private int prefBreakAt;
+	private boolean prefHTMLDesc;
+	private boolean prefBackup;
 
-	public EditorConfig(Preferences pref) {
-		this.pref = pref;
+	public EditorConfig(Preferences prefx) {
 		Common.setDefaultAttributes(this, new BorderLayout());
 
 		setBackground(Common.WPB_COLOR);
-
-		String dirName = pref.getDirectoryName();
-		this.dirNameField.setText(dirName);
-
-		this.backup.setSelected(pref.isBackup());
-
-		this.overrideFileNameField.setSelected(!pref.isOverrideFileName());
-
-		this.useLineComments.setSelected(pref.isLineComments());
-
-		this.problemDescFileWrite.setSelected(pref.isWriteProblemDescFile());
-
-		String probDescExt = pref.getProblemDescExtension();
-		this.problemDescFileField.setText(probDescExt);
-		this.problemDescFileLabel.setEnabled(this.problemDescFileWrite
-				.isSelected());
-		this.problemDescFileField.setEnabled(this.problemDescFileWrite
-				.isSelected());
-
-		String fileName = pref.getFileName();
-		this.fileNameLabel.setEnabled(!this.overrideFileNameField.isSelected());
-		this.fileNameField.setText(fileName);
-		this.fileNameField.setEnabled(!this.overrideFileNameField.isSelected());
-
-		String sigFileName = pref.getSignatureFileName();
-		this.sigFileField.setText(sigFileName);
-
-		this.provideBreakField.setSelected(pref.isProvideBreaks());
-		this.breakAtField.setText(String.valueOf(pref.getBreakAt()));
-		this.breakAtField.setEnabled(this.provideBreakField.isSelected());
-
-		String beginCutString = pref.getBeginCut();
-		this.beginCutField.setText(beginCutString);
-
-		String endCutString = pref.getEndCut();
-		this.endCutField.setText(endCutString);
-
-		this.useLineComments.setSelected(pref.isLineComments());
-		if (pref.isWriteProblemDescFile()) {
-			this.useLineComments.setEnabled(false);
-			this.useLineComments.setSelected(false);
-		}
-
-		this.htmlDesc.setSelected(pref.isHTMLDesc());
-		if (this.htmlDesc.isSelected()) {
-			this.useLineComments.setEnabled(false);
-
-			this.provideBreakField.setEnabled(false);
-			this.breakAtField.setEnabled(false);
-
-			this.problemDescFileWrite.setEnabled(false);
-			this.problemDescFileWrite.setSelected(false);
-
-			this.problemDescFileLabel.setEnabled(false);
-			this.problemDescFileField.setEnabled(false);
-		}
 
 		Box dirNamePane = Common.createHorizontalBox(new Component[] {
 				this.dirNameLabel, this.dirNameField }, true);
@@ -154,12 +111,10 @@ public class EditorConfig extends JPanel
 		Box endCutPane = Common.createHorizontalBox(new Component[] {
 				this.endCutLabel, this.endCutField }, true);
 
-		Box probDescFileWriteBox = Common.createHorizontalBox(
-				new Component[] { this.problemDescFileWrite }, true);
-
-		Box probDescFileExtBox = Common.createHorizontalBox(new Component[] {
-				Box.createHorizontalStrut(20), this.problemDescFileLabel,
-				this.problemDescFileField }, true);
+		Box probDescBox = Common.createHorizontalBox(new Component[] {
+				this.problemDescFileWrite,
+				this.problemDescFileField
+				}, true);
 
 		Box all = Box.createVerticalBox();
 		all.add(Box.createVerticalStrut(10));
@@ -175,9 +130,7 @@ public class EditorConfig extends JPanel
 		all.add(htmlDescPane);
 
 		all.add(Box.createVerticalStrut(5));
-		all.add(probDescFileWriteBox);
-		all.add(Box.createVerticalStrut(1));
-		all.add(probDescFileExtBox);
+		all.add(probDescBox);
 
 		all.add(Box.createVerticalStrut(5));
 		all.add(lineCommentsPane);
@@ -193,13 +146,6 @@ public class EditorConfig extends JPanel
 
 		add(all, "North");
 
-		this.dirNameField.getDocument().addDocumentListener(this);
-		this.fileNameField.getDocument().addDocumentListener(this);
-		this.breakAtField.getDocument().addDocumentListener(this);
-		this.beginCutField.getDocument().addDocumentListener(this);
-		this.endCutField.getDocument().addDocumentListener(this);
-		this.problemDescFileField.getDocument().addDocumentListener(this);
-		this.sigFileField.getDocument().addDocumentListener(this);
 		this.useLineComments.addActionListener(this);
 		this.overrideFileNameField.addActionListener(this);
 		this.problemDescFileWrite.addActionListener(this);
@@ -207,10 +153,9 @@ public class EditorConfig extends JPanel
 		this.htmlDesc.addActionListener(this);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object source = e.getSource();
-
-		this.savePending = true;
 
 		if (source == this.overrideFileNameField) {
 			this.fileNameLabel.setEnabled(!this.overrideFileNameField
@@ -223,8 +168,6 @@ public class EditorConfig extends JPanel
 		} else if (source == this.problemDescFileWrite) {
 			if (this.htmlDesc.isSelected())
 				this.problemDescFileWrite.setSelected(true);
-			this.problemDescFileLabel.setEnabled(this.problemDescFileWrite
-					.isSelected());
 			this.problemDescFileField.setEnabled(this.problemDescFileWrite
 					.isSelected());
 			this.useLineComments.setEnabled(!this.problemDescFileWrite
@@ -242,7 +185,6 @@ public class EditorConfig extends JPanel
 				this.problemDescFileWrite.setEnabled(true);
 				this.problemDescFileWrite.setSelected(true);
 
-				this.problemDescFileLabel.setEnabled(true);
 				this.problemDescFileField.setEnabled(true);
 			}
 			if (this.problemDescFileWrite.isSelected()) {
@@ -252,39 +194,73 @@ public class EditorConfig extends JPanel
 		}
 	}
 
-	public void changedUpdate(DocumentEvent e) {
-		this.savePending = true;
-	}
-
-	public void insertUpdate(DocumentEvent e) {
-		this.savePending = true;
-	}
-
-	public void removeUpdate(DocumentEvent e) {
-		this.savePending = true;
-	}
-
 	public String getTabTitle() {
 		return "Editor";
-	}
-
-	public Icon getTabIcon() {
-		return null;
 	}
 
 	public String getTabToolTip() {
 		return "Editor configuration";
 	}
 
-	public boolean isSavePending() {
-		return this.savePending;
+	public Icon getTabIcon() {
+		return null;
 	}
 
-	public void resetSavePending() {
-		this.savePending = false;
+	@Override
+	public void loadPreferencesToUI() {
+		this.dirNameField.setText(this.prefDirectoryName);
+
+		this.backup.setSelected(this.prefBackup);
+
+		this.overrideFileNameField.setSelected(this.prefOverrideFileName);
+
+		this.useLineComments.setSelected(this.prefLineComments);
+
+		this.problemDescFileWrite.setSelected(this.prefWriteProblemDescFile);
+
+		String probDescExt = this.prefProblemDescExtension;
+		this.problemDescFileField.setText(probDescExt);
+		this.problemDescFileField.setEnabled(this.problemDescFileWrite
+				.isSelected());
+
+		String fileName = this.prefFileName;
+		this.fileNameLabel.setEnabled(!this.overrideFileNameField.isSelected());
+		this.fileNameField.setText(fileName);
+		this.fileNameField.setEnabled(!this.overrideFileNameField.isSelected());
+
+		String sigFileName = this.prefSignatureFileName;
+		this.sigFileField.setText(sigFileName);
+
+		this.provideBreakField.setSelected(this.prefProvideBreaks);
+		this.breakAtField.setText(String.valueOf(this.prefBreakAt));
+		this.breakAtField.setEnabled(this.provideBreakField.isSelected());
+
+		this.beginCutField.setText(this.prefBeginCut);
+
+		this.endCutField.setText(this.prefEndCut);
+
+		this.useLineComments.setSelected(this.prefLineComments);
+		if (this.prefWriteProblemDescFile) {
+			this.useLineComments.setEnabled(false);
+			this.useLineComments.setSelected(false);
+		}
+
+		this.htmlDesc.setSelected(this.prefHTMLDesc);
+		if (this.htmlDesc.isSelected()) {
+			this.useLineComments.setEnabled(false);
+
+			this.provideBreakField.setEnabled(false);
+			this.breakAtField.setEnabled(false);
+
+			this.problemDescFileWrite.setEnabled(false);
+			this.problemDescFileWrite.setSelected(false);
+
+			this.problemDescFileField.setEnabled(false);
+		}		
 	}
 
-	public boolean savePreferences() {
+	@Override
+	public boolean savePreferencesFromUI() {
 		if ((this.overrideFileNameField.isSelected())
 				&& (this.fileNameField.getText().trim().equals(""))) {
 			Common.showMessage("Error", "You must specify a filename", null);
@@ -298,21 +274,23 @@ public class EditorConfig extends JPanel
 			Common.showMessage("Error", "The break at is not a number", null);
 			return false;
 		}
-		this.pref.setDirectoryName(this.dirNameField.getText());
-		this.pref.setFileName(this.fileNameField.getText());
-		this.pref.setBeginCut(this.beginCutField.getText());
-		this.pref.setEndCut(this.endCutField.getText());
-		this.pref.setProblemDescExtension(this.problemDescFileField.getText());
-		this.pref.setSignatureFileName(this.sigFileField.getText());
+		this.prefDirectoryName = this.dirNameField.getText();
+		this.prefFileName = this.fileNameField.getText();
+		this.prefBeginCut = this.beginCutField.getText();
+		this.prefEndCut = this.endCutField.getText();
+		this.prefSignatureFileName = this.sigFileField.getText();
 
-		this.pref.setLineComments(this.useLineComments.isSelected());
-		this.pref.setOverrideFileName(!this.overrideFileNameField.isSelected());
-		this.pref.setProvideBreaks(this.provideBreakField.isSelected());
-		this.pref.setWriteProblemDescFile(this.problemDescFileWrite
-				.isSelected());
-		this.pref.setBreakAt(breakAt);
-		this.pref.setHTMLDesc(this.htmlDesc.isSelected());
-		this.pref.setBackup(this.backup.isSelected());
+		this.prefLineComments = this.useLineComments.isSelected();
+		this.prefOverrideFileName = this.overrideFileNameField.isSelected();
+
+		this.prefWriteProblemDescFile = this.problemDescFileWrite.isSelected();
+		this.prefProblemDescExtension = this.problemDescFileField.getText();
+
+		this.prefProvideBreaks = this.provideBreakField.isSelected();
+		this.prefBreakAt = breakAt;
+
+		this.prefHTMLDesc = this.htmlDesc.isSelected();
+		this.prefBackup = this.backup.isSelected();
 
 		return true;
 	}
@@ -322,20 +300,12 @@ public class EditorConfig extends JPanel
 		frame.setDefaultCloseOperation(3);
 		Preferences pref = new Preferences();
 		pref.removeAllProperties();
-		frame.getContentPane().add(new EditorConfig(pref));
+		EditorConfig config = new EditorConfig(pref);
+		pref.loadInto(config);
+		config.loadPreferencesToUI();
+		frame.getContentPane().add(config);
 		frame.pack();
 		frame.setVisible(true);
 	}
 
-	@Override
-	public void loadPreferencesToUI() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean savePreferencesFromUI() {
-		// TODO Auto-generated method stub
-		return true;
-	}
 }
