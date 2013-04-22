@@ -67,7 +67,7 @@ public class ExampleProcessor extends CodeProcessor {
 		if (tests != null) {
 			for (int i = 0; i != tests.length; i++) {
 				if (needDef(lang)) {
-					buf.append(indent(lang) + "    {\n");
+					buf.append(indent(lang, 2) + "{\n");
 				}
 				String[] vals = tests[i].getInput();
 				for (int j = 0; j != pt.length; j++) {
@@ -76,12 +76,12 @@ public class ExampleProcessor extends CodeProcessor {
 				genValueDef(buf, problem.getReturnType(), tests[i].getOutput(),
 						lang, RETVAL);
 				if (needDef(lang)) {
-					buf.append(indent(lang) + "        "
+					buf.append(indent(lang, 3)
 							+ problem.getClassName() + " theObject;\n"
-							+ indent(lang) + "        eq(" + (i)
+							+ indent(lang, 3) + "eq(" + (i)
 							+ ", theObject." + problem.getMethodName() + "(");
 				} else {
-					buf.append(indent(lang) + "        eq(" + (i) + ",(new "
+					buf.append(indent(lang, 3) + "eq(" + (i) + ",(new "
 							+ problem.getClassName() + "())."
 							+ problem.getMethodName() + "(");
 				}
@@ -96,7 +96,7 @@ public class ExampleProcessor extends CodeProcessor {
 						lang, RETVAL);
 				buf.append(");");
 				if (needDef(lang)) {
-					buf.append(indent(lang) + "\n    }");
+					buf.append(indent(lang, 1) + "\n" + indent(lang,1) + "}");
 				}
 				if (i != tests.length - 1) {
 					buf.append("\n");
@@ -125,7 +125,7 @@ public class ExampleProcessor extends CodeProcessor {
 			val = val.replaceAll("\\d+", "$0L");
 		}
 		if (dt.getDimension() != 0) {
-			val = val.replaceAll("\n", "\n           " + indent(lang));
+			val = val.replaceAll("\n", "\n" + indent(lang, 4));
 		}
 		buf.append(val);
 	}
@@ -173,12 +173,11 @@ public class ExampleProcessor extends CodeProcessor {
 	private static void genValueDef(StringBuffer buf, DataType dt, String val,
 			Language lang, String name) {
 		if (!inPlace(dt, lang) && !empty(val)) {
-			buf.append(indent(lang) + "        "
-					+ dt.getBaseName().toLowerCase() + " " + name
-					+ "ARRAY[] = ");
+			buf.append(indent(lang, 3) + dt.getBaseName().toLowerCase()
+					+ " " + name + "ARRAY[] = ");
 			genValue(buf, dt, val, lang);
 			buf.append(";\n");
-			buf.append(indent(lang) + "        " + dt.getDescriptor(lang) + " "
+			buf.append(indent(lang, 3) + dt.getDescriptor(lang) + " "
 					+ name + "( " + name + "ARRAY, " + name + "ARRAY+ARRSIZE("
 					+ name + "ARRAY) );\n");
 		}
@@ -203,12 +202,26 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @param lang
 	 * @return
 	 */
-	private static String indent(Language lang) {
+	private static String indent(Language lang, int count) {
+		
 		if (lang.getName().equals("C++")) {
-			return "";
-		} else {
-			return "    ";
+			if (count > 0) {
+				count -= 1;
+			}
 		}
+		String single = "";
+		if (pref.getIndentType() == "Space") {
+			char[] spaces = (new char[pref.getTabSize()]);
+			Arrays.fill(spaces, ' ');
+			single = spaces.toString();
+		} else {
+			single = "\t";
+		}
+		String ret = "";
+		for (int i = 0; i < count; ++i) {
+			ret = ret + single;
+		}
+		return ret;
 	}
 
 	private static boolean empty(String s) {
@@ -233,6 +246,7 @@ public class ExampleProcessor extends CodeProcessor {
 		}
 	}
 
+	private static final Preferences pref = Preferences.getInstance();
 	/** List of the supported languages */
 	private static final String[] supported = new String[] { "Java", "C#",
 			"C++" };
