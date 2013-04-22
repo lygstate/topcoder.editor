@@ -28,7 +28,7 @@ public class CodeProcessorConfig extends JPanel
 	 */
 	private static final long serialVersionUID = 8321962248388177104L;
 
-	private JButton codeProcessorConfigure = Common.createJButton("Configure");
+	private JButton configure = Common.createJButton("Configure");
 	private JButton verify = Common.createJButton("Verify");
 	private JButton upAction = Common.createJButton("Up");
 	private JButton downAction = Common.createJButton("Down");
@@ -43,7 +43,6 @@ public class CodeProcessorConfig extends JPanel
 	public CodeProcessorConfig(Preferences pref) {
 		Common.setDefaultAttributes(this);
 		this.setLayout(new GridBagLayout());
-
 
 		// Setup actionlisteners (must be last to avoid savepending problems)
 
@@ -66,14 +65,14 @@ public class CodeProcessorConfig extends JPanel
 		this.add(verify, new GridBagConstraints(2, 5, 1, 1, 0, 0,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(
 						10, 0, 0, 10), 0, 0));
-		this.add(codeProcessorConfigure, new GridBagConstraints(2, 6, 1, 1, 0,
+		this.add(configure, new GridBagConstraints(2, 6, 1, 1, 0,
 				0, GridBagConstraints.WEST, GridBagConstraints.BOTH,
 				new Insets(0, 0, 0, 10), 0, 0));
 		this.add(new JLabel(""), new GridBagConstraints(0, 7, 3, 1, 1, 1,
 				GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0,
 						0, 0, 10), 0, 0));
 
-		codeProcessorConfigure.addActionListener(this);
+		configure.addActionListener(this);
 		verify.addActionListener(this);
 	}
 
@@ -83,21 +82,24 @@ public class CodeProcessorConfig extends JPanel
 			processorTable.getCellEditor().stopCellEditing();
 
 		if (e.getSource() == verify) {
-		} else if (e.getSource() == codeProcessorConfigure) {
+		} else if (e.getSource() == configure) {
 		}
 
 	}
 
+	@Override
 	public String getTabTitle() {
 		return "Code Processors";
 	}
 
-	public Icon getTabIcon() {
-		return null;
-	}
-
+	@Override
 	public String getTabToolTip() {
 		return "Specify code processors";
+	}
+
+	@Override
+	public Icon getTabIcon() {
+		return null;
 	}
 
 	@Override
