@@ -73,7 +73,7 @@ public class EntryPoint {
 		// source)
 		// Note: this is just to see who and how many people are using this
 		// plugin
-		if (pref.isPoweredBy() && pref.isLineComments() /*
+		if (pref.isPoweredBy() && pref.isWriteCodeDescFile() /*
 														 * Only when support for
 														 * line comment, then
 														 * append POWRBY

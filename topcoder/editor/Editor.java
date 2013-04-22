@@ -172,24 +172,24 @@ public class Editor implements Observer {
 		String problemDescription;
 
 		try {
-			problemDescription = this.pref.isHTMLDesc() ?
+			problemDescription = this.pref.isWriteHtmlDescFile() ?
 					this.renderer.toHTML(this.language)
 					: this.renderer.toPlainText(this.language);
 		} catch (Exception e) {
 			System.err.println("Exception happened during rendering: " + e);
-			problemDescription = this.pref.isHTMLDesc() ?
+			problemDescription = this.pref.isWriteHtmlDescFile() ?
 					"<html><body>Error happened - see applet for problem text</body></html>"
 					: "Error happened - see applet for problem text";
 		}
 
-		problemDescription = this.pref.isHTMLDesc() ? problemDescription
+		problemDescription = this.pref.isWriteHtmlDescFile() ? problemDescription
 				: Utilities.parseProblem(problemDescription);
 
 		if ((source == null) || (source.equals(""))
 				|| (source.equals(this.component.getDefaultSolution()))) {
 			source = Utilities
 					.getSource(this.language, this.component, tFileName,
-							this.pref.isHTMLDesc() ? "" : problemDescription);
+							this.pref.isWriteHtmlDescFile() ? "" : problemDescription);
 		}
 
 		source = Utilities.replaceUserDefined(source, this.userDefinedTags);
@@ -252,9 +252,9 @@ public class Editor implements Observer {
 					+ e.toString());
 		}
 
-		if (this.pref.isWriteProblemDescFile()) {
+		if (this.pref.isWriteTextDescFile()) {
 			String pFileName = (this.overridefname ? this.fileName : className)
-					+ "." + this.pref.getProblemDescExtension();
+					+ "." + this.pref.getTextDescExtension();
 			File pFullPath = new File(this.directory, pFileName);
 			try {
 				if (this.directory.mkdirs())
@@ -296,7 +296,7 @@ public class Editor implements Observer {
 		this.beginCut = this.pref.getBeginCut();
 		this.endCut = this.pref.getEndCut();
 
-		this.overridefname = this.pref.isOverrideFileName();
+		this.overridefname = this.pref.isUseClassName();
 	}
 
 	private final void writeLog(String text) {

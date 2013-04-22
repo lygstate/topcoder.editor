@@ -23,32 +23,38 @@ public class Preferences {
 	private static LocalPreferences pref = LocalPreferences.getInstance();
 	private Observer notify;
 
-	public final static String POWEREDBY = "topcoder.editor.config.poweredby";
+	public final static String POWEREDBY = "topcoder.editor.config.poweredBy";
 
-	public final static String NUMCODEPROCESSORS = "topcoder.editor.config.numofcodeprocessors";
-	public final static String CODEPROCESSOR = "topcoder.editor.config.codeprocessor";
+	public final static String CODEPROCESSORNUMBER = "topcoder.editor.config.codeProcessorNumber";
+	public final static String CODEPROCESSOR = "topcoder.editor.config.codeProcessor";
 
-	public static final String JAVATEMPLATE = "topcoder.editor.config.javatemplate";
-	public static final String CPPTEMPLATE = "topcoder.editor.config.cpptemplate";
-	public static final String CSHARPTEMPLATE = "topcoder.editor.config.csharptemplate";
-	public static final String JAVAEXTENSION = "topcoder.editor.config.javaextension";
-	public static final String CPPEXTENSION = "topcoder.editor.config.cppextension";
-	public static final String CSHARPEXTENSION = "topcoder.editor.config.csharpextension";
-	public static final String INDENTTYPE = "topcoder.editor.config.indenttype";
-	public static final String TABSIZE = "topcoder.editor.config.tabsize";
+	public static final String JAVATEMPLATE = "topcoder.editor.config.javaTemplate";
+	public static final String CPPTEMPLATE = "topcoder.editor.config.cppTemplate";
+	public static final String CSHARPTEMPLATE = "topcoder.editor.config.csharpTemplate";
+	public static final String JAVAEXTENSION = "topcoder.editor.config.javaExtension";
+	public static final String CPPEXTENSION = "topcoder.editor.config.cppExtension";
+	public static final String CSHARPEXTENSION = "topcoder.editor.config.csharpExtension";
+
+	public static final String INDENTTYPE = "topcoder.editor.config.indentType";
+	public static final String TABSIZE = "topcoder.editor.config.tabSize";
 
 	public static final String DIRNAMEKEY = "topcoder.editor.config.dirName";
+
+	/* Use class name as file name */
+	public static final String USECLASSNAME = "topcoder.editor.config.useClassName";
 	public static final String FILENAMEKEY = "topcoder.editor.config.fileName";
-	public static final String OVERRIDEFILENAME = "topcoder.editor.config.overrideFileName";
+
 	public static final String PROVIDEBREAKS = "topcoder.editor.config.provideBreaks";
 	public static final String BREAKAT = "topcoder.editor.config.breakAt";
-	public static final String LINECOMMENTS = "topcoder.editor.config.lineComments";
 	public static final String BEGINCUT = "topcoder.editor.config.beginCut";
 	public static final String ENDCUT = "topcoder.editor.config.endCut";
-	public static final String PROBDESCFILEWRITE = "topcoder.editor.config.probdescfilewrite";
-	public static final String PROBDESCFILEEXTENSION = "topcoder.editor.config.probdescfileextnsion";
-	public static final String SIGNATUREFILENAME = "topcoder.editor.config.signaturefilename";
-	public static final String HTMLDESC = "topcoder.editor.config.htmldesc";
+
+	public static final String WRITEHTMLDESCFILE = "topcoder.editor.config.writeHtmlDescfile";
+	public static final String WRITETEXTDESCFILE = "topcoder.editor.config.writeTextDescfile";
+	public static final String TEXTDESCFILEEXTENSION = "topcoder.editor.config.textDescFileExtension";
+	public static final String WRITECODEDESCFILE = "topcoder.editor.config.writeCodeDescFile";
+
+	public static final String SIGNATUREFILENAME = "topcoder.editor.config.signatureFilename";
 	public static final String BACKUP = "topcoder.editor.config.backup";
 
 	public final static class Tuple<X, Y> {
@@ -89,7 +95,7 @@ public class Preferences {
 
 	public String[] getCodeProcessors() {
 		boolean needUpdate = false;
-		int num = getIntProperty(Preferences.NUMCODEPROCESSORS, -1);
+		int num = getIntProperty(Preferences.CODEPROCESSORNUMBER, -1);
 		if (num == -1) {
 			String[] codeProcessors = { "topcoder.editor.ExampleProcessor" };
 			setCodeProcessors(codeProcessors);
@@ -113,7 +119,7 @@ public class Preferences {
 	}
 
 	public void setCodeProcessors(String[] codeProcessors) {
-		int num = getIntProperty(NUMCODEPROCESSORS, -1);
+		int num = getIntProperty(CODEPROCESSORNUMBER, -1);
 
 		// Remove the excess ones
 		if (num > codeProcessors.length) {
@@ -130,7 +136,7 @@ public class Preferences {
 
 		// Sync the number
 		if (num != codeProcessors.length) {
-			setIntProperty(NUMCODEPROCESSORS, codeProcessors.length);
+			setIntProperty(CODEPROCESSORNUMBER, codeProcessors.length);
 		}
 	}
 
@@ -244,20 +250,20 @@ public class Preferences {
 		setStringProperty(ENDCUT, text);
 	}
 
-	public String getProblemDescExtension() {
-		return getStringProperty(PROBDESCFILEEXTENSION, "txt");
+	public String getTextDescExtension() {
+		return getStringProperty(TEXTDESCFILEEXTENSION, "txt");
 	}
 
-	public void setProblemDescExtension(String text) {
-		setStringProperty(PROBDESCFILEEXTENSION, text);
+	public void setTextDescExtension(String text) {
+		setStringProperty(TEXTDESCFILEEXTENSION, text);
 	}
 
-	public boolean isOverrideFileName() {
-		return getBooleanProperty(OVERRIDEFILENAME, false);
+	public boolean isUseClassName() {
+		return getBooleanProperty(USECLASSNAME, false);
 	}
 
-	public void setOverrideFileName(boolean override) {
-		setBooleanProperty(OVERRIDEFILENAME, override);
+	public void setUseClassName(boolean override) {
+		setBooleanProperty(USECLASSNAME, override);
 	}
 
 	public boolean isProvideBreaks() {
@@ -268,28 +274,28 @@ public class Preferences {
 		setBooleanProperty(PROVIDEBREAKS, provideBreaks);
 	}
 
-	public boolean isLineComments() {
-		return getBooleanProperty(LINECOMMENTS, true);
+	public boolean isWriteCodeDescFile() {
+		return getBooleanProperty(WRITECODEDESCFILE, true);
 	}
 
-	public void setLineComments(boolean lineComments) {
-		setBooleanProperty(LINECOMMENTS, lineComments);
+	public void setWriteCodeDescFile(boolean WriteCodeDescFile) {
+		setBooleanProperty(WRITECODEDESCFILE, WriteCodeDescFile);
 	}
 
-	public boolean isWriteProblemDescFile() {
-		return getBooleanProperty(PROBDESCFILEWRITE, false);
+	public boolean isWriteTextDescFile() {
+		return getBooleanProperty(WRITETEXTDESCFILE, false);
 	}
 
-	public void setWriteProblemDescFile(boolean probDescFile) {
-		setBooleanProperty(PROBDESCFILEWRITE, probDescFile);
+	public void setWriteTextDescFile(boolean probDescFile) {
+		setBooleanProperty(WRITETEXTDESCFILE, probDescFile);
 	}
 
-	public boolean isHTMLDesc() {
-		return getBooleanProperty(HTMLDESC, false);
+	public boolean isWriteHtmlDescFile() {
+		return getBooleanProperty(WRITEHTMLDESCFILE, false);
 	}
 
-	public void setHTMLDesc(boolean htmlDesc) {
-		setBooleanProperty(HTMLDESC, htmlDesc);
+	public void setWriteHtmlDescFile(boolean WriteHtmlDescFile) {
+		setBooleanProperty(WRITEHTMLDESCFILE, WriteHtmlDescFile);
 	}
 
 	public boolean isBackup() {

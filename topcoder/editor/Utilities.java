@@ -35,7 +35,7 @@ public class Utilities {
 		source = replaceAll(source, "$BEGINCUT$", pref.getBeginCut());
 		source = replaceAll(source, "$ENDCUT$", pref.getEndCut());
 		source = replaceAll(source, "$PROBLEMDESC$",
-				pref.isWriteProblemDescFile() ? "" : problemText);
+				pref.isWriteTextDescFile() ? "" : problemText);
 		source = replaceAll(source, "$CLASSNAME$", component.getClassName());
 		source = replaceAll(source, "$METHODNAME$", component.getMethodName());
 		source = replaceAll(source, "$RC$", component.getReturnType()
@@ -130,7 +130,7 @@ public class Utilities {
 			return problem;
 
 		int breakAt = pref.isProvideBreaks() ? pref.getBreakAt() : Integer.MAX_VALUE;
-		boolean lineComments = pref.isLineComments();
+		boolean WriteCodeDescFile = pref.isWriteCodeDescFile();
 
 		StringBuffer buf = new StringBuffer(problem.length());
 		BreakIterator itr = BreakIterator.getLineInstance();
@@ -139,7 +139,7 @@ public class Utilities {
 		int start = itr.first();
 		int end = itr.next();
 
-		if (lineComments)
+		if (WriteCodeDescFile)
 			buf.append("// ");
 
 		while (end != -1 && start < problem.length()) {
@@ -160,7 +160,7 @@ public class Utilities {
 			if ((pos >= start) && (pos - start <= breakAt)) {
 				buf.append(problem.substring(start, pos));
 				buf.append(lineEnding);
-				if (lineComments)
+				if (WriteCodeDescFile)
 					buf.append("// ");
 				start = pos;
 				if ((pos < problem.length() - 2)
@@ -181,7 +181,7 @@ public class Utilities {
 
 					buf.append(problem.substring(start, end));
 					buf.append(lineEnding);
-					if (lineComments)
+					if (WriteCodeDescFile)
 						buf.append("// ");
 					start = end;
 				}

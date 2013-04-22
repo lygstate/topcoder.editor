@@ -32,21 +32,21 @@ public class EditorConfig extends JPanel
 			.createJCheckBox("Backup existing file then overwrite (uncheck if you want to keep existing file)");
 
 	JLabel fileNameLabel = Common
-			.createJLabel("Enter filename to use (no extension):");
+			.createJLabel("Enter filename (code,html,text) to use (no extension):");
 	JCheckBox overrideFileNameField = Common
 			.createJCheckBox("Make filename equal to classname");
 
 	JTextField fileNameField = Common.createJTextField(40, new Dimension(400,
 			21));
 
-	JCheckBox htmlDesc = Common
+	JCheckBox htmlDescFileCheckBox = Common
 			.createJCheckBox("Write the problem description using HTML");
-	JCheckBox useLineComments = Common
-			.createJCheckBox("Use Line Comments for Problem Description");
-	JCheckBox problemDescFileWrite = Common
+	JCheckBox textDescFileCheckBox = Common
 			.createJCheckBox("Write the problem description using plain text with extension name:");
-	JTextField problemDescFileField = Common.createJTextField(4, new Dimension(
+	JTextField textDescFileField = Common.createJTextField(4, new Dimension(
 			75, 21));
+	JCheckBox codeDescFileCheckBox = Common
+			.createJCheckBox("Write the problem description into source code by line comment");
 
 	JCheckBox provideBreakField = Common.createJCheckBox("Force Breaks at");
 	JTextField breakAtField = Common.createJTextField(4, new Dimension(75, 21));
@@ -65,14 +65,17 @@ public class EditorConfig extends JPanel
 	private String prefFileName;
 	private String prefBeginCut;
 	private String prefEndCut;
-	private String prefProblemDescExtension;
+	private String prefTextDescExtension;
 	private String prefSignatureFileName;
-	private boolean prefLineComments;
-	private boolean prefOverrideFileName;
+	private boolean prefUseClassName;
+
+	private boolean prefWriteCodeDescFile;
+	private boolean prefWriteTextDescFile;
+	private boolean prefWriteHtmlDescFile;
+
 	private boolean prefProvideBreaks;
-	private boolean prefWriteProblemDescFile;
 	private int prefBreakAt;
-	private boolean prefHTMLDesc;
+
 	private boolean prefBackup;
 
 	public EditorConfig(Preferences prefx) {
@@ -96,11 +99,11 @@ public class EditorConfig extends JPanel
 		Box overridePane = Common.createHorizontalBox(
 				new Component[] { this.overrideFileNameField }, true);
 
-		Box lineCommentsPane = Common.createHorizontalBox(
-				new Component[] { this.useLineComments }, true);
+		Box WriteCodeDescFilePane = Common.createHorizontalBox(
+				new Component[] { this.codeDescFileCheckBox }, true);
 
-		Box htmlDescPane = Common.createHorizontalBox(
-				new Component[] { this.htmlDesc }, true);
+		Box WriteHtmlDescFilePane = Common.createHorizontalBox(
+				new Component[] { this.htmlDescFileCheckBox }, true);
 
 		Box breakAtPane = Common.createHorizontalBox(new Component[] {
 				this.provideBreakField, this.breakAtField }, true);
@@ -112,8 +115,8 @@ public class EditorConfig extends JPanel
 				this.endCutLabel, this.endCutField }, true);
 
 		Box probDescBox = Common.createHorizontalBox(new Component[] {
-				this.problemDescFileWrite,
-				this.problemDescFileField
+				this.textDescFileCheckBox,
+				this.textDescFileField
 				}, true);
 
 		Box all = Box.createVerticalBox();
@@ -127,13 +130,13 @@ public class EditorConfig extends JPanel
 		all.add(fileNamePane);
 
 		all.add(Box.createVerticalStrut(5));
-		all.add(htmlDescPane);
+		all.add(WriteHtmlDescFilePane);
 
 		all.add(Box.createVerticalStrut(5));
 		all.add(probDescBox);
 
 		all.add(Box.createVerticalStrut(5));
-		all.add(lineCommentsPane);
+		all.add(WriteCodeDescFilePane);
 		all.add(Box.createVerticalStrut(1));
 		all.add(breakAtPane);
 		all.add(Box.createVerticalStrut(1));
@@ -146,52 +149,17 @@ public class EditorConfig extends JPanel
 
 		add(all, "North");
 
-		this.useLineComments.addActionListener(this);
+		this.codeDescFileCheckBox.addActionListener(this);
 		this.overrideFileNameField.addActionListener(this);
-		this.problemDescFileWrite.addActionListener(this);
+		this.textDescFileCheckBox.addActionListener(this);
 		this.provideBreakField.addActionListener(this);
-		this.htmlDesc.addActionListener(this);
+		this.htmlDescFileCheckBox.addActionListener(this);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-
-		if (source == this.overrideFileNameField) {
-			this.fileNameLabel.setEnabled(!this.overrideFileNameField
-					.isSelected());
-			this.fileNameField.setEnabled(!this.overrideFileNameField
-					.isSelected());
-		} else if ((source == this.provideBreakField)
-				&& (!this.htmlDesc.isSelected())) {
-			this.breakAtField.setEnabled(this.provideBreakField.isSelected());
-		} else if (source == this.problemDescFileWrite) {
-			if (this.htmlDesc.isSelected())
-				this.problemDescFileWrite.setSelected(true);
-			this.problemDescFileField.setEnabled(this.problemDescFileWrite
-					.isSelected());
-			this.useLineComments.setEnabled(!this.problemDescFileWrite
-					.isSelected());
-			if (this.problemDescFileWrite.isSelected())
-				this.useLineComments.setSelected(false);
-		} else if (source == this.htmlDesc) {
-			this.useLineComments.setEnabled(!this.htmlDesc.isSelected());
-			this.provideBreakField.setEnabled(!this.htmlDesc.isSelected());
-			this.breakAtField.setEnabled(!this.htmlDesc.isSelected());
-
-			if (this.htmlDesc.isSelected()) {
-				this.useLineComments.setSelected(false);
-				this.provideBreakField.setSelected(false);
-				this.problemDescFileWrite.setEnabled(true);
-				this.problemDescFileWrite.setSelected(true);
-
-				this.problemDescFileField.setEnabled(true);
-			}
-			if (this.problemDescFileWrite.isSelected()) {
-				this.useLineComments.setEnabled(false);
-				this.useLineComments.setSelected(false);
-			}
-		}
+		this.savePreferencesFromUI();
+		this.loadPreferencesToUI();
 	}
 
 	public String getTabTitle() {
@@ -212,21 +180,11 @@ public class EditorConfig extends JPanel
 
 		this.backup.setSelected(this.prefBackup);
 
-		this.overrideFileNameField.setSelected(this.prefOverrideFileName);
+		this.overrideFileNameField.setSelected(this.prefUseClassName);
 
-		this.useLineComments.setSelected(this.prefLineComments);
-
-		this.problemDescFileWrite.setSelected(this.prefWriteProblemDescFile);
-
-		String probDescExt = this.prefProblemDescExtension;
-		this.problemDescFileField.setText(probDescExt);
-		this.problemDescFileField.setEnabled(this.problemDescFileWrite
-				.isSelected());
-
-		String fileName = this.prefFileName;
-		this.fileNameLabel.setEnabled(!this.overrideFileNameField.isSelected());
-		this.fileNameField.setText(fileName);
-		this.fileNameField.setEnabled(!this.overrideFileNameField.isSelected());
+		this.fileNameLabel.setEnabled(!this.prefUseClassName);
+		this.fileNameField.setText(this.prefFileName);
+		this.fileNameField.setEnabled(!this.prefUseClassName);
 
 		String sigFileName = this.prefSignatureFileName;
 		this.sigFileField.setText(sigFileName);
@@ -236,27 +194,14 @@ public class EditorConfig extends JPanel
 		this.breakAtField.setEnabled(this.provideBreakField.isSelected());
 
 		this.beginCutField.setText(this.prefBeginCut);
-
 		this.endCutField.setText(this.prefEndCut);
 
-		this.useLineComments.setSelected(this.prefLineComments);
-		if (this.prefWriteProblemDescFile) {
-			this.useLineComments.setEnabled(false);
-			this.useLineComments.setSelected(false);
-		}
+		this.htmlDescFileCheckBox.setSelected(this.prefWriteHtmlDescFile);
+		this.textDescFileCheckBox.setSelected(this.prefWriteTextDescFile);
+		this.textDescFileField.setText(this.prefTextDescExtension);
+		this.textDescFileField.setEnabled(this.prefWriteTextDescFile);
 
-		this.htmlDesc.setSelected(this.prefHTMLDesc);
-		if (this.htmlDesc.isSelected()) {
-			this.useLineComments.setEnabled(false);
-
-			this.provideBreakField.setEnabled(false);
-			this.breakAtField.setEnabled(false);
-
-			this.problemDescFileWrite.setEnabled(false);
-			this.problemDescFileWrite.setSelected(false);
-
-			this.problemDescFileField.setEnabled(false);
-		}		
+		this.codeDescFileCheckBox.setSelected(this.prefWriteCodeDescFile);
 	}
 
 	@Override
@@ -280,16 +225,16 @@ public class EditorConfig extends JPanel
 		this.prefEndCut = this.endCutField.getText();
 		this.prefSignatureFileName = this.sigFileField.getText();
 
-		this.prefLineComments = this.useLineComments.isSelected();
-		this.prefOverrideFileName = this.overrideFileNameField.isSelected();
+		this.prefUseClassName = this.overrideFileNameField.isSelected();
 
-		this.prefWriteProblemDescFile = this.problemDescFileWrite.isSelected();
-		this.prefProblemDescExtension = this.problemDescFileField.getText();
+		this.prefWriteHtmlDescFile = this.htmlDescFileCheckBox.isSelected();
+		this.prefWriteTextDescFile = this.textDescFileCheckBox.isSelected();
+		this.prefTextDescExtension = this.textDescFileField.getText();
+		this.prefWriteCodeDescFile = this.codeDescFileCheckBox.isSelected();
 
 		this.prefProvideBreaks = this.provideBreakField.isSelected();
 		this.prefBreakAt = breakAt;
 
-		this.prefHTMLDesc = this.htmlDesc.isSelected();
 		this.prefBackup = this.backup.isSelected();
 
 		return true;
