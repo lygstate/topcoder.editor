@@ -67,22 +67,39 @@ public class Preferences {
 		}
 	}
 
-	/* The method main body, and the getter/setter method tuple */ 
-	private static Map<String, Tuple<Method, Method>> methodMap = Preferences.getPropertyMethods();
-	private static List<Class<?>> supportedClass = Arrays.asList(new Class<?>[] {int.class, boolean.class, String.class, String[].class}); 
+	/* The method main body, and the getter/setter method tuple */
+	private static Map<String, Tuple<Method, Method>> methodMap = Preferences
+			.getPropertyMethods();
+	private static List<Class<?>> supportedClass = Arrays
+			.asList(new Class<?>[] { int.class, boolean.class, String.class,
+					String[].class });
 
-	public Preferences() {
+	private static Preferences instance = null;
+
+	protected Preferences() {
 	}
 
-	public Preferences(Observer notify) {
+	public static Preferences getInstance() {
+		if (instance == null) {
+			instance = new Preferences();
+		}
+		return instance;
+	}
+
+	public void addSaveObserver(Observer notify) {
+		if (this.notify != null) {
+			pref.removeSaveObserver(notify);
+		}
 		this.notify = notify;
 		pref.addSaveObserver(notify);
 	}
 
 	public void finalize() {
 		// Clean up
-		if (notify != null)
+		if (notify != null) {
 			pref.removeSaveObserver(notify);
+			this.notify = null;
+		}
 	}
 
 	public boolean isPoweredBy() {
@@ -103,8 +120,8 @@ public class Preferences {
 		}
 		List<String> rc = new ArrayList<String>();
 		for (int x = 0; x < num; x++) {
-			String codeProcessor =
-					getStringProperty(Preferences.CODEPROCESSOR+ x, "");
+			String codeProcessor = getStringProperty(Preferences.CODEPROCESSOR
+					+ x, "");
 			if (codeProcessor == null || codeProcessor.trim().length() == 0) {
 				needUpdate = true;
 				continue;
@@ -299,7 +316,7 @@ public class Preferences {
 	}
 
 	public boolean isBackup() {
-		return getBooleanProperty(BACKUP, true);
+		return getBooleanProperty(BACKUP, false);
 	}
 
 	public void setBackup(boolean backup) {
@@ -408,10 +425,10 @@ public class Preferences {
 			if (!Modifier.isPublic(mod)) {
 				continue;
 			}
-			Method m = null; 
-			if ( (m = getMethod(Preferences.class, "get" + name)) != null) {
+			Method m = null;
+			if ((m = getMethod(Preferences.class, "get" + name)) != null) {
 				map.put(name, new Tuple<Method, Method>(m, field));
-			} else if ( (m = getMethod(Preferences.class, "is" + name)) != null) {
+			} else if ((m = getMethod(Preferences.class, "is" + name)) != null) {
 				map.put(name, new Tuple<Method, Method>(m, field));
 			}
 		}
@@ -441,8 +458,7 @@ public class Preferences {
 			if (!methodMap.containsKey(name)) {
 				continue;
 			}
-			if (Modifier.isPrivate(mod))
-			{
+			if (Modifier.isPrivate(mod)) {
 				fields.put(name, field);
 			}
 		}
@@ -452,22 +468,22 @@ public class Preferences {
 	/* Preferences -> Local variable */
 	public void loadInto(Object o) {
 		Map<String, Field> fields = getPreferenceFields(o);
-		for (String name: fields.keySet()) {
-			Tuple<Method,Method> m = methodMap.get(name);
+		for (String name : fields.keySet()) {
+			Tuple<Method, Method> m = methodMap.get(name);
 			Field f = fields.get(name);
 			try {
 				Object x = m.x.invoke(this);
-				Class <?> type = f.getType();
+				Class<?> type = f.getType();
 				f.setAccessible(true);
 				if (type.equals(int.class)) {
 					f.setInt(o, (Integer) x);
 				} else if (type.equals(boolean.class)) {
 					f.setBoolean(o, (Boolean) x);
-				} else { 
+				} else {
 					f.set(o, x);
 				}
 			} catch (Exception e) {
-				//Ignore all exceptions
+				// Ignore all exceptions
 			}
 		}
 	}
@@ -475,23 +491,23 @@ public class Preferences {
 	/* Different between Preferences and Local variable */
 	public boolean isDifferentWith(Object o) {
 		Map<String, Field> fields = getPreferenceFields(o);
-		for (String name: fields.keySet()) {
-			Tuple<Method,Method> m = methodMap.get(name);
+		for (String name : fields.keySet()) {
+			Tuple<Method, Method> m = methodMap.get(name);
 			try {
 				Object x = m.x.invoke(this);
 				Field f = fields.get(name);
 				f.setAccessible(true);
 				Object y = f.get(o);
-				Class <?> type = f.getType();
+				Class<?> type = f.getType();
 				if (type.isArray()) {
-					if (!Arrays.equals((Object[])x, (Object[])y)) {
+					if (!Arrays.equals((Object[]) x, (Object[]) y)) {
 						return true;
 					}
-				} else  if (!x.equals(y)) {
+				} else if (!x.equals(y)) {
 					return true;
 				}
 			} catch (Exception e) {
-				//Ignore all exceptions
+				// Ignore all exceptions
 			}
 		}
 		return false;
@@ -500,22 +516,22 @@ public class Preferences {
 	/* Local variable -> Preferences */
 	public void saveFrom(Object o) {
 		Map<String, Field> fields = getPreferenceFields(o);
-		for (String name: fields.keySet()) {
-			Tuple<Method,Method> m = methodMap.get(name);
+		for (String name : fields.keySet()) {
+			Tuple<Method, Method> m = methodMap.get(name);
 			Field f = fields.get(name);
 			try {
-				Class <?> type = f.getType();
+				Class<?> type = f.getType();
 				f.setAccessible(true);
 				Object y = f.get(o);
 				if (type.equals(int.class)) {
-					m.y.invoke(this, (int)(Integer)y);
+					m.y.invoke(this, (int) (Integer) y);
 				} else if (type.equals(boolean.class)) {
-					m.y.invoke(this, (boolean)(Boolean)y);
-				} else { 
+					m.y.invoke(this, (boolean) (Boolean) y);
+				} else {
 					m.y.invoke(this, y);
 				}
 			} catch (Exception e) {
-				//Ignore all exceptions
+				// Ignore all exceptions
 			}
 		}
 	}

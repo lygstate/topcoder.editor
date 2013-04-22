@@ -10,6 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import topcoder.editor.EntryPoint;
+
 public class EditorPanel extends JPanel {
 	/**
 	 * 
@@ -19,7 +21,7 @@ public class EditorPanel extends JPanel {
 	public EditorPanel(JTextArea textArea) {
 		Common.setDefaultAttributes(this);
 
-		JLabel statusLabel = Common.createJLabel(Common.PRODUCT_NAME, new Font(
+		JLabel statusLabel = Common.createJLabel(EntryPoint.PRODUCT_NAME, new Font(
 				getFont().getFontName(), 3, getFont().getSize()));
 		JLabel reminderLabel = Common.createJLabel(
 				"*** Make sure you remotely compile before test/submit ***",

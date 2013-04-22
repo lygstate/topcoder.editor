@@ -26,35 +26,34 @@ import topcoder.editor.ui.EditorPanel;
 
 public class Editor implements Observer {
 	JPanel panel;
-	JTextArea log = new JTextArea();
-	boolean overridefname;
-	File directory;
-	File fullPath = null;
+	static JTextArea log = new JTextArea();
+	String dirName;
 	String fileName;
 	String beginCut;
 	String endCut;
-	String initialSrc = null;
-	Preferences pref = new Preferences(this);
+	Preferences pref = Preferences.getInstance();
 	Map<String, String> userDefinedTags = new HashMap<String, String>();
+	ProblemComponentModel component;
 	Language language;
-	ProblemComponentModel component = null;
 	Renderer renderer;
 
 	public Editor() {
-		this.log.setForeground(Common.FG_COLOR);
-		this.log.setBackground(Common.BG_COLOR);
+		log.setForeground(Common.FG_COLOR);
+		log.setBackground(Common.BG_COLOR);
+		pref.addSaveObserver(this);
 
 		loadPreferences();
-
-		this.panel = new EditorPanel(this.log);
+		this.panel = new EditorPanel(log);
 	}
 
 	public void setUserDefinedTags(Map<String, String> userDefinedTags) {
 		this.userDefinedTags = userDefinedTags;
 	}
 
-	public void setProblemComponent(ProblemComponentModel component,
-			Language lang, Renderer renderer) {
+	public void setProblemComponent(
+			ProblemComponentModel component,
+			Language lang,
+			Renderer renderer) {
 		this.component = component;
 		this.language = lang;
 		this.renderer = renderer;
@@ -93,24 +92,27 @@ public class Editor implements Observer {
 	}
 
 	public String getSource() {
-		if (this.fullPath == null) {
+		this.loadDirFileNames();
+		File f = newFile(this.pref.getTextDescExtension());
+
+		if (f == null) {
 			writeLog("Trying to read source but file isn't initialized!.  Returning nothing.");
 			return "";
 		}
 
-		if (!this.fullPath.exists()) {
-			writeLog("Trying to read File " + this.fullPath
+		if (!f.exists()) {
+			writeLog("Trying to read File " + f
 					+ " but it does not exist!.  Returning nothing.");
 			return "";
 		}
 
-		int len = (int) this.fullPath.length();
+		int len = (int) f.length();
 		StringBuffer sourceComments = new StringBuffer(len);
 		StringBuffer source = new StringBuffer(len);
 
 		boolean ignoreLine = false;
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(this.fullPath));
+			BufferedReader in = new BufferedReader(new FileReader(f));
 			while (true) {
 				String line = in.readLine();
 				if (line == null) {
@@ -130,25 +132,19 @@ public class Editor implements Observer {
 			}
 			in.close();
 		} catch (IOException e) {
-			writeLog("Error reading source code from file " + this.fullPath
+			writeLog("Error reading source code from file " + f
 					+ ": " + e.toString() + Utilities.lineEnding
 					+ "Returning nothing.");
 			return "";
 		}
-		writeLog("Source read from file " + this.fullPath);
-
-		if ((this.initialSrc != null)
-				&& (this.initialSrc.equals(sourceComments.toString()))) {
-			writeLog("No changes to initial source - returning nothing");
-			return "";
-		}
+		writeLog("Source read from file " + f);
 
 		if ((this.pref.isPoweredBy())
-				&& (!source.toString().endsWith("// Powered by FileEdit"))
+				&& (!source.toString().endsWith(EntryPoint.POWEREDBY))
 				&& (source.length() != 0)) {
 			source.append(Utilities.lineEnding);
 			source.append(Utilities.lineEnding);
-			source.append("// Powered by FileEdit");
+			source.append(EntryPoint.POWEREDBY);
 		}
 
 		String sig = getSignature();
@@ -159,83 +155,65 @@ public class Editor implements Observer {
 		return source.toString();
 	}
 
-	@SuppressWarnings("deprecation")
-	public void setSource(String source) {
-		String className = this.component.getClassName();
+	private void loadDirFileNames() {
+		this.fileName = this.pref.isUseClassName()
+				? this.component.getClassName() : this.pref.getFileName();
 
-		String tFileName = (this.overridefname ? this.fileName : className)
-				+ "."
-				+ (this.language.getId() == 1 ? this.pref.getJAVAExtension()
-						: this.language.getId() == 3 ? this.pref
-								.getCPPExtension() : this.pref
-								.getCSHARPExtension());
-		String problemDescription;
-
-		try {
-			problemDescription = this.pref.isWriteHtmlDescFile() ?
-					this.renderer.toHTML(this.language)
-					: this.renderer.toPlainText(this.language);
-		} catch (Exception e) {
-			System.err.println("Exception happened during rendering: " + e);
-			problemDescription = this.pref.isWriteHtmlDescFile() ?
-					"<html><body>Error happened - see applet for problem text</body></html>"
-					: "Error happened - see applet for problem text";
+        String dirPrefix = this.pref.getDirectoryName();
+		String srmName = this.component.getProblem().getRound().getContestName();
+		File dir = new File(dirPrefix, srmName);
+		this.dirName = dir.getAbsolutePath();
+		if (!dir.exists()) {
+			if (dir.mkdirs()) {
+				writeLog("Directory " + this.dirName + " was created");
+			}
 		}
+	}
 
-		problemDescription = this.pref.isWriteHtmlDescFile() ? problemDescription
-				: Utilities.parseProblem(problemDescription);
+	private File newFile(String extension) {
+		return new File(this.dirName, this.fileName + '.' + extension);
+	}
 
-		if ((source == null) || (source.equals(""))
-				|| (source.equals(this.component.getDefaultSolution()))) {
-			source = Utilities
-					.getSource(this.language, this.component, tFileName,
-							this.pref.isWriteHtmlDescFile() ? "" : problemDescription);
-		}
-
-		source = Utilities.replaceUserDefined(source, this.userDefinedTags);
-
-		this.fullPath = new File(this.directory, tFileName);
-
-		if (this.fullPath.exists()) {
-			if (!this.pref.isBackup()) {
+	public static void writeFile(Preferences pref, File f, String content) {
+		String fName = f.getAbsolutePath();
+		if (f.exists()) {
+			if (!pref.isBackup()) {
 				writeLog("File '"
-						+ this.fullPath
+						+ f
 						+ "' already exists - not overwriting due to config option");
 				return;
 			}
-
-			File backup = new File(this.directory, tFileName + ".bak");
+			
+			File backup = new File(fName + ".bak");
 			if (backup.exists()) {
 				if (backup.delete())
 					writeLog("Backup file " + backup
 							+ " exists and was deleted");
 				else {
 					writeLog("Error deleting backup file " + backup);
+					return ;
 				}
-
 			}
 
-			File renameIt = new File(this.directory, tFileName);
+			File renameIt = new File(fName);
 			if (renameIt.renameTo(backup)) {
-				writeLog("File " + this.fullPath + " is being backed up to "
+				writeLog("File " + f + " is being backed up to "
 						+ backup);
 			} else {
-				writeLog("Error backing up file " + this.fullPath);
+				writeLog("Error backing up file " + f);
 				writeLog("No Backup exists for the file - be careful");
+				return ;
 			}
-
 		}
-
+		if (f.exists()) {
+			writeLog("File " + f +" still exist, writing failed!");
+			return;
+		}
 		BufferedReader in = null;
 		BufferedWriter out = null;
 		try {
-			if (this.directory.mkdirs())
-				writeLog("Directory " + this.directory + " was created");
-			if (this.fullPath.createNewFile())
-				writeLog("File " + this.fullPath + " was created");
-
-			out = new BufferedWriter(new FileWriter(this.fullPath));
-			in = new BufferedReader(new StringReader(source));
+			out = new BufferedWriter(new FileWriter(f));
+			in = new BufferedReader(new StringReader(content));
 			while (true) {
 				String line = in.readLine();
 				if (line == null)
@@ -243,44 +221,87 @@ public class Editor implements Observer {
 				out.write(line);
 				out.write(Utilities.lineEnding);
 			}
-			writeLog("Source successfully written to " + this.fullPath);
+			writeLog("Successfully written to " + f);
 			in.close();
 			out.flush();
 			out.close();
 		} catch (IOException e) {
-			writeLog("Error manipulating the file " + this.fullPath + ": "
-					+ e.toString());
+			writeLog("Failed written to" + f + ": " + e.toString());
 		}
+	}
 
-		if (this.pref.isWriteTextDescFile()) {
-			String pFileName = (this.overridefname ? this.fileName : className)
-					+ "." + this.pref.getTextDescExtension();
-			File pFullPath = new File(this.directory, pFileName);
-			try {
-				if (this.directory.mkdirs())
-					writeLog("Directory " + this.directory + " was created");
-				if (pFullPath.createNewFile())
-					writeLog("File " + pFullPath + " was created");
-
-				out = new BufferedWriter(new FileWriter(pFullPath));
-				in = new BufferedReader(new StringReader(problemDescription));
-				while (true) {
-					String line = in.readLine();
-					if (line == null)
-						break;
-					out.write(line);
-					out.write(Utilities.lineEnding);
-				}
-				in.close();
-				out.flush();
-				out.close();
-				writeLog("Problem Description successfully written to "
-						+ pFullPath);
-			} catch (IOException e) {
-				writeLog("Error manipulating the file " + pFullPath + ": "
-						+ e.toString());
-			}
+	@SuppressWarnings("deprecation")
+	private String getTextDesc() {
+		String desc = ""; 
+		try {
+				desc = this.renderer.toPlainText(this.language);
+		} catch (Exception e) {
+			System.err.println("Exception happened during rendering into text: " + e);
+			desc = "<html><body>Error happened - see applet for problem text</body></html>";
 		}
+		return desc;
+	}
+
+	static String getSourceExtension(Preferences pref, String lang) {
+		if (lang == "Java") {
+			return pref.getJAVAExtension(); 
+		} else if (lang == "C++") {
+			return pref.getCPPExtension();
+		} else if (lang == "C#") {
+			return pref.getCSHARPExtension();
+		} else {
+			/*TODO: Add other language support */
+			return pref.getJAVAExtension();
+		}
+	}
+
+	private void generateHtml(String source){
+		if (!this.pref.isWriteHtmlDescFile()) {
+			return;
+		}
+		File f = newFile("html");
+		String desc = ""; 
+		try {
+				desc = this.renderer.toHTML(this.language);
+		} catch (Exception e) {
+			System.err.println("Exception happened during rendering into HTML: " + e);
+			desc = "<html><body>Error happened - see applet for problem text</body></html>";
+		}
+		writeFile(this.pref, f, desc);
+	}
+	
+	private void generateText(String source, String textDesc){
+		if (!this.pref.isWriteTextDescFile()) {
+			return;
+		}
+		File f = newFile(this.pref.getTextDescExtension());
+		writeFile(this.pref, f, textDesc);
+	}
+
+	private void generateSource(String source, String textDesc) {
+		File f = newFile(getSourceExtension(this.pref, this.language.getName()));
+		if (source == null
+			|| source == ""
+			|| source.equals(this.component.getDefaultSolution()))
+		{
+			source = Utilities.getSource(
+					this.language,
+					this.component,
+					this.fileName,
+					this.pref.isWriteCodeDescFile()
+						? Utilities.parseProblem(textDesc) : "");
+			source = Utilities.replaceUserDefined(source, this.userDefinedTags);
+		}
+		writeFile(this.pref, f, source);
+	}
+
+	public void setSource(String source) {
+		this.loadDirFileNames();
+		writeLog("Start setting source " + source);
+		generateHtml(source);
+		String textDesc = getTextDesc();
+		generateText(source, textDesc);
+		generateSource(source, textDesc);
 	}
 
 	public void update(Observable o, Object a) {
@@ -288,22 +309,15 @@ public class Editor implements Observer {
 	}
 
 	private final void loadPreferences() {
-		String dirName = this.pref.getDirectoryName();
-		this.directory = new File(dirName.trim());
-
-		this.fileName = this.pref.getFileName();
-
 		this.beginCut = this.pref.getBeginCut();
 		this.endCut = this.pref.getEndCut();
-
-		this.overridefname = this.pref.isUseClassName();
 	}
 
-	private final void writeLog(String text) {
+	private final static void writeLog(String text) {
 		System.out.println(text);
-		this.log.append(text);
-		this.log.append("\n");
-		this.log.setCaretPosition(this.log.getDocument().getLength() - 1);
+		log.append(text);
+		log.append("\n");
+		log.setCaretPosition(log.getDocument().getLength() - 1);
 	}
 
 	public static void main(String[] args) {
@@ -313,7 +327,6 @@ public class Editor implements Observer {
 		parms.add("int");
 
 		Editor en = new Editor();
-		en.fullPath = new File("test.java");
 		System.out.println(en.getSource());
 	}
 }

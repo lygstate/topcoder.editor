@@ -20,4 +20,5 @@ These three option can co-exist. So user didn't bother the relationship between 
 4. Automatically Compare and Save preferences. building the relationship between the local variable with the
   preferences saved in the Preferences class.
   The Editor config panel didn't implement yet.
-  
+
+5. Generate separate directory for different Problem Set(SRMs).

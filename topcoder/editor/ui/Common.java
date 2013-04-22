@@ -35,8 +35,6 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeModel;
 
 public class Common {
-	public final static String PRODUCT_NAME = "TopCoder Editor https://github.com/lygstate/topcoder.editor";
-	public final static String PRODUCT_VERSION = "0.10";
 	public static final Color FG_COLOR = Color.white;
 	public static final Color BG_COLOR = Color.black;
 	public static final Color WPB_COLOR = Color.decode("0x333333");

@@ -34,8 +34,7 @@ public class Utilities {
 
 		source = replaceAll(source, "$BEGINCUT$", pref.getBeginCut());
 		source = replaceAll(source, "$ENDCUT$", pref.getEndCut());
-		source = replaceAll(source, "$PROBLEMDESC$",
-				pref.isWriteTextDescFile() ? "" : problemText);
+		source = replaceAll(source, "$PROBLEMDESC$", problemText);
 		source = replaceAll(source, "$CLASSNAME$", component.getClassName());
 		source = replaceAll(source, "$METHODNAME$", component.getMethodName());
 		source = replaceAll(source, "$RC$", component.getReturnType()

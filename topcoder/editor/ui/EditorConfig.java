@@ -243,7 +243,7 @@ public class EditorConfig extends JPanel
 	public static void main(String[] s) {
 		JFrame frame = new JFrame();
 		frame.setDefaultCloseOperation(3);
-		Preferences pref = new Preferences();
+		Preferences pref = Preferences.getInstance();
 		pref.removeAllProperties();
 		EditorConfig config = new EditorConfig(pref);
 		pref.loadInto(config);

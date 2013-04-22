@@ -13,8 +13,6 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
-import topcoder.editor.ui.Common;
-
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
@@ -40,9 +38,11 @@ public class EntryPoint {
 	// Our preferences
 	private Preferences pref = null;
 
+	public final static String PRODUCT_NAME = "TopCoder Editor https://github.com/lygstate/topcoder.editor";
+	public final static String PRODUCT_VERSION = "0.10";
+
 	// Tag line
-	private final static String POWEREDBY = "// Powered by "
-			+ Common.PRODUCT_NAME;
+	public final static String POWEREDBY = "// Powered by " + PRODUCT_NAME;
 
 	/** Constructor that does nothing */
 	public EntryPoint() {
