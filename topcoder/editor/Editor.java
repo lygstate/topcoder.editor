@@ -335,9 +335,10 @@ public class Editor implements Observer {
 		String source = Utilities.getSource(
 				this.language,
 				this.component,
-				this.fileName,
 				this.pref.isWriteCodeDescFile()
-					? Utilities.parseProblem(textDesc) : "");
+					? Utilities.parseProblem(textDesc) : "",
+				this.roundName,
+				this.fileName);
 		source = Utilities.replaceUserDefined(source, this.userDefinedTags);
 		writeFile(this.pref, f, source, pref.isBackup());
 	}

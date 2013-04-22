@@ -20,8 +20,12 @@ public class Utilities {
 			.getProperty("line.separator");
 	public static final Preferences pref = new Preferences();
 
-	public static final String getSource(Language language,
-			ProblemComponentModel component, String fileName, String problemText) {
+	public static final String getSource(
+			Language language,
+			ProblemComponentModel component,
+			String problemText,
+			String packageName,
+			String fileName) {
 		String source = "";
 
 		if (language.getId() == 1)
@@ -39,8 +43,8 @@ public class Utilities {
 		source = replaceAll(source, "$METHODNAME$", component.getMethodName());
 		source = replaceAll(source, "$RC$", component.getReturnType()
 				.getDescriptor(language));
+		source = replaceAll(source, "$PACKAGE_NAME$", packageName);
 		source = replaceAll(source, "$FILENAME$", fileName);
-
 		StringBuffer parmString = new StringBuffer();
 		DataType[] dataType = component.getParamTypes();
 		String[] parms = component.getParamNames();
