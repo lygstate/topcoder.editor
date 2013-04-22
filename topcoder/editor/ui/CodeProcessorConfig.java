@@ -81,7 +81,9 @@ public class CodeProcessorConfig extends JPanel
 				if (processorTable.getCellEditor() != null)
 					processorTable.getCellEditor().stopCellEditing();
 				int row = myModel.moveUp(processorTable.getSelectedRow());
-				processorTable.setRowSelectionInterval(row, row);
+				if (row >= 0) {
+					processorTable.setRowSelectionInterval(row, row);
+				}
 			}
 		});
 
@@ -90,7 +92,9 @@ public class CodeProcessorConfig extends JPanel
 				if (processorTable.getCellEditor() != null)
 					processorTable.getCellEditor().stopCellEditing();
 				int row = myModel.moveDown(processorTable.getSelectedRow());
-				processorTable.setRowSelectionInterval(row, row);
+				if (row >= 0) {
+					processorTable.setRowSelectionInterval(row, row);
+				}
 			}
 		});
 
