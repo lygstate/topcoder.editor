@@ -174,10 +174,10 @@ public class Editor implements Observer {
 		return new File(this.dirName, this.fileName + '.' + extension);
 	}
 
-	public static void writeFile(Preferences pref, File f, String content) {
+	public static void writeFile(Preferences pref, File f, String content, boolean isBackup) {
 		String fName = f.getAbsolutePath();
 		if (f.exists()) {
-			if (!pref.isBackup()) {
+			if (!isBackup) {
 				writeLog("File '"
 						+ f
 						+ "' already exists - not overwriting due to config option");
@@ -255,7 +255,7 @@ public class Editor implements Observer {
 		}
 	}
 
-	private void generateHtml(String source){
+	private void generateHtml(){
 		if (!this.pref.isWriteHtmlDescFile()) {
 			return;
 		}
@@ -267,41 +267,47 @@ public class Editor implements Observer {
 			System.err.println("Exception happened during rendering into HTML: " + e);
 			desc = "<html><body>Error happened - see applet for problem text</body></html>";
 		}
-		writeFile(this.pref, f, desc);
+		writeFile(this.pref, f, desc, pref.isBackup());
 	}
 	
-	private void generateText(String source, String textDesc){
+	private void generateText(String textDesc){
 		if (!this.pref.isWriteTextDescFile()) {
 			return;
 		}
 		File f = newFile(this.pref.getTextDescExtension());
-		writeFile(this.pref, f, textDesc);
+		writeFile(this.pref, f, textDesc, pref.isBackup());
 	}
 
-	private void generateSource(String source, String textDesc) {
-		File f = newFile(getSourceExtension(this.pref, this.language.getName()));
-		if (source == null
-			|| source == ""
-			|| source.equals(this.component.getDefaultSolution()))
-		{
-			source = Utilities.getSource(
-					this.language,
-					this.component,
-					this.fileName,
-					this.pref.isWriteCodeDescFile()
-						? Utilities.parseProblem(textDesc) : "");
-			source = Utilities.replaceUserDefined(source, this.userDefinedTags);
-		}
-		writeFile(this.pref, f, source);
+	private void generateSource(String textDesc) {
+		String extension = getSourceExtension(this.pref, this.language.getName()); 
+		File f = newFile(extension);
+		String source = Utilities.getSource(
+				this.language,
+				this.component,
+				this.fileName,
+				this.pref.isWriteCodeDescFile()
+					? Utilities.parseProblem(textDesc) : "");
+		source = Utilities.replaceUserDefined(source, this.userDefinedTags);
+		writeFile(this.pref, f, source, pref.isBackup());
+	}
+	
+	private void writeCommitedSource(String source) {
+		String extension = getSourceExtension(this.pref, this.language.getName()); 
+		writeFile(this.pref, newFile("commited." + extension), source, true);
 	}
 
 	public void setSource(String source) {
 		this.loadDirFileNames();
-		writeLog("Start setting source " + source);
-		generateHtml(source);
-		String textDesc = getTextDesc();
-		generateText(source, textDesc);
-		generateSource(source, textDesc);
+		if (source == null
+				|| source == ""
+				|| source.equals(this.component.getDefaultSolution())) {
+			String textDesc = getTextDesc();
+			generateHtml();
+			generateText(textDesc);
+			generateSource(textDesc);
+		} else {
+			writeCommitedSource(source);
+		}
 	}
 
 	public void update(Observable o, Object a) {
