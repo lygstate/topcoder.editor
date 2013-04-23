@@ -18,7 +18,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import topcoder.editor.Preferences;
+import topcoder.editor.EntryPoint;
 
 public class CodeProcessorConfig extends JPanel
 	implements ActionListener, ConfigurationInterface {
@@ -27,6 +27,7 @@ public class CodeProcessorConfig extends JPanel
 	 * 
 	 */
 	private static final long serialVersionUID = 8321962248388177104L;
+	private final EntryPoint entry;
 
 	private JButton configure = Common.createJButton("Configure");
 	private JButton verify = Common.createJButton("Verify");
@@ -40,7 +41,8 @@ public class CodeProcessorConfig extends JPanel
 
 	private String[] prefCodeProcessors;
 
-	public CodeProcessorConfig(Preferences pref) {
+	public CodeProcessorConfig(EntryPoint entry) {
+		this.entry = entry;
 		Common.setDefaultAttributes(this);
 		this.setLayout(new GridBagLayout());
 
@@ -131,6 +133,7 @@ public class CodeProcessorConfig extends JPanel
 
 		if (e.getSource() == verify) {
 		} else if (e.getSource() == configure) {
+			this.entry.processor.configure();
 		}
 
 	}

@@ -19,7 +19,7 @@ import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
 
-import topcoder.editor.Preferences;
+import topcoder.editor.EntryPoint;
 
 public class CodeTemplateConfig extends JPanel implements ItemListener,
 		ConfigurationInterface {
@@ -63,7 +63,7 @@ public class CodeTemplateConfig extends JPanel implements ItemListener,
 	private String prefIndentType;
 	private int prefTabSize;
 
-	public CodeTemplateConfig(Preferences pref) {
+	public CodeTemplateConfig(EntryPoint entry) {
 		Common.setDefaultAttributes(this);
 
 		Box lang = Common.createHorizontalBox(new Component[] {

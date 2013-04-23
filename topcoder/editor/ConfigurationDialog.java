@@ -29,7 +29,8 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	 */
 	private static final long serialVersionUID = 1712681747171330702L;
 
-	private Preferences pref;
+	private final EntryPoint entry;
+	private static Preferences pref = Preferences.getInstance();
 	ConfigurationInterface[] config;
 
 	private JTabbedPane tab = new JTabbedPane();
@@ -39,14 +40,14 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 	private WindowHandler windowHandler = new WindowHandler();
 
-	public ConfigurationDialog(Preferences pref) {
+	public ConfigurationDialog(EntryPoint entry) {
 		super((JFrame) null, "TopCoder Editor Configuration", true);
+		this.entry = entry;
 		setSize(new Dimension(600, 400));
-		this.pref = pref;
 		this.config = new ConfigurationInterface[] {
-				new EditorConfig(this.pref),
-				new CodeProcessorConfig(pref),
-				new CodeTemplateConfig(this.pref),
+				new EditorConfig(this.entry),
+				new CodeProcessorConfig(this.entry),
+				new CodeTemplateConfig(this.entry),
 				};
 
 		Container contentPane = getContentPane();
@@ -113,7 +114,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 							"Reset configuration",
 							"Do you want to reset all TopCoder Editor settings?",
 							null)) {
-				this.pref.removeAllProperties();
+				pref.removeAllProperties();
 				this.load();
 			}
 		}
@@ -141,7 +142,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 
 		try {
 			/* Save into the preference file */
-			this.pref.save();
+			pref.save();
 			Common.showMessage("Save", "Preferences were saved successfully",
 					null);
 			return true;
@@ -196,7 +197,7 @@ public class ConfigurationDialog extends JDialog implements ActionListener {
 	}
 
 	public static void main(String[] args) {
-		ConfigurationDialog ff = new ConfigurationDialog(new Preferences());
-		ff.setVisible(true);
+		EntryPoint entry = new EntryPoint();
+		entry.configure();
 	}
 }

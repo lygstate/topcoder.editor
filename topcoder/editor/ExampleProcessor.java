@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
+import topcoder.editor.ui.Common;
+
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
@@ -105,6 +107,11 @@ public class ExampleProcessor extends CodeProcessor {
 		}
 		tags.put(MAINBODY, buf.toString());
 		return "";
+	}
+
+	@Override
+	public void configure() {
+		Common.showMessage("configure", "Configure now!", null);
 	}
 
 	/**

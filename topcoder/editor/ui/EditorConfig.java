@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import topcoder.editor.EntryPoint;
 import topcoder.editor.Preferences;
 
 public class EditorConfig extends JPanel
@@ -78,7 +79,7 @@ public class EditorConfig extends JPanel
 
 	private boolean prefBackup;
 
-	public EditorConfig(Preferences prefx) {
+	public EditorConfig(EntryPoint entry) {
 		Common.setDefaultAttributes(this, new BorderLayout());
 
 		setBackground(Common.WPB_COLOR);
@@ -238,19 +239,6 @@ public class EditorConfig extends JPanel
 		this.prefBackup = this.backup.isSelected();
 
 		return true;
-	}
-
-	public static void main(String[] s) {
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(3);
-		Preferences pref = Preferences.getInstance();
-		pref.removeAllProperties();
-		EditorConfig config = new EditorConfig(pref);
-		pref.loadInto(config);
-		config.loadPreferencesToUI();
-		frame.getContentPane().add(config);
-		frame.pack();
-		frame.setVisible(true);
 	}
 
 }

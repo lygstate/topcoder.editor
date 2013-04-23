@@ -24,7 +24,7 @@ public class EntryPoint {
 
 	// The Code Processor, process code with the
 	// need replacement.
-	private CodeProcessor processor;
+	public CodeProcessor processor;
 
 	// Current language chosen
 	private Language language;
@@ -109,7 +109,7 @@ public class EntryPoint {
 	/** Show the configuration dialog */
 	public void configure() {
 		loadPreferences();
-		new ConfigurationDialog(pref).setVisible(true);
+		new ConfigurationDialog(this).setVisible(true);
 	}
 
 	// TODO: Not implemented
