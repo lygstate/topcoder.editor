@@ -9,13 +9,11 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import topcoder.editor.EntryPoint;
-import topcoder.editor.Preferences;
 
 public class EditorConfig extends JPanel
 	implements ActionListener, ConfigurationInterface {

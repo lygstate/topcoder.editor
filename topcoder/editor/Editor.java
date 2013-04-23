@@ -347,7 +347,7 @@ public class Editor implements Observer {
 	
 	private void writeCommittedSource(String source) {
 		String extension = getSourceExtension(this.pref, this.language.getName()); 
-		writeFile(this.pref, newFile("committed." + extension), source, true);
+		writeFile(this.pref, newFile("committed." + extension), source, pref.isBackup());
 	}
 
 	public void setSource(String source) {
