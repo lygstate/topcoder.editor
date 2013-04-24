@@ -6,18 +6,18 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-public class ContestListCellRenderer extends JLabel implements ListCellRenderer {
+public class ContestListCellRenderer<E> extends JLabel implements ListCellRenderer<E> {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -766414738431860512L;
-	JList internalList = null;
+	JList<? extends E> internalList = null;
 
 	public ContestListCellRenderer() {
 		setOpaque(true);
 	}
 
-	public Component getListCellRendererComponent(JList list, Object value,
+	public Component getListCellRendererComponent(JList<? extends E> list, E value,
 			int index, boolean isSelected, boolean cellHasFocus) {
 		if ((this.internalList != list) && (list != null)) {
 			this.internalList = list;

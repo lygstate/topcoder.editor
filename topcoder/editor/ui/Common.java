@@ -271,24 +271,24 @@ public class Common {
 		return temp;
 	}
 
-	public static final JComboBox createJComboBox(String[] list) {
+	public static final JComboBox<String> createJComboBox(String[] list) {
 		return createJComboBox(list, DEFAULTFONT);
 	}
 
-	public static final JComboBox createJComboBox(String[] list, Font font) {
-		JComboBox temp = createComboBox();
+	public static final JComboBox<String> createJComboBox(String[] list, Font font) {
+		JComboBox<String> temp = createComboBox();
 		temp.setFont(font);
 		for (int x = 0; x < list.length; x++)
 			temp.addItem(list[x]);
 		return temp;
 	}
 
-	public static JComboBox createComboBox() {
-		JComboBox jcb = new JComboBox();
+	public static JComboBox<String> createComboBox() {
+		JComboBox<String> jcb = new JComboBox<String>();
 		jcb.setBackground(WPB_COLOR);
 		jcb.setForeground(Color.white);
 
-		jcb.setRenderer(new ContestListCellRenderer());
+		jcb.setRenderer(new ContestListCellRenderer<String>());
 
 		return jcb;
 	}
@@ -344,8 +344,8 @@ public class Common {
 		return temp;
 	}
 
-	public static final JList createJList(Object[] list) {
-		JList temp = new JList(list);
+	public static final JList<Object> createJList(Object[] list) {
+		JList<Object> temp = new JList<Object>(list);
 		temp.setBackground(BG_COLOR);
 		temp.setForeground(FG_COLOR);
 		temp.setSelectionBackground(HB_COLOR);
