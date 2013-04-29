@@ -3,6 +3,8 @@ package topcoder.editor;
 import java.util.HashMap;
 import java.util.Map;
 
+import topcoder.editor.ui.Common;
+
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
 import com.topcoder.shared.problem.Renderer;
@@ -27,5 +29,6 @@ public abstract class CodeProcessor {
 	}
 
 	public void configure() {
+		Common.showMessage("Processor configure", "There is nothing to configure!", null);
 	}
 }
