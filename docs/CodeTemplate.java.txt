@@ -1,7 +1,7 @@
 $BEGINCUT$
 $PROBLEMDESC$
-$ENDCUT$
 package $PACKAGE_NAME$;
+$ENDCUT$
 import java.util.*;
 public class $CLASSNAME$ {
 	public $RC$ $METHODNAME$($METHODPARMS$) {
