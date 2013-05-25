@@ -183,22 +183,23 @@ public class Editor implements Observer {
 		return input;
 	}
 
-	private void loadDirFileNames() {
-		this.fileName = this.pref.isUseClassName()
-				? this.component.getClassName() : this.pref.getFileName();
-
-		String dirPrefix = this.pref.getDirectoryName();
-		RoundModel round = this.component.getProblem().getRound();
-		roundName = round.getDisplayName();
-		writeLog("Round name is: " + roundName);
+	public static String filterRoundName(String roundName){
+		/* Round name is: Single Round Match 580 - Round 1 */
+		roundName = roundName.replace("Single Round Match", "SRM");
 		roundName = roundName.replace((CharSequence) "-", "");
 		roundName = roundName.replace((CharSequence) "'", "");
-		if (roundName.matches("SRM")) {
-		} else if (roundName.matches("TCHS")) {
+		if (roundName.indexOf("SRM") >= 0) {
+			roundName = roundName.replace("Member", "");   /* Only SRM replace Member to "" */
+			roundName = roundName.replace("Round", "DIV"); /* Only SRM replace Round to DIV */
+		} else if (roundName.indexOf("TCHS") >= 0) {
 			roundName = expandYear(roundName, "TCHS");
 		} else {
 			roundName = expandYear(roundName, "TCO");
 			roundName = expandYear(roundName, "TCCC");
+			if (roundName.indexOf(" Round ") == -1)
+			{
+				roundName = roundName.replace(" DIV ", " Round ");
+			}
 			roundName = roundName.replace((CharSequence) "Algorithm",
 					(CharSequence) "");
 			String[] names = roundName.split(" ");
@@ -215,6 +216,19 @@ public class Editor implements Observer {
 		roundName = join(roundName.split(" "), "");
 		roundName = roundName.replace((CharSequence) "DIV1", (CharSequence) "");
 		roundName = roundName.replace((CharSequence) "DIV2", (CharSequence) "");
+		return roundName; 
+	}
+
+	private void loadDirFileNames() {
+		this.fileName = this.pref.isUseClassName()
+				? this.component.getClassName() : this.pref.getFileName();
+
+		String dirPrefix = this.pref.getDirectoryName();
+		RoundModel round = this.component.getProblem().getRound();
+		roundName = round.getDisplayName();
+		writeLog("Round name is: " + roundName);
+		roundName = filterRoundName(roundName);
+
 		File dir = new File(dirPrefix, roundName);
 		this.dirName = dir.getAbsolutePath();
 		if (!dir.exists()) {
