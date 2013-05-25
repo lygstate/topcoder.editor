@@ -33,7 +33,7 @@ public class CodeTemplateConfig extends JPanel implements ItemListener,
 
 	private JLabel languageLabel = Common.createJLabel("Language:",
 			new Dimension(80, 20));
-	private JComboBox<String> language = Common.createJComboBox(new String[] { "C++",
+	private JComboBox language = Common.createJComboBox(new String[] { "C++",
 			"Java", "C#" });
 
 	private JLabel extensionLabel = Common.createJLabel("Extension:",
@@ -43,7 +43,7 @@ public class CodeTemplateConfig extends JPanel implements ItemListener,
 
 	private JLabel identLabel = Common.createJLabel("Ident:", new Dimension(80,
 			20));
-	private JComboBox<String> indent = Common.createJComboBox(new String[] { "Space",
+	private JComboBox indent = Common.createJComboBox(new String[] { "Space",
 			"Tab" });
 
 	private JLabel tabSizeLabel = Common.createJLabel("Tab Size:",

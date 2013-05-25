@@ -190,6 +190,7 @@ public class Editor implements Observer {
 		String dirPrefix = this.pref.getDirectoryName();
 		RoundModel round = this.component.getProblem().getRound();
 		roundName = round.getDisplayName();
+		writeLog("Round name is: " + roundName);
 		roundName = roundName.replace((CharSequence) "-", "");
 		roundName = roundName.replace((CharSequence) "'", "");
 		if (roundName.matches("SRM")) {
