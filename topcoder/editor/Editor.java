@@ -183,8 +183,21 @@ public class Editor implements Observer {
 		return input;
 	}
 
+	static String[] nameMap = {
+		"East China College Tour Round 1 DIV 1 - ", "SRM400EastChina",
+		"TopCoder China Tournament Round 2 DIV 1 - ", "TCO2008ChinaRound2",
+		"2008 China Tournament Round 1A Div 1 - ", "TCO2008ChinaRound1A",
+		};
+
 	public static String filterRoundName(String roundName){
 		/* Round name is: Single Round Match 580 - Round 1 */
+		for (int i = 0; i < nameMap.length; i+=2)
+		{
+			if (roundName.compareTo(nameMap[i]) == 0)
+			{
+				return nameMap[i+1];
+			}
+		}
 		roundName = roundName.replace("Single Round Match", "SRM");
 		roundName = roundName.replace((CharSequence) "-", "");
 		roundName = roundName.replace((CharSequence) "'", "");
@@ -194,6 +207,7 @@ public class Editor implements Observer {
 		} else if (roundName.indexOf("TCHS") >= 0) {
 			roundName = expandYear(roundName, "TCHS");
 		} else {
+			roundName = roundName.replace("2008 TopCoder China Tournament", "TCO 2008 China");
 			roundName = expandYear(roundName, "TCO");
 			roundName = expandYear(roundName, "TCCC");
 			if (roundName.indexOf(" Round ") == -1)
