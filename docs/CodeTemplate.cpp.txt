@@ -15,6 +15,7 @@ $ENDCUT$
 #include <cmath>
 using namespace std;
 
+$BEGINCUT$
 vector<string> split( const string& s, const string& delim =" " ) {
 	vector<string> res;
 	string t;
@@ -42,7 +43,6 @@ vector<int> splitInt( const string& s, const string& delim =" " ) {
 	return res;
 }
 
-$BEGINCUT$
 #define ARRSIZE(x) (sizeof(x)/sizeof(x[0]))
 
 template<typename T> void print( T a ) {
