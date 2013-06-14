@@ -281,7 +281,7 @@ public class ExampleProcessor extends CodeProcessor {
 		}
 	}
 
-	private static final Preferences pref = Preferences.getInstance();
+	private static Preferences pref = Preferences.getInstance();
 
 	/** This map stores user-defined tags */
 	private final Map<String, String> tags = new HashMap<String, String>();
