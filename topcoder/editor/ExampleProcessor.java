@@ -24,6 +24,36 @@ import com.topcoder.shared.problem.TestCase;
  *         Description
  */
 public class ExampleProcessor extends CodeProcessor {
+
+	/* Storage the current procee language name */
+	int langID;
+	static int LANG_UNSUPPORTED = 0;
+	static int LANG_CPP = 1;
+	static int LANG_CSHARP = 2;
+	static int LANG_JAVA = 3;
+
+	public static int parseLang(Language lang)
+	{
+		//{ "Java", "C#", "C++" };
+		String langName = lang.getName();
+		if (langName.equals("C++"))
+		{
+			return LANG_CPP;
+		}
+		else if (langName.equals("Java"))
+		{
+			return LANG_JAVA;
+		}
+		else if (langName.equals("C#"))
+		{
+			return LANG_CSHARP;
+		}
+		else
+		{
+			return LANG_UNSUPPORTED;
+		}
+	}
+
 	/**
 	 * Obtains a list of user-defined tags.
 	 * 
@@ -43,22 +73,27 @@ public class ExampleProcessor extends CodeProcessor {
 	 */
 	public String preProcess(String src, ProblemComponentModel problem,
 			Language lang, Renderer rend) {
+		pref = Preferences.getInstance();
 
 		tags.put(WRITERCODE, problem.getDefaultSolution());
+
+		langID = parseLang(lang);
 		// If the source not equal to the default solution, return the existing
 		// source
 		if (src != null && src.length() > 0
 				&& !src.equals(problem.getDefaultSolution())
-				&& sameLanguage(lang, src)) {
+				&& sameLanguage(langID, src)) {
 			return src;
 		}
+
 		if (!problem.hasSignature()) {
 			tags.put(MAINBODY, "// Problem has no signature");
 			return src;
 		}
-		if (!Arrays.asList(supported).contains(lang.getName())) {
+		if (langID == LANG_UNSUPPORTED) {
 			return src;
 		}
+
 		TestCase[] tests = problem.getTestCases();
 		DataType[] pt = problem.getParamTypes();
 		String[] pn = problem.getParamNames();
@@ -234,12 +269,12 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @param src
 	 * @return
 	 */
-	private static boolean sameLanguage(Language lang, String src) {
-		if (lang.getName().equals("C++")) {
+	private static boolean sameLanguage(int langID, String src) {
+		if (langID == LANG_CPP) {
 			return src.indexOf("#include") != -1;
-		} else if (lang.getName().equals("Java")) {
+		} else if (langID == LANG_JAVA) {
 			return src.indexOf("import ") != -1;
-		} else if (lang.getName().equals("C#")) {
+		} else if (langID == LANG_CSHARP) {
 			return src.indexOf("using ") != -1 && src.indexOf("#include") == -1;
 		} else {
 			return true;
@@ -247,9 +282,7 @@ public class ExampleProcessor extends CodeProcessor {
 	}
 
 	private static final Preferences pref = Preferences.getInstance();
-	/** List of the supported languages */
-	private static final String[] supported = new String[] { "Java", "C#",
-			"C++" };
+
 	/** This map stores user-defined tags */
 	private final Map<String, String> tags = new HashMap<String, String>();
 	/** Name of the Writer Code tag in the code template. */

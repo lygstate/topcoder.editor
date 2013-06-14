@@ -80,6 +80,7 @@ public class Preferences {
 	}
 
 	public static Preferences getInstance() {
+		pref = LocalPreferences.getInstance();
 		if (instance == null) {
 			instance = new Preferences();
 		}

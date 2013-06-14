@@ -35,7 +35,7 @@ public class Editor implements Observer {
 	String fileName;
 	String beginCut;
 	String endCut;
-	Preferences pref = Preferences.getInstance();
+	Preferences pref = null;
 	Map<String, String> userDefinedTags = new HashMap<String, String>();
 	ProblemComponentModel component;
 	Language language;
@@ -44,10 +44,16 @@ public class Editor implements Observer {
 	public Editor() {
 		log.setForeground(Common.FG_COLOR);
 		log.setBackground(Common.BG_COLOR);
-		pref.addSaveObserver(this);
 
 		loadPreferences();
 		this.panel = new EditorPanel(log);
+	}
+
+	public void loadPreferences()
+	{
+		pref = Preferences.getInstance();
+		pref.addSaveObserver(this);
+		updatePreferences();
 	}
 
 	public void setUserDefinedTags(Map<String, String> userDefinedTags) {
@@ -402,10 +408,10 @@ public class Editor implements Observer {
 	}
 
 	public void update(Observable o, Object a) {
-		loadPreferences();
+		updatePreferences();
 	}
 
-	private final void loadPreferences() {
+	private final void updatePreferences() {
 		this.beginCut = this.pref.getBeginCut();
 		this.endCut = this.pref.getEndCut();
 	}
