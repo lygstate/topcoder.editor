@@ -18,7 +18,7 @@ using namespace std;
 vector<string> split( const string& s, const string& delim =" " ) {
     vector<string> res;
     string t;
-    for ( int i = 0 ; i != s.size() ; i++ ) {
+    for ( size_t i = 0 ; i != s.size() ; i++ ) {
         if ( delim.find( s[i] ) != string::npos ) {
             if ( !t.empty() ) {
                 res.push_back( t );
@@ -37,7 +37,7 @@ vector<string> split( const string& s, const string& delim =" " ) {
 vector<int> splitInt( const string& s, const string& delim =" " ) {
     vector<string> tok = split( s, delim );
     vector<int> res;
-    for ( int i = 0 ; i != tok.size(); i++ )
+    for ( size_t i = 0 ; i != tok.size(); i++ )
         res.push_back( atoi( tok[i].c_str() ) );
     return res;
 }
@@ -56,7 +56,7 @@ static void print( string a ) {
 }
 template<typename T> void print( vector<T> a ) {
     cerr << "{";
-    for ( int i = 0 ; i != a.size() ; i++ ) {
+    for ( size_t i = 0 ; i != a.size() ; i++ ) {
         if ( i != 0 ) cerr << ", ";
         print( a[i] );
     }
@@ -80,7 +80,7 @@ template<typename T> void eq( int n, vector<T> have, vector<T> need ) {
         print( need );
         return;
     }
-    for( int i= 0; i < have.size(); i++ ) {
+    for( size_t i= 0; i < have.size(); i++ ) {
         if( have[i] != need[i] ) {
             cerr << "Case " << n << " failed. Expected and returned array differ in position " << i << ".";
             print( have );
@@ -90,7 +90,8 @@ template<typename T> void eq( int n, vector<T> have, vector<T> need ) {
     }
     cerr << "Case " << n << " passed." << endl;
 }
-static void eq( int n, string have, string need ) {
+
+void eq( int n, string have, string need ) {
     if ( have == need ) {
         cerr << "Case " << n << " passed." << endl;
     } else {
@@ -111,7 +112,8 @@ public:
 $WRITERCODE$
 };
 $BEGINCUT$
-void main( int argc, char* argv[] ) {
+int main( int argc, char* argv[] ) {
 $MAINBODY$
+    return 0;
 }
 $ENDCUT$
