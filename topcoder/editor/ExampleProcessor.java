@@ -102,7 +102,7 @@ public class ExampleProcessor extends CodeProcessor {
 
 		if (tests != null) {
 			for (int i = 0; i != tests.length; i++) {
-				if (needDef()) {
+				if (langID == LANG_CPP) {
 					buf.append(indent(2) + "{\n");
 				}
 				String[] vals = tests[i].getInput();
@@ -114,7 +114,7 @@ public class ExampleProcessor extends CodeProcessor {
 						tests[i].getOutput(),
 						lang,
 						RETVAL);
-				if (needDef()) {
+				if (langID == LANG_CPP) {
 					buf.append(indent(3)
 							+ problem.getClassName() + " theObject;\n"
 							+ indent(3) + "eq(" + (i)
@@ -134,7 +134,7 @@ public class ExampleProcessor extends CodeProcessor {
 				genValueRef(buf, problem.getReturnType(), tests[i].getOutput(),
 						lang, RETVAL);
 				buf.append(");");
-				if (needDef()) {
+				if (langID == LANG_CPP) {
 					buf.append("\n" + indent(2) + "}");
 				}
 				if (i != tests.length - 1) {
@@ -247,10 +247,6 @@ public class ExampleProcessor extends CodeProcessor {
 		}
 	}
 
-	private static boolean needDef() {
-		return langID == LANG_CPP;
-	}
-
 	/**
 	 * 
 	 * @param dt
@@ -258,7 +254,7 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @return
 	 */
 	private static boolean inPlace(DataType dt) {
-		return (dt.getDimension() == 0) || !needDef();
+		return (dt.getDimension() == 0) || langID != LANG_CPP;
 	}
 
 	/**
