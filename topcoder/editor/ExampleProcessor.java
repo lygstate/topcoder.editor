@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.topcoder.client.contestant.ProblemComponentModel;
 import com.topcoder.shared.language.Language;
+import com.topcoder.shared.problem.InvalidTypeException;
 import com.topcoder.shared.problem.Renderer;
 import com.topcoder.shared.problem.DataType;
 import com.topcoder.shared.problem.TestCase;
@@ -25,8 +26,8 @@ import com.topcoder.shared.problem.TestCase;
  */
 public class ExampleProcessor extends CodeProcessor {
 
-	/* Storage the current procee language name */
-	int langID;
+	/* Storage the current processed language id. */
+	static int langID;
 	static int LANG_UNSUPPORTED = 0;
 	static int LANG_CPP = 1;
 	static int LANG_CSHARP = 2;
@@ -101,22 +102,25 @@ public class ExampleProcessor extends CodeProcessor {
 
 		if (tests != null) {
 			for (int i = 0; i != tests.length; i++) {
-				if (needDef(lang)) {
-					buf.append(indent(lang, 2) + "{\n");
+				if (needDef()) {
+					buf.append(indent(2) + "{\n");
 				}
 				String[] vals = tests[i].getInput();
 				for (int j = 0; j != pt.length; j++) {
 					genValueDef(buf, pt[j], vals[j], lang, pn[j]);
 				}
-				genValueDef(buf, problem.getReturnType(), tests[i].getOutput(),
-						lang, RETVAL);
-				if (needDef(lang)) {
-					buf.append(indent(lang, 3)
+				genValueDef(buf,
+						problem.getReturnType(),
+						tests[i].getOutput(),
+						lang,
+						RETVAL);
+				if (needDef()) {
+					buf.append(indent(3)
 							+ problem.getClassName() + " theObject;\n"
-							+ indent(lang, 3) + "eq(" + (i)
+							+ indent(3) + "eq(" + (i)
 							+ ", theObject." + problem.getMethodName() + "(");
 				} else {
-					buf.append(indent(lang, 3) + "eq(" + (i) + ",(new "
+					buf.append(indent(3) + "eq(" + (i) + ",(new "
 							+ problem.getClassName() + "())."
 							+ problem.getMethodName() + "(");
 				}
@@ -130,8 +134,8 @@ public class ExampleProcessor extends CodeProcessor {
 				genValueRef(buf, problem.getReturnType(), tests[i].getOutput(),
 						lang, RETVAL);
 				buf.append(");");
-				if (needDef(lang)) {
-					buf.append(indent(lang, 1) + "\n" + indent(lang,1) + "}");
+				if (needDef()) {
+					buf.append("\n" + indent(2) + "}");
 				}
 				if (i != tests.length - 1) {
 					buf.append("\n");
@@ -154,13 +158,22 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @param lang
 	 *            the target language
 	 */
-	private static void genValue(StringBuffer buf, DataType dt, String val,
-			Language lang) {
+	private static void genValue(
+			StringBuffer buf,
+			DataType dt,
+			String val) {
 		if (dt.getBaseName().toLowerCase().indexOf("long") != -1) {
-			val = val.replaceAll("\\d+", "$0L");
+			if (langID == LANG_CPP)
+			{
+				val = val.replaceAll("\\d+", "$0LL");
+			}
+			else
+			{
+				val = val.replaceAll("\\d+", "$0L");
+			}
 		}
 		if (dt.getDimension() != 0) {
-			val = val.replaceAll("\n", "\n" + indent(lang, 4));
+			val = val.replaceAll("\n", "\n" + indent( 4));
 		}
 		buf.append(val);
 	}
@@ -179,15 +192,19 @@ public class ExampleProcessor extends CodeProcessor {
 	 *            the target language
 	 * @name name of the variable to reference, if any
 	 */
-	private static void genValueRef(StringBuffer buf, DataType dt, String val,
-			Language lang, String name) {
-		if (inPlace(dt, lang)) {
+	private static void genValueRef(
+			StringBuffer buf,
+			DataType dt,
+			String val,
+			Language lang,
+			String name) {
+		if (inPlace(dt)) {
 			if (dt.getDimension() != 0) {
 				buf.append("new ");
 				buf.append(dt.getDescriptor(lang));
 				buf.append(" ");
 			}
-			genValue(buf, dt, val, lang);
+			genValue(buf, dt, val);
 		} else {
 			if (!empty(val)) {
 				buf.append(name);
@@ -205,21 +222,33 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @param lang
 	 * @param name
 	 */
-	private static void genValueDef(StringBuffer buf, DataType dt, String val,
-			Language lang, String name) {
-		if (!inPlace(dt, lang) && !empty(val)) {
-			buf.append(indent(lang, 3) + dt.getBaseName().toLowerCase()
+	private static void genValueDef(
+			StringBuffer buf,
+			DataType dt,
+			String val,
+			Language lang,
+			String name) {
+		if (!inPlace(dt) && !empty(val)) {
+			try
+			{
+				DataType sub = dt.reduceDimension();
+				buf.append(indent(3) +  sub.getDescriptor(lang)
 					+ " " + name + "ARRAY[] = ");
-			genValue(buf, dt, val, lang);
+			}
+			catch(InvalidTypeException e)
+			{
+				//pass, that's impossible.
+			}
+			genValue(buf, dt, val);
 			buf.append(";\n");
-			buf.append(indent(lang, 3) + dt.getDescriptor(lang) + " "
+			buf.append(indent(3) + dt.getDescriptor(lang) + " "
 					+ name + "( " + name + "ARRAY, " + name + "ARRAY+ARRSIZE("
 					+ name + "ARRAY) );\n");
 		}
 	}
 
-	private static boolean needDef(Language lang) {
-		return lang.getName().equals("C++");
+	private static boolean needDef() {
+		return langID == LANG_CPP;
 	}
 
 	/**
@@ -228,8 +257,8 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @param lang
 	 * @return
 	 */
-	private static boolean inPlace(DataType dt, Language lang) {
-		return (dt.getDimension() == 0) || !needDef(lang);
+	private static boolean inPlace(DataType dt) {
+		return (dt.getDimension() == 0) || !needDef();
 	}
 
 	/**
@@ -237,9 +266,9 @@ public class ExampleProcessor extends CodeProcessor {
 	 * @param lang
 	 * @return
 	 */
-	private static String indent(Language lang, int count) {
+	private static String indent(int count) {
 		
-		if (lang.getName().equals("C++")) {
+		if (langID == LANG_CPP) {
 			if (count > 0) {
 				count -= 1;
 			}

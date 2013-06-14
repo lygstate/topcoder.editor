@@ -175,16 +175,16 @@ public class EntryPoint {
 	}
 
 	private final void loadPreferences() {
+		processor = new ExampleProcessor();
+
 		// If already loaded - ignore
 		if (pref != null)
 			return;
 
-		processor = new ExampleProcessor();
+		// Create the preferences
+		pref = Preferences.getInstance();
 
 		/* The editor */
 		editor = new Editor();
-
-		// Create the preferences
-		pref = new Preferences();
 	}
 }
