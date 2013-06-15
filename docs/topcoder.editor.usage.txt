@@ -1,0 +1,11 @@
+1.topcoder.editor.jar 解压缩到一个本地路径，比如 D:\TopCoder\topcoder.editor.jar
+2.在TopCoder Arena界面里面，打开Options->Editor
+3.点击 Add按钮.
+4.Name: 填随意字符串，比如 OwnEditor
+5.EntryPoint: 填topcoder.editor.EntryPoint
+6.ClassPath: 填D:\TopCoder\topcoder.editor.jar
+7.点击OK.
+8.在 Editor Preferences界面，选中 Default, At Startup
+9.点击Configure.
+10.Editor, 和 Code Processors 可以根据喜好自由配置
+11.Code Template 可以使用压缩文件里面附带的C++,Java,C#模版文件
