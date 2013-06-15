@@ -48,10 +48,10 @@ vector<int> splitInt( const string& s, const string& delim =" " ) {
 template<typename T> void print( T a ) {
 	cerr << a;
 }
-static void print( long long a ) {
+void print( long long a ) {
 	cerr << a << "L";
 }
-static void print( string a ) {
+void print( string a ) {
 	cerr << '"' << a << '"';
 }
 template<typename T> void print( vector<T> a ) {
