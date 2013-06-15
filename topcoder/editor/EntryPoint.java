@@ -8,6 +8,7 @@
 
 package topcoder.editor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,12 +20,8 @@ import com.topcoder.shared.problem.Renderer;
 
 public class EntryPoint {
 
-	// The dynamic editor proxy
+	// The user defined editor 
 	private Editor editor = null;
-
-	// The Code Processor, process code with the
-	// need replacement.
-	public CodeProcessor processor;
 
 	// Current language chosen
 	private Language language;
@@ -36,7 +33,7 @@ public class EntryPoint {
 	private Renderer renderer;
 
 	// Our preferences
-	private Preferences pref = null;
+	static private Preferences pref = null;
 
 	public final static String PRODUCT_NAME = "TopCoder Editor https://github.com/lygstate/topcoder.editor";
 	public final static String PRODUCT_VERSION = "0.10";
@@ -54,18 +51,35 @@ public class EntryPoint {
 		return editor.getEditorPanel();
 	}
 
-	// Get the source, the post process it with the processor and return that
+	// Get the code processors, processing codes with the
+	// needed replacements.
+	static public CodeProcessor[] getProcessors() {
+		String[] processorNames = pref.getCodeProcessors();
+		ArrayList<CodeProcessor> processors = new ArrayList<CodeProcessor>();
+		for (int i = 0; i < processorNames.length; ++i) {
+			CodeProcessor processor = CodeProcessor.create(processorNames[i]);
+			if (processor != null) {
+				processors.add(processor);
+			}
+		}
+		return processors.toArray(new CodeProcessor[processors.size()]);
+	}
+
+	// Get the source, then post process it with the processors and return it.
 	public String getSource() {
 		loadPreferences();
 
-		String source = editor.getSource();
-		if (processor == null)
-			return source;
+		CodeProcessor[] processors = getProcessors();
+
 		// Get the source
+		String source = editor.getSource();
 		String cpSource = (source == null ? "" : source);
-		String tempSource = processor.postProcess(cpSource, language);
-		if (tempSource != null)
-			cpSource = tempSource;
+
+		for (int i = 0; i < processors.length; ++i) {
+			String tempSource = processors[i].postProcess(cpSource, language);
+			if (tempSource != null)
+				cpSource = tempSource;
+		}
 
 		StringBuffer temp = new StringBuffer(cpSource);
 
@@ -73,11 +87,9 @@ public class EntryPoint {
 		// source)
 		// Note: this is just to see who and how many people are using this
 		// plugin
-		if (pref.isPoweredBy() && pref.isWriteCodeDescFile() /*
-														 * Only when support for
-														 * line comment, then
-														 * append POWRBY
-														 */
+		if (pref.isPoweredBy()
+				/* Only when support for line comment, then append POWRBY */
+				&& pref.isWriteCodeDescFile()
 				&& !temp.toString().endsWith(POWEREDBY) && temp.length() != 0) {
 			temp.append("\n");
 			temp.append(POWEREDBY);
@@ -86,19 +98,22 @@ public class EntryPoint {
 		return temp.toString();
 	}
 
-	// Preprocess the source and the pass it to the editor
+	// Preprocessing the source and the pass it to the editor
 	public void setSource(String source) {
 		loadPreferences();
+
+		CodeProcessor[] processors = getProcessors();
+
 		// This probably needs to be broken up and cleaned up...
 		String newSource = source;
 
 		Map<String, String> userDefinedTags = new HashMap<String, String>();
-		if (processor != null) {
-			String tempSource = processor.preProcess(newSource, problem,
+		for (int i = 0; i < processors.length; ++i) {
+			String tempSource = processors[i].preProcess(newSource, problem,
 					language, renderer);
 			if (tempSource != null)
 				newSource = tempSource;
-			Map<String, String> temp = processor.getUserDefinedTags();
+			Map<String, String> temp = processors[i].getUserDefinedTags();
 			userDefinedTags.putAll(temp);
 		}
 
@@ -125,7 +140,7 @@ public class EntryPoint {
 	// TODO: Not implemented
 	public void setProblemComponent(ProblemComponentModel problem,
 			Language lang, Renderer renderer) {
-		// Save the parms
+		// Save the parameters.
 		this.problem = problem;
 		this.language = lang;
 		this.renderer = renderer;
@@ -175,16 +190,13 @@ public class EntryPoint {
 	}
 
 	private final void loadPreferences() {
-		processor = new ExampleProcessor();
-
-		// If already loaded - ignore
-		if (pref != null)
-			return;
-
-		// Create the preferences
+		// Load the preferences
 		pref = Preferences.getInstance();
 
-		/* The editor */
-		editor = new Editor();
+		/* The editor ins */
+		if (editor == null)
+		{
+			editor = new Editor();
+		}
 	}
 }

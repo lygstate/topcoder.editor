@@ -18,6 +18,7 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import topcoder.editor.CodeProcessor;
 import topcoder.editor.EntryPoint;
 
 public class CodeProcessorConfig extends JPanel
@@ -27,7 +28,6 @@ public class CodeProcessorConfig extends JPanel
 	 * 
 	 */
 	private static final long serialVersionUID = 8321962248388177104L;
-	private final EntryPoint entry;
 
 	private JButton configure = Common.createJButton("Configure");
 	private JButton verify = Common.createJButton("Verify");
@@ -42,7 +42,6 @@ public class CodeProcessorConfig extends JPanel
 	private String[] prefCodeProcessors;
 
 	public CodeProcessorConfig(EntryPoint entry) {
-		this.entry = entry;
 		Common.setDefaultAttributes(this);
 		this.setLayout(new GridBagLayout());
 
@@ -131,11 +130,40 @@ public class CodeProcessorConfig extends JPanel
 		if (processorTable.getCellEditor() != null)
 			processorTable.getCellEditor().stopCellEditing();
 
-		if (e.getSource() == verify) {
-		} else if (e.getSource() == configure) {
-			this.entry.processor.configure();
+		int selected = processorTable.getSelectedRow();
+		if (selected < 0) {
+			selected = 0;
 		}
 
+		String[] processorNames = myModel.getModel();
+		String name = null;
+		if (selected < processorNames.length) {
+			name = processorNames[selected];
+		}
+
+		CodeProcessor processor = CodeProcessor.create(name); 
+
+		if (e.getSource() == verify) {
+			if  (name == null){
+				Common.showMessage("Code processor error.", "No code processors in the list", null);
+			} else if (processor == null) {
+				String info = String.format("Verification failed, the code processor [%s] doesn't exist.", name);
+				Common.showMessage("Code processor error.", info, null);
+			} else {
+				String info = String.format("Verification passed, the code processor [%s] exist.", name);
+				Common.showMessage("Code processor inforamtion.", info, null);
+			}
+		}
+		else if (e.getSource() == configure) {
+			if (name == null) {
+				Common.showMessage("Code processor configure error.", "No code processors to configure", null);
+			} else if (processor == null) {
+				String info = String.format("The code processor [%s] doesn't exist", name);
+				Common.showMessage("Code processor configure error.", info, null);
+			} else {
+				processor.configure();
+			}
+		}
 	}
 
 	@Override
@@ -166,8 +194,6 @@ public class CodeProcessorConfig extends JPanel
 		if (processorTable.getCellEditor() != null)
 			processorTable.getCellEditor().stopCellEditing();
 
-		/* TODO: Test the existence of the configuration CodePrecessor class */
-
 		int row = processorTable.getSelectedRow();
 		for (int x = 0; x < myModel.getModel().length; x++) {
 			processorTable.getSelectionModel().setSelectionInterval(x, x);
@@ -175,7 +201,16 @@ public class CodeProcessorConfig extends JPanel
 		if (row >= 0) {
 			processorTable.getSelectionModel().setSelectionInterval(row, row);
 		}
-		this.prefCodeProcessors = myModel.getModel();
+		String [] processorNames = myModel.getModel();
+
+		/* Test the existence of the configuration CodePrecessor class */
+		for (int i = 0; i < processorNames.length; ++i){
+			if (CodeProcessor.create(processorNames[i]) == null) {
+				Common.showMessage("Code processor list", "The code processor[" + processorNames[i] + "]doesn't exist.", null);
+				return false;
+			}
+		}
+		this.prefCodeProcessors = processorNames; 
 		return true;
 	}
 

@@ -29,6 +29,20 @@ public abstract class CodeProcessor {
 	}
 
 	public void configure() {
-		Common.showMessage("Processor configure", "There is nothing to configure!", null);
+		String info = String.format("There is nothing to configure [%s]!", this.getClass().getName());
+		Common.showMessage("Code processor configure", info, null);
+	}
+
+	public static CodeProcessor create(String name) {
+		if (name == null) {
+			return null;
+		}
+		try {
+			return (CodeProcessor) Class.forName(name).newInstance();
+		}
+		catch (Exception e) 
+		{
+			return null;
+		}
 	}
 }

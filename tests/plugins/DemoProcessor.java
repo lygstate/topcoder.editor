@@ -23,7 +23,7 @@ public class DemoProcessor extends CodeProcessor {
 	}
 
 	public void configure() {
-		Common.showMessage("Processor configure", "There is nothing to configure!", null);
+		Common.showMessage("Processor configure", "There is nothing to configure DemoProcessor!", null);
 	}
 
 	private static final String DEMOTAG = "$DEMOTAG$"; 
