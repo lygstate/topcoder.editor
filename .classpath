@@ -3,16 +3,17 @@
 	<classpathentry kind="src" path=""/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="libs/arena-client-7.0.3.jar"/>
-	<classpathentry kind="lib" path="libs/arena-shared-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/arena-client-7.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/arena-shared-7.5.4.jar"/>
 	<classpathentry kind="lib" path="libs/basic_type_serialization-1.0.1.jar"/>
-	<classpathentry kind="lib" path="libs/client-common-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="libs/client-socket-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="libs/compeng-common-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="libs/concurrent-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="libs/custom-serialization-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="libs/encoder-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="libs/http-tunnel-client-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="libs/client-common-1.2.0.jar"/>
+	<classpathentry kind="lib" path="libs/client-socket-1.1.1.jar"/>
+	<classpathentry kind="lib" path="libs/compeng-common-1.2.1.jar"/>
+	<classpathentry kind="lib" path="libs/concurrent-1.0.2.jar"/>
+	<classpathentry kind="lib" path="libs/custom-serialization-1.1.0.jar"/>
+	<classpathentry kind="lib" path="libs/encoder-1.0.0.jar"/>
+	<classpathentry kind="lib" path="libs/http-tunnel-client-1.1.0.jar"/>
 	<classpathentry kind="lib" path="libs/log4j-1.2.13.jar"/>
+	<classpathentry kind="lib" path="libs/logging-1.1.0.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
