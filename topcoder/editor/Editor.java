@@ -189,54 +189,119 @@ public class Editor implements Observer {
 		return input;
 	}
 
-	static String[] nameMap = {
-		"East China College Tour Round 1 DIV 1 - ", "SRM400EastChina",
-		"TopCoder China Tournament Round 2 DIV 1 - ", "TCO2008ChinaRound2",
-		"2008 China Tournament Round 1A Div 1 - ", "TCO2008ChinaRound1A",
-		};
-
 	public static String filterRoundName(String roundName){
-		/* Round name is: Single Round Match 580 - Round 1 */
-		for (int i = 0; i < nameMap.length; i+=2)
-		{
-			if (roundName.compareTo(nameMap[i]) == 0)
-			{
-				return nameMap[i+1];
+		char[] roundNameCharArray = roundName.toCharArray();
+		roundName = "";
+		for (int i = 0; i < roundNameCharArray.length; ++i) {
+			char c = roundNameCharArray[i];
+			if (!Character.isDigit(c) && !Character.isAlphabetic(c)) {
+				c = ' ';
 			}
+			roundName += c;
 		}
+		roundName = roundName.trim();
 		roundName = roundName.replace("Single Round Match", "SRM");
-		roundName = roundName.replace((CharSequence) "-", "");
-		roundName = roundName.replace((CharSequence) "'", "");
-		if (roundName.indexOf("SRM") >= 0) {
-			roundName = roundName.replace("Member", "");   /* Only SRM replace Member to "" */
-			roundName = roundName.replace("Round", "DIV"); /* Only SRM replace Round to DIV */
-		} else if (roundName.indexOf("TCHS") >= 0) {
-			roundName = expandYear(roundName, "TCHS");
-		} else {
-			roundName = roundName.replace("2008 TopCoder China Tournament", "TCO 2008 China");
-			roundName = expandYear(roundName, "TCO");
-			roundName = expandYear(roundName, "TCCC");
-			if (roundName.indexOf(" Round ") == -1)
-			{
-				roundName = roundName.replace(" DIV ", " Round ");
-			}
-			roundName = roundName.replace((CharSequence) "Algorithm",
-					(CharSequence) "");
-			String[] names = roundName.split(" ");
-			try {
-				Integer.parseInt(names[0]);
-				String tmp = names[0];
-				names[0] = names[1];
-				names[1] = tmp;
-			} catch (Exception e) {
-
-			}
-			roundName = join(names, "");
+		roundName = roundName.replace("TopCoder China Tournament", "2008 TCO China");
+		roundName = roundName.replace("China Tournament", "TCO China");
+		roundName = roundName.replace("Inv ", "TCO ");
+		roundName = roundName.replace("CRPF ", " TCO 2003 ");
+		for (int i = 0; i <= 9; ++i) {
+			int codePoints = (int)('0') +i;
+			char ch = (char)codePoints;
+			roundName = roundName.replace("TCO" + ch, "TCO " + "20" + ch);
+			roundName = roundName.replace("TCCC" + ch, "TCCC " + "20" + ch);
+			roundName = roundName.replace("TCHS" + ch, "TCHS " + "20" + ch);
 		}
-		roundName = join(roundName.split(" "), "");
-		roundName = roundName.replace((CharSequence) "DIV1", (CharSequence) "");
-		roundName = roundName.replace((CharSequence) "DIV2", (CharSequence) "");
+		roundName = roundName.replace("TCCC ", "TCO ");
+		roundName = roundName.replace("CC ", "TCO ");
+		String[] roundNameList = roundName.split(" ");
+		roundName = "";
+		int year = -1;
+		int srm = -1;
+		String round = "";
+		boolean isSRM = false;
+		boolean isTCO = false;
+		boolean isTCHS = false;
+		int getSRM = -1;
+		int getYear = -1;
+		int getDiv = -1;
+		List<String> roundNameCleanList = new ArrayList<String>();
+		for (int i = 0; i < roundNameList.length; ++i) {
+			--getSRM;
+			--getYear;
+			--getDiv;
+			String current = roundNameList[i];
+			int x = parseInt(current);
+			String lowerCurrent = current.toLowerCase();
+			if (lowerCurrent.compareTo("srm") == 0) {
+				isSRM = true;
+
+				getSRM = 2;
+				continue;
+			}
+			if (lowerCurrent.compareTo("tco") == 0) {
+				isTCO = true;
+
+				getYear = 2;
+				continue;
+			}
+			if (lowerCurrent.compareTo("tchs") == 0) {
+				isTCHS = true;
+
+				getYear = 2;
+				continue;
+			}
+			if (lowerCurrent.compareTo("div") == 0) {
+				getDiv = 2;
+				continue;
+			}
+			if (getDiv > 0) {
+				continue;
+			}
+
+			if (roundNameCleanList.size() > 0 || x == -1) {
+				roundNameCleanList.add(current);
+			}
+
+			if (year > 0 && (isTCO || isTCHS)) {
+				round = round + current;
+				continue;
+			}
+			if (x == -1) {
+				continue;
+			}
+			if (getSRM > 0) {
+				srm = x;
+			} else if (getYear > 0) {
+				if (x >= 2000) {
+					year = x;
+				} else if (x >= 0) {
+					year = 2000 + x;
+				}
+			} else if (year == -1 && x >= 2000) {
+				year = x;
+			}
+		}
+		if (isTCHS && isSRM && srm != -1) {
+			roundName = "TCHSSRM" + srm;
+		} else if (isSRM && srm != -1) {
+			roundName = "SRM" + srm;
+		} else if (isTCO && year != -1) {
+			roundName = "TCO" + year + round;
+		} else if (isTCHS && year != -1) {
+			roundName = "TCHS" + year + round;
+		} else {
+			roundName = join(roundNameCleanList.toArray(new String[0]), "");
+		}
 		return roundName; 
+	}
+	
+	static public int parseInt(String str) {
+		try {
+			return Integer.parseInt(str);
+		} catch (Exception e) {
+			return -1;
+		}
 	}
 
 	private void loadDirFileNames() {
